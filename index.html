@@ -9,17 +9,24 @@
 <meta property="og:title" content="모래에서 칩까지">
 <meta property="og:description" content="스크롤로 떠나는 반도체 8대 공정 인터랙티브 여행">
 <meta property="og:image" content="https://stkeo.github.io/sand-to-chip/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="모래에서 칩까지 — 반도체 8대 공정 3D 여행">
+<meta property="og:site_name" content="모래에서 칩까지">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta property="og:url" content="https://stkeo.github.io/sand-to-chip/">
 <link rel="canonical" href="https://stkeo.github.io/sand-to-chip/">
 <meta name="theme-color" content="#070b14">
+<meta name="author" content="Claude Fable 5">
+<script>document.documentElement.classList.add('js')</script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"LearningResource",
  "name":"모래에서 칩까지 — 반도체 8대 공정 인터랙티브",
  "description":"모래 한 줌이 수백억 트랜지스터의 칩이 되기까지 — 스크롤로 떠나는 반도체 8대 공정 3D 여행.",
  "inLanguage":"ko","url":"https://stkeo.github.io/sand-to-chip/",
  "learningResourceType":"인터랙티브 설명",
+ "teaches":"반도체 8대 공정","datePublished":"2026-07-04","dateModified":"2026-07-21",
  "image":"https://stkeo.github.io/sand-to-chip/og.png"}
 </script>
 <style>
@@ -69,6 +76,14 @@ body{
 #rail a.on .lbl{opacity:1; transform:none}
 #rail a:focus-visible{outline:2px solid var(--cyan); outline-offset:4px; border-radius:6px}
 #rail a:focus-visible .lbl{opacity:1; transform:none}
+section.stage:focus{outline:none}
+.skip{position:fixed; left:-9999px; top:0; z-index:60; background:var(--cyan); color:#0a0f1a;
+  padding:10px 18px; border-radius:0 0 10px 0; font-size:13px; font-weight:700; text-decoration:none}
+.skip:focus{left:0}
+.keyhint{margin-top:14px; font-size:11px; color:var(--dim); letter-spacing:.14em; opacity:.75}
+.flownote{margin-top:10px; font-size:12px; color:var(--dim)}
+.flownote b{color:var(--ink)}
+#scCv{display:block; max-width:100%; height:auto; margin:6px auto 2px}
 /* ---------- sections & cards ---------- */
 main{position:relative; z-index:10}
 section.stage{min-height:150vh; display:flex; align-items:center; padding:8vh 6vw; position:relative}
@@ -86,8 +101,8 @@ section.stage:nth-child(odd)[data-ghost]::before{right:5vw}
 section.stage:nth-child(even)[data-ghost]::before{left:5vw}
 section.stage:nth-child(even){justify-content:flex-end}
 section.stage:nth-child(odd){justify-content:flex-start}
-section.hero{min-height:100vh; justify-content:center !important; text-align:center}
-section.finale{min-height:120vh; justify-content:center !important; text-align:center}
+section.hero{min-height:100vh; min-height:100dvh; justify-content:center !important; text-align:center}
+section.finale{min-height:120vh; min-height:120dvh; justify-content:center !important; text-align:center}
 .card{
   max-width:540px; position:relative; z-index:1;
   background:linear-gradient(158deg,rgba(22,30,50,.82),rgba(10,15,27,.8));
@@ -96,12 +111,15 @@ section.finale{min-height:120vh; justify-content:center !important; text-align:c
   padding:30px 32px; backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
   box-shadow:0 28px 70px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.07),
     inset 0 0 60px -30px var(--acc,transparent);
-  opacity:0; transform:translateY(36px); transition:opacity .7s ease,transform .7s ease;
+  transition:opacity .7s ease,transform .7s ease;
 }
-.card.in{opacity:1; transform:none}
+/* JS 활성 시에만 카드 숨김→등장 — JS 꺼진 환경·크롤러도 본문 판독 가능 */
+html.js .card{opacity:0; transform:translateY(36px)}
+html.js .card.in{opacity:1; transform:none}
 /* 카드 내부 요소 등장 스태거 */
-.card>*{opacity:0; transform:translateY(16px); transition:opacity .55s ease,transform .55s ease}
-.card.in>*{opacity:1; transform:none}
+.card>*{transition:opacity .55s ease,transform .55s ease}
+html.js .card>*{opacity:0; transform:translateY(16px)}
+html.js .card.in>*{opacity:1; transform:none}
 .card.in>*:nth-child(1){transition-delay:.06s}
 .card.in>*:nth-child(2){transition-delay:.14s}
 .card.in>*:nth-child(3){transition-delay:.22s}
@@ -195,6 +213,7 @@ section.finale{min-height:120vh; justify-content:center !important; text-align:c
 #minimap{display:none}
 @media (max-width:760px){
   #rail{display:none}
+  .keyhint{display:none}
   section.stage{min-height:120vh; padding:8vh 5vw; justify-content:center !important}
   .card{padding:24px 22px}
   section.stage[data-ghost]::before{font-size:36vw; opacity:.25;
@@ -212,14 +231,28 @@ section.finale{min-height:120vh; justify-content:center !important; text-align:c
 @media (prefers-reduced-motion: reduce){
   html{scroll-behavior:auto}
   .card{transition:none}
-  .card>*{transition:none; opacity:1; transform:none}
+  .card>*, html.js .card>*{transition:none; opacity:1; transform:none}
   .scrollcue{animation:none}
   .scrollcue::after{animation:none}
   .chip,.finale .cta{transition:none}
 }
+@media print{
+  #bg,#veil,#topbar,#rail,#minimap,.scrollcue,.keyhint,.skip,.widget,.cta{display:none !important}
+  body{background:#fff; color:#111}
+  section.stage{min-height:auto; padding:18px 0; display:block}
+  section.stage[data-ghost]::before{display:none}
+  .card, .card>*, html.js .card, html.js .card>*{opacity:1 !important; transform:none !important}
+  .card{max-width:100%; margin:0 auto 14px; background:#fff; border:1px solid #bbb; box-shadow:none; backdrop-filter:none; break-inside:avoid}
+  .card p,.hero .sub,.finale .credit,.chip,.chip b,.card .fact,.card .fact b,.bigout,.flow span,.flownote{color:#222}
+  .card h2 small{color:#555}
+  .step{color:#333; border-color:#999; background:none}
+  .hero h1{background:none; -webkit-background-clip:initial; background-clip:initial; -webkit-text-fill-color:#111; filter:none}
+}
 </style>
 </head>
 <body>
+<a class="skip" href="#s0">본문 바로가기</a>
+<noscript><div style="position:relative;z-index:20;padding:10px 16px;background:#131b2e;color:#c7d3e6;font-size:13px;text-align:center">JavaScript가 꺼져 있어 3D 애니메이션은 나오지 않지만, 본문은 그대로 읽을 수 있습니다.</div></noscript>
 <canvas id="bg" aria-hidden="true"></canvas>
 <div id="veil" aria-hidden="true"></div>
 <div id="topbar" role="progressbar" aria-label="읽기 진행도" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
@@ -238,6 +271,7 @@ section.finale{min-height:120vh; justify-content:center !important; text-align:c
       <span class="chip">8대 공정</span><span class="chip">소요 <b>2~3개월</b></span><span class="chip">공정 단계 <b>수백 개</b></span>
     </div>
     <div class="scrollcue">SCROLL</div>
+    <div class="keyhint">← · → 또는 J · K 키로 공정 사이를 건너뛸 수 있다</div>
   </div>
 </section>
 
@@ -265,7 +299,8 @@ section.finale{min-height:120vh; justify-content:center !important; text-align:c
     녹은 실리콘이 시드의 원자 배열을 그대로 따라 굳으면서
     원자가 완벽히 정렬된 <b>단결정 잉곳</b>이 자라난다.</p>
     <p>1916년 폴란드 화학자 <b>얀 초크랄스키</b>가 펜을 잉크병 대신
-    녹은 주석에 잘못 담갔다가 발견한 방법이 100년 넘게 반도체 산업을 떠받치고 있다.</p>
+    녹은 주석에 잘못 담갔다가 발견한 이 방법은, 110년이 지난 지금도
+    거의 모든 웨이퍼의 출발점이다.</p>
     <div class="chips"><span class="chip">지름 <b>300mm</b></span><span class="chip">길이 <b>1~2m</b></span><span class="chip">무게 <b>수백 kg</b></span></div>
     <div class="fact"><b>💡 왜 하필 '단'결정일까?</b> 결정 알갱이 경계(결정립계)가 있으면
     그 자리에서 전자가 흩어져 소자 특성이 흐트러진다. 웨이퍼 한 장 전체가
@@ -282,6 +317,12 @@ section.finale{min-height:120vh; justify-content:center !important; text-align:c
     표면 굴곡이 <b>나노미터 수준</b>인 완벽한 캔버스가 완성된다.
     이 위에 앞으로 수백 개의 공정이 쌓인다.</p>
     <div class="fact"><b>💡 왜 원형일까?</b> 잉곳이 회전하며 자라 원기둥이기 때문. 사각 칩을 새기다 보니 가장자리는 버려지지만, 원형이 열·응력 분포에도 유리하다.</div>
+    <div class="widget" id="scaleWidget">
+      <h3>🔬 나노 스케일 감각 — 머리카락에서 원자까지</h3>
+      <div class="lamps" id="scLamps"></div>
+      <canvas id="scCv" width="460" height="64" aria-hidden="true"></canvas>
+      <div class="bigout" aria-live="polite" aria-atomic="true">크기 <div class="num" id="scSize">—</div><div class="note" id="scNote" style="color:var(--dim)"></div></div>
+    </div>
   </div>
 </section>
 
@@ -289,10 +330,11 @@ section.finale{min-height:120vh; justify-content:center !important; text-align:c
   <div class="card">
     <div class="step">공정 ② 산화</div>
     <h2>실리콘 위에 유리 갑옷을 입히다<small>OXIDATION</small></h2>
-    <p>웨이퍼를 <b>800~1,200°C</b> 고온 노(퍼니스)에 넣고 산소나 수증기를 흘리면,
+    <p>거울처럼 닦아낸 웨이퍼에 가장 먼저 하는 일은, 역설적이게도 표면을 다시 덮는 것이다.
+    웨이퍼를 <b>800~1,200°C</b> 고온 노(퍼니스)에 넣고 산소나 수증기를 흘리면,
     표면에 <b>이산화규소(SiO₂)</b> — 유리 — 막이 자란다.</p>
     <p>이 산화막은 전기가 통하지 않는 <b>절연체</b>다. 회로 사이 누전을 막는 보호벽이자,
-    트랜지스터의 스위치 역할을 하는 <b>게이트 절연막</b>의 재료가 된다.
+    트랜지스터(이 여정 끝에 완성될 전기 스위치)의 심장인 <b>게이트 절연막</b>의 재료가 된다.
     두께는 나노미터 단위로 정밀하게 제어한다.</p>
     <div class="chips"><span class="chip">건식: 산소, 얇고 치밀</span><span class="chip">습식: 수증기, 빠르고 두껍게</span></div>
     <div class="fact"><b>💡 SiO₂를 넘어서:</b> 45nm 세대(2007년)부터 트랜지스터 게이트 절연막은
@@ -305,13 +347,14 @@ section.finale{min-height:120vh; justify-content:center !important; text-align:c
   <div class="card">
     <div class="step">공정 ③ 포토 (노광)</div>
     <h2>빛으로 회로를 그리다<small>PHOTOLITHOGRAPHY — 칩 제조의 심장</small></h2>
-    <p>웨이퍼에 빛에 반응하는 <b>감광액(포토레지스트)</b>을 바르고, 회로 설계도가 새겨진
+    <p>앞서 기른 산화막은 웨이퍼 전체를 통짜로 덮고 있다. 이제 <b>어디를 남기고 어디를 깎을지</b>,
+    그 경계선을 빛으로 그릴 차례다. 웨이퍼에 빛에 반응하는 <b>감광액(포토레지스트)</b>을 바르고, 회로 설계도가 새겨진
     <b>마스크(레티클)</b>를 통해 빛을 쏘아 패턴을 <b>4분의 1로 축소 투영</b>한다.</p>
     <p>더 짧은 파장일수록 더 가는 선을 그릴 수 있다. 그래서 업계는 g-line(436nm) → KrF(248nm) →
     ArF(193nm)를 거쳐 극자외선 <b>EUV(13.5nm)</b>까지 왔다. EUV 빛은 날아가는 <b>주석 방울을
     레이저로 초당 5만 번</b> 맞혀 플라즈마로 만들어 얻고, 렌즈(유리)에 흡수되므로
-    초정밀 <b>다층 거울</b>로만 다룬다. 이 장비를 만드는 회사는 지구상에 <b>ASML 하나</b>,
-    대당 가격은 <b>2억 달러</b>를 넘는다.</p>
+    초정밀 <b>다층 거울</b>로만 다룬다. 이 장비를 만드는 회사는 지구상에 <b>ASML 하나</b> —
+    기본형이 대당 약 <b>2억 달러</b>, 2024년 등장한 차세대 <b>하이-NA EUV</b>는 약 <b>3.8억 달러</b>에 이른다.</p>
     <div class="chips">
       <span class="chip">① 감광액 도포(스핀 코팅)</span><span class="chip">② 소프트베이크</span>
       <span class="chip">③ 노광</span><span class="chip">④ 노광후 베이크(PEB)</span><span class="chip">⑤ 현상</span>
@@ -322,9 +365,12 @@ section.finale{min-height:120vh; justify-content:center !important; text-align:c
       <div class="lamps" id="lamps"></div>
       <div class="wrow"><label for="naR">개구수 NA</label><input type="range" id="naR" min="0" max="100" value="60"><output id="naO"></output></div>
       <div class="wrow"><label for="k1R">공정상수 k₁</label><input type="range" id="k1R" min="25" max="80" value="35"><output id="k1O"></output></div>
-      <div class="bigout">최소 선폭(하프피치) <div class="num" id="cdO">—</div><div class="note" id="cdNote"></div></div>
+      <div class="bigout" aria-live="polite" aria-atomic="true">최소 선폭(하프피치) <div class="num" id="cdO">—</div><div class="note" id="cdNote"></div><div class="note" id="dofO" style="color:var(--dim)"></div></div>
     </div>
-    <div class="fact"><b>💡 팹은 왜 노란빛일까?</b> 감광액이 파란빛·자외선에 반응하기 때문에, 포토 구역은 반응하지 않는 노란 조명만 켠다. 참고로 '3nm 공정'의 3nm는 실제 선폭이 아니라 세대를 뜻하는 마케팅 명칭이다.</div>
+    <div class="fact"><b>💡 팹은 왜 노란빛일까?</b> 감광액이 파란빛·자외선에 반응하기 때문에, 포토 구역은 반응하지 않는 노란 조명만 켠다. 참고로 '3nm 공정'의 3nm는 실제 선폭이 아니라 세대를 뜻하는 마케팅 명칭 — 2025년부터는 <b>2nm 세대</b>가 양산에 들어갔다.</div>
+    <div class="fact"><b>💡 설계도는 어디서 올까?</b> 이 여정은 모래를 칩으로 <b>'만드는'</b> 이야기다.
+    무엇을 만들지 그리는 <b>회로 설계</b>(팹리스·EDA)와 그 밑그림을 유리판에 새기는 <b>포토마스크 제작</b>은,
+    이 앞단에 존재하는 또 다른 거대 산업이다.</div>
   </div>
 </section>
 
@@ -337,6 +383,8 @@ section.finale{min-height:120vh; justify-content:center !important; text-align:c
     깊고 좁은 도랑을 팔 수 있다.</p>
     <p>최신 3D 낸드에서는 <b>종횡비 100:1</b>이 넘는 — 폭보다 깊이가 100배인 —
     구멍을 수백 층의 막을 관통해 한 번에 뚫는다. 우물 지름이 1m라면 깊이 100m를 수직으로 파는 셈.</p>
+    <p>여기까지가 회로 <b>한 층</b>을 새기는 한 바퀴다. 층을 만들고(산화·증착) → 빛으로 그리고(포토) →
+    깎아내는(식각) 이 사이클이 층을 바꿔 가며 <b>수십 번</b> 되풀이된다 — 지금 보는 ①~⑧은 그 반복을 한 줄로 편 것이다.</p>
     <div class="chips"><span class="chip">건식: 플라즈마, 정밀·수직</span><span class="chip">습식: 용액, 빠르지만 등방성</span><span class="chip">식각 장비 선두 <b>램리서치·TEL</b></span></div>
   </div>
 </section>
@@ -355,9 +403,10 @@ section.finale{min-height:120vh; justify-content:center !important; text-align:c
     박힌 불순물을 제자리에 앉혀 <b>활성화</b>시켜야 비로소 전기가 흐른다.</p>
     <div class="widget" id="mosWidget">
       <h3>🔀 MOSFET 스위치 — 도핑이 만든 트랜지스터</h3>
-      <canvas id="mosCanvas" width="300" height="180"></canvas>
+      <canvas id="mosCanvas" width="300" height="180" aria-hidden="true"></canvas>
       <div class="wrow"><label for="vgR">게이트 전압</label><input type="range" id="vgR" min="0" max="100" value="0"><output id="vgO"></output></div>
-      <div class="bigout">상태 <div class="num" id="mosState">—</div><div class="note" id="mosNote"></div></div>
+      <div class="bigout" aria-live="polite" aria-atomic="true">상태 <div class="num" id="mosState">—</div><div class="note" id="mosNote"></div></div>
+      <div class="note">※ 평면형 MOSFET 개념 단면 — 최신 2nm 세대는 게이트가 채널을 사방에서 감싸는 <b>GAA</b> 구조다</div>
     </div>
     <div class="fact"><b>💡 도핑의 마법:</b> 실리콘 원자 백만 개당 불순물 몇 개 수준의 차이가 도체와 부도체 사이를 오가는 스위치를 만든다.</div>
     <div class="chips"><span class="chip">증착·이온주입 장비 <b>어플라이드 머티어리얼즈(AMAT)</b></span></div>
@@ -385,7 +434,7 @@ section.finale{min-height:120vh; justify-content:center !important; text-align:c
     <div class="step">공정 ⑦ EDS 테스트</div>
     <h2>수율 — 생사를 가르는 숫자<small>WAFER TEST & YIELD</small></h2>
     <p>완성된 웨이퍼의 모든 다이(칩)에 미세 바늘이 달린 <b>프로브 카드</b>를 접촉시켜
-    전기 신호로 양품/불량을 판정한다. 양품 비율이 곧 <b>수율(yield)</b> —
+    전기 신호로 양품/불량을 판정한다 — <b>EDS</b>(Electrical Die Sorting)다. 양품 비율이 곧 <b>수율(yield)</b> —
     파운드리 사업의 생사를 가르는 숫자다.</p>
     <p>불량 대부분은 공정 중 내려앉은 눈에 보이지 않는 <b>미세 결함</b> 때문이다.
     결함은 면적당 무작위로 떨어지므로, <b>다이가 클수록 수율은 기하급수적으로 떨어진다</b>.
@@ -395,13 +444,14 @@ section.finale{min-height:120vh; justify-content:center !important; text-align:c
     양·불량을 가르는 전기 검사는 <b>어드밴테스트·테라다인</b> 같은 테스트 장비(ATE)가 수행한다.</div>
     <div class="widget" id="yieldWidget">
       <h3>🎯 수율 실험실 — 300mm 웨이퍼</h3>
+      <div class="lamps" id="yModel"></div>
       <div class="wrow"><label for="dieR">다이 한 변</label><input type="range" id="dieR" min="40" max="220" value="90"><output id="dieO"></output></div>
       <div class="wrow"><label for="d0R">결함 밀도 D₀</label><input type="range" id="d0R" min="2" max="40" value="10"><output id="d0O"></output></div>
-      <canvas id="waferMap" width="280" height="280"></canvas>
+      <canvas id="waferMap" width="280" height="280" aria-hidden="true"></canvas>
       <div class="ystats" aria-live="polite" aria-atomic="true"><span>다이 <b id="nDie">—</b>개</span><span class="yg">양품 <b id="nGood">—</b></span><span class="yb">불량 <b id="nBad">—</b></span><span>수율 <b id="yPct" style="color:var(--cyan)">—</b></span></div>
       <div class="wrow"><label for="wcR">웨이퍼 가공비</label><input type="range" id="wcR" min="10" max="150" value="50"><output id="wcO"></output></div>
-      <div class="ystats"><span>양품당 원가 <b id="cpd" style="color:var(--amber)">—</b></span></div>
-      <div class="bigout" style="margin-top:12px"><span style="font-size:12px">푸아송 수율 모델 Y = e<sup>−A·D₀</sup> — 같은 결함 밀도라도 다이 면적(A)이 크면 수율이 급락하고, <b>양품당 원가 = 웨이퍼 가공비 ÷ 양품 수</b>는 폭증한다</span></div>
+      <div class="ystats" aria-live="polite" aria-atomic="true"><span>양품당 원가 <b id="cpd" style="color:var(--amber)">—</b></span></div>
+      <div class="bigout" style="margin-top:12px"><span style="font-size:12px" id="yFormula">푸아송 수율 모델 Y = e<sup>−A·D₀</sup> — 같은 결함 밀도라도 다이 면적(A)이 크면 수율이 급락하고, <b>양품당 원가 = 웨이퍼 가공비 ÷ 양품 수</b>는 폭증한다</span></div>
     </div>
   </div>
 </section>
@@ -410,13 +460,25 @@ section.finale{min-height:120vh; justify-content:center !important; text-align:c
   <div class="card">
     <div class="step">공정 ⑧ 패키징</div>
     <h2>칩에 옷을 입히다, 그리고 쌓다<small>PACKAGING — 제2의 미세공정</small></h2>
-    <p>웨이퍼를 블레이드나 레이저로 잘라 다이를 분리하고(<b>다이싱</b>), 기판에 붙여
+    <p>앞선 테스트에서 <b>양품으로 걸러진 다이만</b>이 이 마지막 관문에 들어온다.
+    웨이퍼를 블레이드나 레이저로 잘라 다이를 분리하고(<b>다이싱</b>), 기판에 붙여
     외부 세계와 연결한 뒤 보호 껍질을 씌운다. 연결 방식은 금선을 잇는 <b>와이어 본딩</b>에서
     다이를 뒤집어 범프로 직결하는 <b>플립칩</b>으로 진화했다.</p>
     <p>최신 AI 칩은 여기서 한 번 더 도약한다 — D램을 <b>8~12층으로 쌓고</b> 실리콘을 관통하는
     전극 <b>TSV</b>로 수직 연결한 <b>HBM</b>, GPU와 HBM을 한 기판에 나란히 얹는
     <b>2.5D 패키징(CoWoS)</b>까지. 패키징이 '제2의 미세공정'이라 불리는 이유다.</p>
-    <div class="chips"><span class="chip">HBM: 대역폭 <b>TB/s급</b></span><span class="chip">TSV 지름 <b>수 µm</b></span><span class="chip">차세대 <b>HBM4</b>: 2,048비트·최대 16단</span><span class="chip"><b>칩렛</b>: 큰 칩을 조각으로 나눠 이어붙임</span></div>
+    <div class="chips"><span class="chip">HBM: 대역폭 <b>TB/s급</b></span><span class="chip">TSV 지름 <b>수 µm</b></span><span class="chip"><b>HBM4</b>(2026 양산 개시): 2,048비트·최대 16단</span><span class="chip"><b>칩렛</b>: 큰 칩을 조각으로 나눠 이어붙임</span></div>
+    <div class="widget" id="hbmWidget">
+      <h3>🚄 HBM 대역폭 계산기 — 쌓을수록 넓어지는 길</h3>
+      <div class="lamps" id="hbmGen"></div>
+      <div class="wrow"><label for="pinR">핀 속도</label><input type="range" id="pinR" min="20" max="120" value="80"><output id="pinO"></output></div>
+      <div class="wrow"><label for="stkR">스택 수</label><input type="range" id="stkR" min="1" max="12" value="8"><output id="stkO"></output></div>
+      <div class="bigout" aria-live="polite" aria-atomic="true">시스템 메모리 대역폭 <div class="num" id="bwO">—</div><div class="note" id="bwNote"></div></div>
+      <div class="note">대역폭 = 버스폭 × 핀 속도 ÷ 8 × 스택 수 · JEDEC 공개 규격 기준(실제 제품은 이보다 낮게 운용되기도 한다)</div>
+    </div>
+    <div class="fact"><b>💡 병목이 된 패키징:</b> 2025~26년 AI 가속기 수요가 폭증하며
+    <b>CoWoS</b> 2.5D 패키징과 <b>HBM</b>은 반도체 공급망 전체의 최대 병목이 됐다.
+    이제 패키징 용량이 곧 AI 칩 생산량을 결정한다.</div>
   </div>
 </section>
 
@@ -425,24 +487,27 @@ section.finale{min-height:120vh; justify-content:center !important; text-align:c
     <div class="step pre">FIN · 그리고 당신의 손안으로</div>
     <h2>모래 한 줌이 걸어온 길</h2>
     <div class="flow" aria-label="공정 요약">
-      <span>정제</span><span class="fa">→</span><span>잉곳</span><span class="fa">→</span><span>웨이퍼</span><span class="fa">→</span><span>산화</span><span class="fa">→</span><span>노광</span><span class="fa">→</span><span>식각</span><span class="fa">→</span><span>증착·주입</span><span class="fa">→</span><span>배선</span><span class="fa">→</span><span>테스트</span><span class="fa">→</span><span>패키징</span>
+      <span>정제</span><span class="fa" aria-hidden="true">→</span><span>잉곳</span><span class="fa" aria-hidden="true">→</span><span>웨이퍼</span><span class="fa" aria-hidden="true">→</span><span>산화</span><span class="fa" aria-hidden="true">→</span><span>노광</span><span class="fa" aria-hidden="true">→</span><span>식각</span><span class="fa" aria-hidden="true">→</span><span>증착·주입</span><span class="fa" aria-hidden="true">→</span><span>배선</span><span class="fa" aria-hidden="true">→</span><span>테스트</span><span class="fa" aria-hidden="true">→</span><span>패키징</span>
     </div>
+    <div class="flownote">웨이퍼 위에서 이뤄지는 테스트까지가 <b>전공정</b>(Front-end), 잘라서 조립하는 패키징부터가 <b>후공정</b>(Back-end)이다</div>
     <p style="font-size:15.5px"><b>2~3개월, 수백 개의 공정</b>을 거친 손톱만 한 칩 안에는<br>
-    바이러스보다 작은 트랜지스터가 <b>수백억 개</b> 들어 있다.</p>
+    바이러스와 견줄 만큼 작은 트랜지스터가 <b>수백억 개</b> 들어 있다.<br>
+    그리고 지금 — 이 글을 띄운 화면 속에서도, 모래에서 온 그 도시가 쉼 없이 돌아가고 있다.</p>
     <div class="chips" style="justify-content:center; margin-top:22px">
-      <span class="chip">최신 스마트폰 AP 트랜지스터 <b>190억+</b></span>
+      <span class="chip">최신 스마트폰 AP 트랜지스터 <b>200억+</b></span>
       <span class="chip">최소 배선 폭 <b>~20nm</b></span>
       <span class="chip">클린룸 청정도: 수술실의 <b>수천 배</b></span>
     </div>
     <div class="widget" id="mooreWidget" style="max-width:520px; margin:22px auto 0; text-align:left">
       <h3>📈 무어의 법칙 — 트랜지스터 수 (로그 축)</h3>
-      <canvas id="mooreCv" width="480" height="240"></canvas>
-      <div class="note" id="mooreNote">점에 커서를 올려보세요</div>
+      <canvas id="mooreCv" width="480" height="240" role="img" aria-label="무어의 법칙: 1971년 인텔 4004의 2,300개부터 2024년 엔비디아 B200의 2,080억 개까지, 트랜지스터 수가 로그 축에서 거의 직선으로 증가"></canvas>
+      <div class="note" id="mooreNote">점을 탭하거나 커서를 올려보세요</div>
     </div>
     <div class="widget" id="quizWidget" style="max-width:480px; margin:18px auto 0; text-align:left">
       <h3>🧩 8대 공정 복습 퀴즈</h3>
       <div id="qStem" style="font-size:14px; color:#c7d3e6; min-height:40px">—</div>
       <div class="lamps" id="qOpts" style="margin-top:12px"></div>
+      <div class="note" id="qFb" aria-live="polite" style="min-height:18px; text-align:left"></div>
       <div class="bigout" id="qScore" style="display:none"></div>
     </div>
     <div class="cta">🏭 직접 팹을 운영해보고 싶다면 — <b>클린룸 타이쿤</b> (곧 공개)</div>
@@ -651,28 +716,51 @@ reg(g => {
     slices.add(s);
   }
   slices.position.set(-0.4,0.15,0); g.add(slices);
+  /* 다이아몬드 와이어 쏘 — 절단 초반에 보이고, 슬라이스가 벌어지면 사라진다 */
+  const wireGeo = new THREE.CylinderGeometry(0.006,0.006,1.7,6);
+  const wireM = basic({color:0x9fe8ff, transparent:true, opacity:.7, blending:THREE.AdditiveBlending, depthWrite:false});
+  const saw = new THREE.Group();
+  for(let k=0;k<10;k++){
+    const w = new THREE.Mesh(wireGeo, wireM);
+    w.rotation.x = Math.PI/2;
+    saw.add(w);
+  }
+  saw.position.set(-0.4,0.15,0); g.add(saw);
+  const grit = pointCloud(90, 0, 0xfff2c8, 0.02, () => new THREE.Vector3((Math.random()-0.5)*1.6, (Math.random()-0.5)*0.3, (Math.random()-0.5)*1.3));
+  grit.position.set(-0.4,0.15,0); g.add(grit);
   const wafer = new THREE.Group();
   const disc = new THREE.Mesh(new THREE.CylinderGeometry(0.85,0.85,0.028,64), mat({color:0xaeb9cc, metalness:1, roughness:.08}));
   const sheen = new THREE.Mesh(new THREE.CircleGeometry(0.83,64), basic({color:0x74e6ff, transparent:true, opacity:.16, blending:THREE.AdditiveBlending}));
   sheen.rotation.x = -Math.PI/2; sheen.position.y = 0.016;
-  wafer.add(disc, sheen);
+  const notch = new THREE.Mesh(new THREE.BoxGeometry(0.07,0.034,0.06), mat({color:0x2a3142, metalness:.6, roughness:.4}));
+  notch.position.set(0,0,-0.83);   // 결정 방위 표식(노치)
+  wafer.add(disc, sheen, notch);
   wafer.position.set(1.15,-0.1,0.5); wafer.rotation.set(0.5,0,-0.15);
   g.add(wafer);
-  return (p,t) => {
-    const e = ease(p);
+  return (p,t,dt,ww) => {
+    const e = ease(p), W = ww===undefined?1:ww;
     for(let i=0;i<slices.children.length;i++){
       const c = slices.children[i];
       c.position.x = (i - 5) * (0.075 + e*0.16);
     }
     slices.rotation.x = t*0.15;
+    for(let k=0;k<saw.children.length;k++){
+      saw.children[k].position.x = (k - 4.5) * (0.075 + e*0.16);   // 슬라이스 사이 틈을 따라감
+    }
+    saw.position.y = 0.15 + Math.sin(t*3.2)*0.03;                  // 톱질 왕복
+    wireM.opacity = Math.max(0, 1 - e*1.4) * 0.7 * W;              // 절단이 끝나면 와이어 소멸
+    grit.rotation.y = t*0.4;
+    grit.material.opacity = Math.max(0, 1 - e*1.2) * 0.65 * W;
     wafer.rotation.z = -0.15 + Math.sin(t*0.5)*0.06;
     wafer.position.y = -0.1 + Math.sin(t*0.8)*0.05;
     wafer.scale.setScalar(0.6 + e*0.55);
+    sheen.material.color.setHSL((0.52 + Math.sin(t*0.35)*0.08 + 1) % 1, 0.7, 0.6);  // 연마면 간섭 무지갯빛
   };
 });
 
 /* ============ S4 산화 — 퍼니스 링 + 막 성장 ============ */
 reg(g => {
+  g.rotation.x = 0.42;
   const wafer = new THREE.Mesh(new THREE.CylinderGeometry(1.0,1.0,0.035,64), mat({color:0xaeb9cc, metalness:.95, roughness:.12}));
   g.add(wafer);
   const oxide = new THREE.Mesh(new THREE.CylinderGeometry(1.0,1.0,0.05,64),
@@ -693,10 +781,9 @@ reg(g => {
     oxide.scale.set(e>0.02?1:0.001, 0.2+e*1.6, e>0.02?1:0.001);
     oxide.material.opacity = (0.15+e*0.45) * W;
     oxide.material.color.setHSL(0.5 - e*0.55, 0.6, 0.55);      // 막 두께에 따른 간섭색: 청록→금→자홍
-    oxide.material.emissive.setHSL((0.5 - e*0.5 % 1 + 1) % 1, 0.6, 0.22);
+    oxide.material.emissive.setHSL(((0.5 - e*0.55) % 1 + 1) % 1, 0.6, 0.22);   // color와 동일 궤적(연산자 우선순위 버그 수정)
     ring.material.emissiveIntensity = 1.1 + Math.sin(t*4)*0.35;
     heat.position.y = Math.sin(t*0.9)*0.06;
-    g.rotation.x = 0.42;
   };
 });
 
@@ -847,6 +934,7 @@ reg(g => {
   const base = new THREE.Mesh(new THREE.BoxGeometry(2.4,0.16,2.4), mat({color:0x232a3d, metalness:.5, roughness:.5}));
   base.position.y = -0.85; g.add(base);
   const cu = mat({color:0xd97a3c, metalness:.95, roughness:.28, emissive:0x7a3210, emissiveIntensity:.25});
+  const viaM = mat({color:0xffb066, metalness:.9, roughness:.3, emissive:0xff7a1a, emissiveIntensity:.3});
   const wires = new THREE.Group();
   const rng = (s => () => (s = s*16807%2147483647)/2147483647)(1234);
   for(let lv=0; lv<4; lv++){
@@ -858,24 +946,63 @@ reg(g => {
       w.position.set(horiz?(rng()-0.5)*0.9:(i-3)*0.34, y, horiz?(i-3)*0.34:(rng()-0.5)*0.9);
       wires.add(w);
       if(lv<3 && rng()>0.45){
-        const via = new THREE.Mesh(new THREE.CylinderGeometry(0.035,0.035,0.3,10), cu);
+        const via = new THREE.Mesh(new THREE.CylinderGeometry(0.035,0.035,0.3,10), viaM);
         via.position.set(w.position.x + (horiz?(rng()-0.5)*len*0.8:0), y+0.15, w.position.z + (horiz?0:(rng()-0.5)*len*0.8));
         wires.add(via);
       }
     }
   }
   g.add(wires);
+  /* 상층 수평 배선을 달리는 전류 패킷 */
+  const runs = [];
+  wires.children.forEach(w => {
+    const pr = w.geometry.parameters;
+    if(!pr || pr.height !== 0.055) return;             // 배선(Box)만 — via(Cylinder)는 제외
+    const len = Math.max(pr.width, pr.depth);
+    if(len < 0.9 || w.position.y < -0.2) return;       // 길고 높은 층만
+    runs.push({w, axis: pr.width >= pr.depth ? 'x' : 'z', len});
+  });
+  const packs = runs.slice(0,4).map((r,i) => {
+    const s = glow(0xffd9a0, 0.14); g.add(s);
+    return {r, s, off: i*0.27};
+  });
   const cmp = new THREE.Mesh(new THREE.CylinderGeometry(0.5,0.5,0.06,32), mat({color:0x9aa7b8, metalness:.8, roughness:.25}));
   cmp.position.y = 0.55; g.add(cmp);
-  return (p,t) => {
-    const e = ease(p);
+  const pad = new THREE.Mesh(new THREE.CircleGeometry(0.42,28), basic({color:0xaebdd6, transparent:true, opacity:.14, blending:THREE.AdditiveBlending, depthWrite:false}));
+  pad.rotation.x = -Math.PI/2; pad.position.y = 0.515; g.add(pad);
+  const slurry = pointCloud(70, 0, 0xcdd8ea, 0.016, () => {
+    const a = Math.random()*Math.PI*2, r = 0.12+Math.random()*0.38;
+    return new THREE.Vector3(Math.cos(a)*r, (Math.random()-0.5)*0.04, Math.sin(a)*r);
+  });
+  slurry.position.y = 0.515; g.add(slurry);
+  return (p,t,dt,ww) => {
+    const e = ease(p), W = ww===undefined?1:ww;
     wires.children.forEach((w,i)=>{
       const k = M.clamp(e*1.4 - (w.position.y+0.72)/1.2*0.55, 0, 1);
       w.visible = k>0.02; w.scale.setScalar(Math.max(k,0.001));
     });
     cu.emissiveIntensity = 0.2 + e*0.1 + Math.abs(Math.sin(t*1.6))*0.35;  // 통전 맥동
+    viaM.emissiveIntensity = 0.25 + Math.abs(Math.sin(t*2.2))*0.4;        // 수직 통로 강조
+    packs.forEach(pk => {
+      const w = pk.r.w, on = w.visible;
+      pk.s.visible = on;
+      if(!on) return;
+      const q = (t*0.35 + pk.off) % 1, half = pk.r.len/2 - 0.05;
+      pk.s.position.set(
+        w.position.x + (pk.r.axis==='x' ? M.lerp(-half, half, q) : 0),
+        w.position.y + 0.07,
+        w.position.z + (pk.r.axis==='z' ? M.lerp(-half, half, q) : 0));
+      pk.s.material.opacity = 0.85 * W;
+    });
+    const grind = e > 0.15;                     // 배선이 생기기 전엔 연마기 숨김
+    cmp.visible = pad.visible = slurry.visible = grind;
     cmp.position.x = Math.sin(t*1.2)*0.6;
     cmp.position.z = Math.cos(t*0.9)*0.4;
+    pad.position.x = slurry.position.x = cmp.position.x;
+    pad.position.z = slurry.position.z = cmp.position.z;
+    slurry.rotation.y = t*2.5;
+    slurry.material.opacity = (grind ? 0.55 : 0) * W;
+    pad.material.opacity = (grind ? 0.14 : 0) * W;
     g.rotation.y = t*0.12;
   };
 });
@@ -888,7 +1015,9 @@ reg(g => {
   g.add(wafer);
   const COLS = 13, size = 0.165, gap = 0.02;
   const dieGeo = new THREE.BoxGeometry(size, 0.02, size);
-  const dieMat = mat({color:0xffffff, roughness:.35, metalness:.25});
+  /* r128 셰이더는 instanceColor를 USE_COLOR 경로로만 반영 — 흰 정점색 + vertexColors 필수(없으면 전부 흰색) */
+  dieGeo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(dieGeo.attributes.position.count*3).fill(1), 3));
+  const dieMat = mat({color:0xffffff, roughness:.35, metalness:.25, vertexColors:true});
   const cells = [];
   for(let i=0;i<COLS;i++) for(let j=0;j<COLS;j++){
     const x = (i-(COLS-1)/2)*(size+gap), z = (j-(COLS-1)/2)*(size+gap);
@@ -900,10 +1029,12 @@ reg(g => {
   cells.forEach((c,k)=>{ dummy.position.set(c.x,0.035,c.z); dummy.updateMatrix(); dies.setMatrixAt(k,dummy.matrix); });
   dies.instanceMatrix.needsUpdate = true;
   const cGood = new THREE.Color(0x41e396), cBad = new THREE.Color(0xff5d73);
-  function paint(D0){ // D0: 결함/cm² 스케일 파라미터
+  function paint(D0){ // D0: 결함/cm² 스케일 파라미터 — 시드 고정: 같은 D0면 같은 패턴(슬라이더 깜빡임 방지)
     const A = (size*10)*(size*10)*0.55; // 시각화용 상대 면적
+    let s = 88911;
+    const rnd = () => { s = (s*16807)%2147483647; return s/2147483647; };
     for(let k=0;k<cells.length;k++){
-      const bad = Math.random() < 1-Math.exp(-A*D0);
+      const bad = rnd() < 1-Math.exp(-A*D0);
       dies.setColorAt(k, bad?cBad:cGood);
     }
     if(dies.instanceColor) dies.instanceColor.needsUpdate = true;
@@ -945,15 +1076,17 @@ reg(g => {
   gpu.position.set(-0.42,-0.44,0); g.add(gpu);
   const hbm = new THREE.Group();
   const dm = mat({color:0x2c3550, metalness:.6, roughness:.3, emissive:0xb18cff, emissiveIntensity:.15});
+  const tsvGeo = new THREE.CylinderGeometry(0.012,0.012,0.055,6);
+  const tsvs = [];
   const hbmLayers = [];
   for(let i=0;i<8;i++){
     const d = new THREE.Mesh(new THREE.BoxGeometry(0.6,0.045,0.75), dm);
     d.position.y = -0.465 + i*0.055;
     hbmLayers.push(d); hbm.add(d);
     if(i<7) for(let v=0;v<4;v++){
-      const tsv = new THREE.Mesh(new THREE.CylinderGeometry(0.012,0.012,0.055,6), mat({color:0xd97a3c, metalness:.9}));
+      const tsv = new THREE.Mesh(tsvGeo, mat({color:0xd97a3c, metalness:.9, emissive:0xff7a1a, emissiveIntensity:.15}));
       tsv.position.set((v%2-0.5)*0.4, -0.4375+i*0.055, (Math.floor(v/2)-0.5)*0.5);
-      hbm.add(tsv);
+      tsvs.push(tsv); hbm.add(tsv);
     }
   }
   hbm.position.x = 0.55; g.add(hbm);
@@ -967,11 +1100,28 @@ reg(g => {
   g.add(bumps);
   const lid = new THREE.Mesh(new THREE.BoxGeometry(2.1,0.07,1.45), mat({color:0x8d93a8, metalness:.9, roughness:.3, transparent:true, opacity:.9}));
   g.add(lid);
-  return (p,t) => {
-    const e = ease(p);
+  /* GPU↔HBM 인터포저 데이터링크 빔 */
+  const beams = [];
+  for(let b=0;b<3;b++){
+    const beam = new THREE.Mesh(new THREE.BoxGeometry(0.98,0.008,0.05),
+      basic({color:0x38e1ff, transparent:true, opacity:0, blending:THREE.AdditiveBlending, depthWrite:false}));
+    beam.position.set(0.06,-0.485,(b-1)*0.25);
+    beams.push(beam); g.add(beam);
+  }
+  return (p,t,dt,ww) => {
+    const e = ease(p), W = ww===undefined?1:ww;
     hbmLayers.forEach((d,i)=>{
       const k = M.clamp(e*10-i, 0, 1);
       d.visible = k>0.02; d.scale.setScalar(Math.max(k,0.001));
+    });
+    gpu.position.y = -0.44 + (1-ease(M.clamp(e*2.2,0,1)))*1.2;       // 픽앤플레이스 착지
+    tsvs.forEach((v,i)=>{
+      v.visible = e*10 - (i>>2) > 0.6;                               // 해당 층이 쌓인 뒤에만
+      if(v.visible) v.material.emissiveIntensity = 0.15 + 0.5*Math.max(0, Math.sin(t*3 - (i>>2)*0.5));  // 아래→위 통전 펄스
+    });
+    const link = ease(M.clamp((p-0.45)*3, 0, 1));                    // 조립 후반에 점등
+    beams.forEach((b,i)=>{
+      b.material.opacity = (0.2 + 0.4*(0.5+0.5*Math.sin(t*7 + i*2.1))) * link * W;
     });
     lid.position.y = 0.6 - ease(M.clamp((p-0.55)*2.2,0,1))*0.92;
     g.rotation.y = t*0.15;
@@ -1075,6 +1225,29 @@ railNames.forEach((n,i)=>{
 });
 const miniLinks = Array.from(minimap.children);
 
+/* ---------- 키보드 스테이지 점프 + 내비 포커스 이관 ---------- */
+sections.forEach(s => s.setAttribute('tabindex','-1'));
+function jumpTo(idx){
+  idx = M.clamp(idx, 0, sections.length-1);
+  sections[idx].scrollIntoView({behavior:REDUCE?'auto':'smooth', block:'center'});
+  sections[idx].focus({preventScroll:true});
+}
+window.addEventListener('keydown', e => {
+  if(e.ctrlKey || e.altKey || e.metaKey) return;
+  const tag = (e.target && e.target.tagName || '').toLowerCase();
+  if(tag==='input' || tag==='button' || tag==='a' || tag==='select' || tag==='textarea') return;
+  const k = e.key.toLowerCase();
+  if(k==='arrowright' || k==='j'){ e.preventDefault(); jumpTo(Math.round(stagePosNow())+1); }
+  else if(k==='arrowleft' || k==='k'){ e.preventDefault(); jumpTo(Math.round(stagePosNow())-1); }
+});
+function navFocus(ev){
+  const a = ev.target.closest('a'); if(!a) return;
+  const idx = parseInt(a.getAttribute('href').slice(2), 10);
+  if(sections[idx]) sections[idx].focus({preventScroll:true});
+}
+rail.addEventListener('click', navFocus);
+minimap.addEventListener('click', navFocus);
+
 /* ---------- 카드 등장 ---------- */
 const io = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); }), {threshold:0.22});
 document.querySelectorAll('.card').forEach(c => io.observe(c));
@@ -1092,6 +1265,8 @@ resize();
 
 const clock = new THREE.Clock();
 let lastActive = -1;
+let fadeW = 1;
+const fadeCb = o => { if(o.material && o.userData.baseOp !== undefined) o.material.opacity = o.userData.baseOp * fadeW; };
 let animT = 0;   // 캡된 dt 누적 — 탭 복귀 시 elapsedTime 점프 방지
 function frame(){
   const dt = REDUCE ? 0 : Math.min(clock.getDelta(), 0.05);
@@ -1108,10 +1283,9 @@ function frame(){
     st.group.visible = true;
     const ww = ease(w);
     st.group.scale.setScalar(0.9 + 0.1*ww);   // 크로스페이드 스케일 팝인
-    st.group.traverse(o => {
-      if(o.material && o.userData.baseOp !== undefined) o.material.opacity = o.userData.baseOp * ww;
-    });
-    const p = M.clamp((sp - i + 1) / 2, 0, 1); // 스테이지 국소 진행도
+    st.group.position.z = (i - sp) * 0.6;     // 전환 시 깊이 분리 — 씬을 뚫고 나아가는 달리감
+    fadeW = ww; st.group.traverse(fadeCb);
+    const p = M.clamp((sp - i + 1) / 1.5, 0, 1); // 국소 진행도 — 카드 중앙(sp=i)에서 ~74% 완성, i+0.5에서 완성 후 홀드
     st.update(p, t, dt, ww);
   }
 
@@ -1127,6 +1301,8 @@ function frame(){
   if(act !== lastActive){
     railLinks.forEach((a,k)=>a.classList.toggle('on', k===act));
     miniLinks.forEach((a,k)=>a.classList.toggle('on', k===act));
+    if(railLinks[lastActive]){ railLinks[lastActive].removeAttribute('aria-current'); miniLinks[lastActive].removeAttribute('aria-current'); }
+    if(railLinks[act]){ railLinks[act].setAttribute('aria-current','true'); miniLinks[act].setAttribute('aria-current','true'); }
     if(miniLinks[act]) miniLinks[act].scrollIntoView({inline:'center', block:'nearest', behavior:REDUCE?'auto':'smooth'});
     topbar.setAttribute('aria-valuenow', Math.round(act/(railNames.length-1)*100));
     lastActive = act;
@@ -1167,7 +1343,7 @@ if(REDUCE){
     {name:'ArF',    l:193, naMin:0.60, naMax:0.93, era:'2000년대 · 90~65nm'},
     {name:'ArF 액침',l:193, naMin:0.85, naMax:1.35, era:'2007~ · 45nm부터, 물 렌즈'},
     {name:'EUV',    l:13.5, naMin:0.25, naMax:0.33, era:'2019~ · 7nm 세대부터 양산'},
-    {name:'High-NA EUV', l:13.5, naMin:0.40, naMax:0.55, era:'2025~ · 차세대'},
+    {name:'High-NA EUV', l:13.5, naMin:0.40, naMax:0.55, era:'2026~ · 인텔 18A로 양산 진입'},
   ];
   let cur = 5;
   const lamps = document.getElementById('lamps');
@@ -1181,6 +1357,7 @@ if(REDUCE){
   const naR = document.getElementById('naR'), k1R = document.getElementById('k1R');
   const naO = document.getElementById('naO'), k1O = document.getElementById('k1O');
   const cdO = document.getElementById('cdO'), cdNote = document.getElementById('cdNote');
+  const dofO = document.getElementById('dofO');
   function na(){ const s=SRC[cur]; return s.naMin + (naR.value/100)*(s.naMax-s.naMin); }
   function k1(){ return k1R.value/100; }
   function syncRange(){
@@ -1192,6 +1369,9 @@ if(REDUCE){
     naO.textContent = 'NA ' + na().toFixed(2);
     k1O.textContent = 'k₁ ' + k1().toFixed(2);
     cdO.textContent = cd >= 1000 ? (cd/1000).toFixed(2)+' µm' : cd.toFixed(1)+' nm';
+    const dof = 0.5*s.l/(na()*na());   // DOF = k₂·λ/NA², k₂=0.5 개념값
+    dofO.textContent = '초점심도 DOF ≈ ' + (dof >= 1000 ? (dof/1000).toFixed(2)+' µm' : Math.round(dof)+' nm')
+      + ' — NA를 올리면 선폭은 줄지만 초점 여유는 NA²로 급감한다 (k₂=0.5)';
     let note = s.era;
     if(s.l===13.5 && cd < 10) note += ' — 최첨단 로직의 최소 패턴 영역';
     else if(s.l===193 && cd < 40) note += ' — 이보다 가늘게는 멀티패터닝(여러 번 나눠 노광) 필요';
@@ -1214,6 +1394,22 @@ if(REDUCE){
         nBad = document.getElementById('nBad'), yPct = document.getElementById('yPct');
   const wcR = document.getElementById('wcR'), wcO = document.getElementById('wcO'),
         cpd = document.getElementById('cpd');
+  const yFormula = document.getElementById('yFormula');
+  /* 수율 모델 3종 — 푸아송이 가장 비관적, 음이항(결함 군집)이 가장 관대 */
+  const YM = [
+    {name:'푸아송', f:ad=>Math.exp(-ad), desc:'푸아송 Y = e<sup>−A·D₀</sup> — 결함이 완전 무작위라는 가정, 가장 비관적'},
+    {name:'머피', f:ad=> ad<1e-9 ? 1 : Math.pow((1-Math.exp(-ad))/ad, 2), desc:'머피 Y = ((1−e<sup>−AD₀</sup>)/AD₀)² — 실무에서 오래 쓰인 고전 모델'},
+    {name:'음이항', f:ad=>Math.pow(1+ad/3, -3), desc:'음이항 Y = (1+AD₀/α)<sup>−α</sup> (α=3) — 결함이 뭉쳐 떨어지는 현실 반영, 가장 관대'},
+  ];
+  let curYM = 0, lastD0 = -1;
+  const yModel = document.getElementById('yModel');
+  YM.forEach((m,i)=>{
+    const b = document.createElement('button');
+    b.textContent = m.name;
+    b.onclick = ()=>{ curYM = i; Array.from(yModel.children).forEach((x,k)=>x.classList.toggle('on', k===i)); render(); };
+    yModel.appendChild(b);
+  });
+  yModel.children[0].classList.add('on');
   const R = 140;                 // px, 웨이퍼 반지름 (=150mm)
   const PX_PER_MM = R/150;
   let seed = 42;
@@ -1225,7 +1421,8 @@ if(REDUCE){
     dieO.textContent = dieMM.toFixed(1)+' mm';
     d0O.textContent = D0.toFixed(2)+' /cm²';
     const A = (dieMM/10)*(dieMM/10);      // cm²
-    const pGood = Math.exp(-A*D0);        // 푸아송
+    const AD = A*D0;
+    const pGood = YM[curYM].f(AD);        // 선택한 수율 모델
     const d = dieMM*PX_PER_MM;
     ctx.clearRect(0,0,280,280);
     ctx.save(); ctx.translate(140,140);
@@ -1252,7 +1449,9 @@ if(REDUCE){
     const waferUSD = wcR.value*100;                    // $1,000 ~ $15,000
     wcO.textContent = '$'+waferUSD.toLocaleString();
     cpd.textContent = good>0 ? '$'+Math.round(waferUSD/good).toLocaleString() : '—';
-    if(edsApi) edsApi.paint(D0*0.9);      // 3D 웨이퍼도 함께 물들인다
+    const pc = y => Math.round(y*100)+'%';
+    yFormula.innerHTML = YM[curYM].desc + '<br>같은 조건의 이론 수율 — 푸아송 <b>'+pc(YM[0].f(AD))+'</b> · 머피 <b>'+pc(YM[1].f(AD))+'</b> · 음이항 <b>'+pc(YM[2].f(AD))+'</b> · <b>양품당 원가 = 가공비 ÷ 양품 수</b>';
+    if(edsApi && D0 !== lastD0){ edsApi.paint(D0*0.9); lastD0 = D0; }  // 결함 밀도가 변할 때만 3D 재도색 (가공비 슬라이더에 안 흔들림)
   }
   dieR.oninput = render; d0R.oninput = render; wcR.oninput = render;
   render();
@@ -1269,8 +1468,9 @@ if(REDUCE){
   const stO = document.getElementById('mosState'), noteO = document.getElementById('mosNote');
   const VTH = 45;                              // 문턱전압 ≈ 0.45 V (개념값)
   const els = Array.from({length:14}, ()=>Math.random());
-  let visible = false, running = false;
-  function draw(){
+  let visible = false, running = false, lastTs = 0;
+  function draw(mul){
+    mul = (typeof mul === 'number' && isFinite(mul)) ? mul : 1;
     const vg = +vgR.value, on = vg >= VTH;
     vgO.textContent = (vg/100).toFixed(2)+' V';
     ctx.clearRect(0,0,300,180);
@@ -1282,30 +1482,37 @@ if(REDUCE){
     ctx.fillStyle = 'rgba(255,190,77,.9)'; ctx.fillRect(90,72,120,6);    // 게이트 산화막
     ctx.fillStyle = on ? '#ffbe4d' : '#5a6373'; ctx.fillRect(96,54,108,16); // 게이트 전극
     ctx.fillStyle = '#93a4bd'; ctx.fillText('게이트',128,50);
+    const kLin = on ? Math.min(1,(vg-VTH)/(100-VTH)) : 0;
+    const k = kLin*kLin;                       // I_D ∝ (V_GS−V_th)² — 포화영역 제곱법칙
     if(on){
-      const k = Math.min(1,(vg-VTH)/(100-VTH));
       ctx.fillStyle = 'rgba(56,225,255,'+(0.25+0.5*k).toFixed(2)+')';
       ctx.fillRect(90,80,120,6);                                          // 반전층(전자 통로)
       ctx.fillStyle = '#eaf7ff';
       for(let i=0;i<els.length;i++){
-        els[i] += 0.004 + 0.014*k; if(els[i]>1) els[i]-=1;
+        els[i] += (0.004 + 0.018*k)*mul; if(els[i]>1) els[i]-=1;
         ctx.beginPath(); ctx.arc(28+els[i]*244, 83+Math.sin(els[i]*22)*1.2, 1.6, 0, 7); ctx.fill();
       }
     }
     stO.textContent = on ? 'ON — 논리 1' : 'OFF — 논리 0';
     stO.style.color = on ? 'var(--good)' : 'var(--bad)';
     noteO.textContent = on
-      ? '문턱전압을 넘어 반전층(전자 통로)이 열렸다 — 소스→드레인 전류가 흐른다'
+      ? '반전층이 열렸다 — I_D ∝ (V_GS−V_th)²: 문턱을 조금만 넘겨도 전류가 급증한다 (상대 전류 '+Math.round(k*100)+'%)'
       : '문턱전압 미만: 채널이 없어 전류 차단 (스위치 열림)';
   }
-  function loop(){ if(!visible || REDUCE){ running = false; return; } draw(); requestAnimationFrame(loop); }
+  function loop(ts){
+    if(!visible || REDUCE){ running = false; lastTs = 0; return; }
+    const mul = lastTs ? Math.min((ts-lastTs)/16.7, 3) : 1;   // 60fps 기준 정규화 — 120Hz에서도 같은 속도
+    lastTs = ts;
+    draw(mul);
+    requestAnimationFrame(loop);
+  }
   new IntersectionObserver(es => es.forEach(e => {
     visible = e.isIntersecting;
     if(!visible) return;
     if(REDUCE) draw();                                  // 모션 최소화: 1회만 그림
     else if(!running){ running = true; requestAnimationFrame(loop); }
   }), {threshold:0}).observe(cv);
-  vgR.oninput = draw;
+  vgR.oninput = () => draw();
   draw();
 })();
 
@@ -1319,9 +1526,10 @@ if(REDUCE){
   const D = [
     ['Intel 4004',1971,2300],['Intel 8086',1978,29000],['Intel 80386',1985,275000],
     ['Pentium',1993,3.1e6],['Pentium 4',2000,42e6],['Core 2 Duo',2006,2.91e8],
-    ['Apple A7',2013,1e9],['Apple A14',2020,1.18e10],['Apple A17 Pro',2023,1.9e10]
+    ['Apple A7',2013,1e9],['Apple A14',2020,1.18e10],['Apple A17 Pro',2023,1.9e10],
+    ['NVIDIA B200 (GPU)',2024,2.08e11,1]   // AI 가속기 — CPU/AP 계열과 구분해 점만 표시
   ];
-  const Y0=1971, Y1=2023, C0=1e3, C1=1e11, PAD=40, W=480, H=240;
+  const Y0=1971, Y1=2024, C0=1e3, C1=1e12, PAD=40, W=480, H=240;
   const px = y => PAD + (y-Y0)/(Y1-Y0)*(W-PAD-12);
   const py = c => 14 + (1-(Math.log10(c)-Math.log10(C0))/(Math.log10(C1)-Math.log10(C0)))*(H-14-22);
   function redraw(){
@@ -1341,19 +1549,22 @@ if(REDUCE){
     ctx.moveTo(px(Y0), py(2300)); ctx.lineTo(px(Y1), py(2300*Math.pow(2,(Y1-Y0)/2))); ctx.stroke();
     ctx.setLineDash([]);
     ctx.strokeStyle = 'rgba(56,225,255,.7)'; ctx.lineWidth = 2; ctx.beginPath();
-    D.forEach((d,i)=>{ const X=px(d[1]), Yv=py(d[2]); i?ctx.lineTo(X,Yv):ctx.moveTo(X,Yv); });
+    let started = false;
+    D.forEach(d=>{ if(d[3]) return; const X=px(d[1]), Yv=py(d[2]); started?ctx.lineTo(X,Yv):ctx.moveTo(X,Yv); started = true; });
     ctx.stroke(); ctx.lineWidth = 1;
-    D.forEach(d=>{ ctx.fillStyle = '#38e1ff'; ctx.beginPath(); ctx.arc(px(d[1]),py(d[2]),3.5,0,7); ctx.fill(); });
+    D.forEach(d=>{ ctx.fillStyle = d[3] ? '#ffbe4d' : '#38e1ff'; ctx.beginPath(); ctx.arc(px(d[1]),py(d[2]),3.5,0,7); ctx.fill(); });
   }
   redraw();
-  cv.addEventListener('pointermove', e => {
+  function probe(e){
     const r = cv.getBoundingClientRect(), sx = cv.width/r.width, sy = cv.height/r.height;
     const mx = (e.clientX-r.left)*sx, my = (e.clientY-r.top)*sy;
     let hit = null;
-    D.forEach(d=>{ if(Math.hypot(px(d[1])-mx, py(d[2])-my) < 12) hit = d; });
+    D.forEach(d=>{ if(Math.hypot(px(d[1])-mx, py(d[2])-my) < 16) hit = d; });
     note.textContent = hit ? hit[0]+' ('+hit[1]+') — 트랜지스터 '+hit[2].toLocaleString()+'개'
-                           : '점에 커서를 올려보세요 — 점선은 "2년마다 2배"';
-  });
+                           : '점을 탭하거나 커서를 올려보세요 — 점선은 "2년마다 2배", 주황 점은 AI 가속기';
+  }
+  cv.addEventListener('pointermove', probe);
+  cv.addEventListener('pointerdown', probe);   // 터치 기기 대응
 })();
 
 /* ============================================================
@@ -1372,20 +1583,28 @@ if(REDUCE){
     {q:'프로브 카드로 다이의 양품/불량을 가려 수율을 판정하는 공정은?', a:'EDS 테스트'},
     {q:'다이를 잘라 기판에 붙이고 HBM처럼 쌓아 옷을 입히는 공정은?', a:'패키징'}
   ];
+  const qFb = document.getElementById('qFb');
   let i = 0, score = 0;
   const sh = a => { for(let k=a.length-1;k>0;k--){ const j=Math.random()*(k+1)|0; [a[k],a[j]]=[a[j],a[k]]; } return a; };
   function show(){
     const cur = Q[i];
     stem.textContent = (i+1)+' / '+Q.length+' · '+cur.q;
     opts.innerHTML = '';
+    qFb.textContent = '';
     sh([cur.a, ...sh(NAMES.filter(n=>n!==cur.a)).slice(0,3)]).forEach(c=>{
       const b = document.createElement('button');
       b.textContent = c;
       b.onclick = ()=>{
-        if(c===cur.a){ b.classList.add('on'); score++; }
-        else { b.style.borderColor='var(--bad)'; b.style.color='var(--bad)'; }
-        Array.from(opts.children).forEach(x=>x.disabled=true);
-        setTimeout(next, 700);
+        const btns = Array.from(opts.children);
+        const hit = c===cur.a;
+        if(hit){ b.textContent = '✓ '+c; b.classList.add('on'); score++; }
+        else {
+          b.textContent = '✗ '+c; b.style.borderColor='var(--bad)'; b.style.color='var(--bad)';
+          btns.forEach(x=>{ if(x.textContent===cur.a){ x.textContent = '✓ '+cur.a; x.classList.add('on'); } });
+        }
+        qFb.textContent = hit ? '정답!' : '오답 — 정답은 "'+cur.a+'"';
+        btns.forEach(x=>x.disabled=true);
+        setTimeout(next, hit ? 700 : 1500);
       };
       opts.appendChild(b);
     });
@@ -1393,6 +1612,7 @@ if(REDUCE){
   function next(){
     if(++i < Q.length){ show(); return; }
     stem.textContent = '복습 완료!';
+    qFb.textContent = '';
     opts.innerHTML = '';
     const again = document.createElement('button');
     again.textContent = '다시 풀기';
@@ -1402,6 +1622,99 @@ if(REDUCE){
     scoreEl.innerHTML = '<div class="num">'+score+' / '+Q.length+'</div><div class="note">틀린 공정은 위로 스크롤해 복습해보자</div>';
   }
   show();
+})();
+
+/* ============================================================
+   위젯 6 — 나노 스케일 감각 (머리카락 → 원자, 로그 자)
+   ============================================================ */
+(function(){
+  const lamps = document.getElementById('scLamps');
+  if(!lamps) return;
+  const cv = document.getElementById('scCv'), ctx = cv.getContext('2d');
+  const sizeO = document.getElementById('scSize'), noteO = document.getElementById('scNote');
+  const ITEMS = [  // [버튼명, 크기 nm, 설명]
+    ['머리카락', 80000, '굵기 ≈ 0.08mm — 맨눈으로 보이는 마지막 세계'],
+    ['적혈구', 7500, '피 한 방울 속 산소 배달부'],
+    ['대장균', 2000, '박테리아 — 광학현미경의 영역'],
+    ['바이러스', 100, '코로나바이러스 — 전자현미경이 필요한 크기'],
+    ['트랜지스터 게이트', 16, '최신 칩 스위치의 게이트 길이 — 빛의 파장보다 훨씬 작다'],
+    ['DNA', 2.5, 'DNA 이중나선의 폭'],
+    ['실리콘 원자 간격', 0.54, '실리콘 결정의 격자상수 — 사실상 바닥'],
+  ];
+  const L0 = Math.log10(0.4), L1 = Math.log10(150000);
+  const X = lg => 14 + (lg - L0)/(L1 - L0)*(cv.width - 28);
+  let cur = 0;
+  ITEMS.forEach((it,i)=>{
+    const b = document.createElement('button');
+    b.textContent = it[0];
+    b.onclick = ()=>{ cur = i; Array.from(lamps.children).forEach((x,k)=>x.classList.toggle('on', k===i)); draw(); };
+    lamps.appendChild(b);
+  });
+  lamps.children[0].classList.add('on');
+  function fmt(nm){ return nm >= 1000 ? (nm/1000).toLocaleString()+' µm' : nm+' nm'; }
+  function draw(){
+    const it = ITEMS[cur];
+    sizeO.textContent = fmt(it[1]);
+    const ratio = 80000/it[1];
+    noteO.textContent = it[2] + (cur>0 ? ' · 머리카락 굵기에 나란히 약 '+Math.round(ratio).toLocaleString()+'개' : '');
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ctx.strokeStyle = 'rgba(147,164,189,.3)';
+    ctx.beginPath(); ctx.moveTo(14,34); ctx.lineTo(cv.width-14,34); ctx.stroke();
+    ctx.font = '9px sans-serif'; ctx.fillStyle = '#93a4bd';
+    [[0,'1nm'],[1,'10nm'],[2,'100nm'],[3,'1µm'],[4,'10µm'],[5,'100µm']].forEach(pr=>{
+      const x = X(pr[0]);
+      ctx.strokeStyle = 'rgba(147,164,189,.2)';
+      ctx.beginPath(); ctx.moveTo(x,28); ctx.lineTo(x,40); ctx.stroke();
+      ctx.fillText(pr[1], x-10, 56);
+    });
+    ITEMS.forEach((m,i)=>{
+      const x = X(Math.log10(m[1]));
+      ctx.fillStyle = i===cur ? '#74e6ff' : 'rgba(147,164,189,.55)';
+      ctx.beginPath(); ctx.arc(x, 34, i===cur ? 5 : 3, 0, 7); ctx.fill();
+      if(i===cur){ ctx.strokeStyle = '#74e6ff'; ctx.beginPath(); ctx.arc(x, 34, 9, 0, 7); ctx.stroke(); }
+    });
+  }
+  draw();
+})();
+
+/* ============================================================
+   위젯 7 — HBM 대역폭 계산기 (버스폭 × 핀속도 ÷ 8 × 스택)
+   ============================================================ */
+(function(){
+  const gen = document.getElementById('hbmGen');
+  if(!gen) return;
+  const GENS = [  // [이름, 버스폭 bit, 대표 핀속도 Gbps, 설명]
+    ['HBM2', 1024, 2.0, '2016~'],
+    ['HBM2E', 1024, 3.6, '2020~'],
+    ['HBM3', 1024, 6.4, '2022~ · H100 세대'],
+    ['HBM3E', 1024, 9.2, '2024~ · B200 세대'],
+    ['HBM4', 2048, 8.0, '2026 양산 — 버스폭 2배'],
+  ];
+  let cur = 4;
+  const pinR = document.getElementById('pinR'), pinO = document.getElementById('pinO');
+  const stkR = document.getElementById('stkR'), stkO = document.getElementById('stkO');
+  const bwO = document.getElementById('bwO'), bwNote = document.getElementById('bwNote');
+  GENS.forEach((s,i)=>{
+    const b = document.createElement('button');
+    b.textContent = s[0];
+    b.onclick = ()=>{ cur = i; pinR.value = Math.round(s[2]*10); sync(); render(); };
+    gen.appendChild(b);
+  });
+  function sync(){ Array.from(gen.children).forEach((b,i)=>b.classList.toggle('on', i===cur)); }
+  function fmtBW(gbs){ return gbs >= 1000 ? (gbs/1000).toFixed(2)+' TB/s' : Math.round(gbs)+' GB/s'; }
+  function render(){
+    const s = GENS[cur];
+    const pin = pinR.value/10;                 // 2.0 ~ 12.0 Gbps
+    const stacks = +stkR.value;
+    const per = s[1]*pin/8;                    // 스택당 GB/s
+    const sys = per*stacks;
+    pinO.textContent = pin.toFixed(1)+' Gbps';
+    stkO.textContent = stacks+'개';
+    bwO.textContent = fmtBW(sys);
+    bwNote.textContent = s[0]+' ('+s[3]+') · 스택당 '+fmtBW(per)+' — 1초에 4K 영화(50GB) 약 '+(sys/50).toFixed(sys/50<10?1:0)+'편 분량';
+  }
+  pinR.oninput = render; stkR.oninput = render;
+  sync(); render();
 })();
 
 })();
