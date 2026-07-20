@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>모래에서 칩까지 — 반도체 8대 공정 인터랙티브</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23070b14'/%3E%3Crect x='9' y='9' width='14' height='14' rx='2' fill='none' stroke='%2338e1ff' stroke-width='2'/%3E%3Crect x='13' y='13' width='6' height='6' fill='%2338e1ff'/%3E%3C/svg%3E">
 <meta name="description" content="모래 한 줌이 수백억 트랜지스터의 칩이 되기까지 — 스크롤로 떠나는 반도체 8대 공정 3D 여행. 잉곳 성장부터 EUV 노광, 수율 실험실까지.">
@@ -34,6 +34,10 @@
   --bg:#070b14; --ink:#e8eef7; --dim:#93a4bd; --line:rgba(147,164,189,.18);
   --cyan:#38e1ff; --amber:#ffbe4d; --violet:#b18cff; --good:#41e396; --bad:#ff5d73;
   --card:rgba(13,19,33,.78);
+  /* 수직 리듬 토큰 — 산문 < 콜아웃/태그 < 인터랙티브 계기 */
+  --sp-prose:12px; --sp-block:16px; --sp-module:24px;
+  /* 계기판 숫자용 고정폭 스택 */
+  --mono:ui-monospace,"Cascadia Mono","Segoe UI Mono",Consolas,"Malgun Gothic",monospace;
 }
 /* 스테이지별 액센트 — 3D 씬의 대표색과 매칭 */
 section.hero{--acc:var(--cyan)}
@@ -49,30 +53,60 @@ section.stage[data-stage="9"]{--acc:#38e1ff}  /* 테스트 */
 section.stage[data-stage="10"]{--acc:#d88cff} /* 패키징·HBM */
 section.finale{--acc:var(--violet)}
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth; scrollbar-width:thin; scrollbar-color:rgba(147,164,189,.32) transparent}
+::-webkit-scrollbar{width:11px; height:11px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(147,164,189,.24); border-radius:99px; border:3px solid transparent; background-clip:content-box}
+::-webkit-scrollbar-thumb:hover{background:color-mix(in srgb,var(--acc,var(--cyan)) 45%,rgba(147,164,189,.3)); background-clip:content-box}
+/* 드래그 하이라이트 — 현재 공정의 액센트로 물든다 */
+::selection{background:color-mix(in srgb,var(--acc,var(--cyan)) 36%,#0a0f1a); color:#fff; text-shadow:none}
 body{
   background:var(--bg); color:var(--ink);
   font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Segoe UI","Malgun Gothic","맑은 고딕",sans-serif;
   overflow-x:hidden; line-height:1.7;
+  word-break:keep-all;          /* 한글은 어절 단위로만 줄바꿈 */
+  overflow-wrap:break-word;     /* 초장문 라틴 토큰만 예외적 강제개행 */
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+  font-optical-sizing:auto;
 }
 #bg{position:fixed; inset:0; width:100%; height:100%; display:block; z-index:0}
 #veil{position:fixed; inset:0; z-index:1; pointer-events:none;
-  background:radial-gradient(ellipse 120% 90% at 50% 40%, transparent 55%, rgba(7,11,20,.75) 100%)}
+  background:
+    radial-gradient(60% 42% at 50% 40%, color-mix(in srgb,var(--acc,var(--cyan)) 6%,transparent), transparent 76%),
+    radial-gradient(ellipse 120% 82% at 50% 38%, transparent 44%, rgba(7,11,20,.34) 72%, rgba(4,7,12,.8) 100%),
+    radial-gradient(ellipse 150% 130% at 50% 50%, transparent 62%, rgba(3,6,11,.5) 100%)}
 #veil::after{content:''; position:absolute; inset:0; pointer-events:none;
   opacity:.05; mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 #topbar{position:fixed; top:0; left:0; height:3px; width:0%; z-index:50;
-  background:linear-gradient(90deg,var(--cyan),var(--violet)); box-shadow:0 0 12px var(--cyan)}
+  background:linear-gradient(90deg,
+    color-mix(in srgb,var(--acc,var(--cyan)) 55%,#070b14),
+    var(--acc,var(--cyan)) 72%,
+    color-mix(in srgb,var(--acc,var(--cyan)) 45%,#fff));
+  box-shadow:0 0 10px color-mix(in srgb,var(--acc,var(--cyan)) 65%,transparent),
+             0 0 2px color-mix(in srgb,var(--acc,var(--cyan)) 90%,transparent);
+  transition:box-shadow .5s ease}
+/* 진행선 선단의 재생 헤드 코멧 — 진행 시작 전(0%)에는 숨김 */
+#topbar::after{content:''; position:absolute; top:50%; right:0; transform:translate(50%,-50%);
+  width:8px; height:8px; border-radius:50%; background:#eaf6ff;
+  box-shadow:0 0 10px 2px var(--acc,var(--violet)), 0 0 4px #fff; pointer-events:none;
+  opacity:0; transition:opacity .3s ease}
+#topbar.go::after{opacity:1}
 /* ---------- progress rail ---------- */
 #rail{position:fixed; left:22px; top:50%; transform:translateY(-50%); z-index:40; display:flex; flex-direction:column; gap:10px}
 #rail::before{content:''; position:absolute; left:3px; top:6px; bottom:6px;
   width:1.5px; border-radius:2px; background:var(--line); z-index:-1}
 #rail a{display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--dim); font-size:11px; opacity:.75; transition:.25s}
-#rail a .dot{width:8px; height:8px; border-radius:50%; background:transparent; border:1.5px solid var(--dim); transition:.25s; flex:none}
+#rail a .dot{width:8px; height:8px; border-radius:50%; background:transparent; border:1.5px solid var(--dim); flex:none;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1), background .25s ease, border-color .25s ease, box-shadow .25s ease}
+#rail a:hover .dot{transform:scale(1.18); border-color:color-mix(in srgb,var(--acc,var(--cyan)) 60%,transparent)}
 #rail a .lbl{opacity:0; transform:translateX(-4px); transition:.25s; white-space:nowrap}
 #rail a:hover .lbl{opacity:1; transform:none}
-#rail a.on{color:var(--cyan); opacity:1}
-#rail a.on .dot{background:var(--cyan); border-color:var(--cyan); box-shadow:0 0 10px var(--cyan)}
+#rail a.on{color:var(--acc,var(--cyan)); opacity:1}
+#rail a.on .dot{background:var(--acc,var(--cyan)); border-color:var(--acc,var(--cyan));
+  box-shadow:0 0 10px var(--acc,var(--cyan)); transform:scale(1.28)}
 #rail a.on .lbl{opacity:1; transform:none}
 #rail a:focus-visible{outline:2px solid var(--cyan); outline-offset:4px; border-radius:6px}
 #rail a:focus-visible .lbl{opacity:1; transform:none}
@@ -83,14 +117,14 @@ section.stage:focus{outline:none}
 .keyhint{margin-top:14px; font-size:11px; color:var(--dim); letter-spacing:.14em; opacity:.75}
 .flownote{margin-top:10px; font-size:12px; color:var(--dim)}
 .flownote b{color:var(--ink)}
-#scCv{display:block; max-width:100%; height:auto; margin:6px auto 2px}
+#scCv{display:block; max-width:100%; height:auto; margin:12px auto 4px}
 /* ---------- sections & cards ---------- */
 main{position:relative; z-index:10}
 section.stage{min-height:150vh; display:flex; align-items:center; padding:8vh 6vw; position:relative}
 /* 거대 고스트 챕터 넘버 — 에디토리얼 워터마크 */
 section.stage[data-ghost]::before{
   content:attr(data-ghost);
-  position:absolute; top:50%; transform:translateY(-50%);
+  position:absolute; top:50%; transform:translateY(calc(-50% + var(--gy,0px)));
   font-size:clamp(150px,24vw,320px); font-weight:800; line-height:.8;
   letter-spacing:-.05em; font-variant-numeric:tabular-nums;
   color:transparent;
@@ -108,10 +142,29 @@ section.finale{min-height:120vh; min-height:120dvh; justify-content:center !impo
   background:linear-gradient(158deg,rgba(22,30,50,.82),rgba(10,15,27,.8));
   border:1px solid var(--line); border-radius:18px;
   border-color:color-mix(in srgb,var(--acc,#fff) 16%,var(--line));
-  padding:30px 32px; backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
-  box-shadow:0 28px 70px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.07),
+  padding:clamp(24px,2vw + 18px,32px) clamp(22px,2vw + 16px,32px);
+  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  box-shadow:0 28px 70px rgba(0,0,0,.5),
+    inset 0 1px 0 color-mix(in srgb,var(--acc,#fff) 22%,rgba(255,255,255,.10)),
+    inset 0 -1px 0 rgba(0,0,0,.4),
     inset 0 0 60px -30px var(--acc,transparent);
-  transition:opacity .7s ease,transform .7s ease;
+  transition:opacity .7s ease,transform .7s ease,box-shadow .5s ease,border-color .5s ease;
+}
+/* 공정 카드 = 단일 템플릿: 배지→제목→본문→콜아웃/계기→태그 푸터 (S5 칩은 공정 순서 나열이라 제자리 유지) */
+section.stage:not(.hero):not(.finale) .card{display:flex; flex-direction:column}
+section.stage:not(.hero):not(.finale) .card .step{align-self:flex-start}  /* 배지가 카드 전폭으로 stretch되지 않게 */
+section.stage:not(.hero):not(.finale) .card .chips{order:99; margin-top:var(--sp-block)}
+#s5 .card .chips{order:0}
+/* 카드 hover — 계기판 점등 (터치 고착 방지 게이트) */
+@media (hover:hover){
+  section.stage[data-ghost] .card.in:hover{
+    border-color:color-mix(in srgb,var(--acc,#fff) 30%,var(--line));
+    box-shadow:0 28px 70px rgba(0,0,0,.5),
+      inset 0 1px 0 color-mix(in srgb,var(--acc,#fff) 26%,rgba(255,255,255,.12)),
+      inset 0 -1px 0 rgba(0,0,0,.4),
+      inset 0 0 60px -28px var(--acc,transparent),
+      0 0 0 1px color-mix(in srgb,var(--acc,var(--cyan)) 22%,transparent),
+      0 0 40px -20px color-mix(in srgb,var(--acc,var(--cyan)) 60%,transparent)}
 }
 /* JS 활성 시에만 카드 숨김→등장 — JS 꺼진 환경·크롤러도 본문 판독 가능 */
 html.js .card{opacity:0; transform:translateY(36px)}
@@ -131,39 +184,58 @@ html.js .card.in>*{opacity:1; transform:none}
   color:var(--acc,var(--cyan));
   border-color:color-mix(in srgb,var(--acc,var(--cyan)) 35%,transparent);
   background:color-mix(in srgb,var(--acc,var(--cyan)) 7%,transparent);
-  padding:4px 12px; border-radius:99px; margin-bottom:14px}
-.card h2{font-size:clamp(22px,3.2vw,30px); margin-bottom:4px; letter-spacing:-.02em}
-.card h2 small{display:block; font-size:12.5px; color:var(--dim); font-weight:500; letter-spacing:.06em; margin-top:2px;
-  color:color-mix(in srgb,var(--acc,var(--dim)) 55%,var(--dim))}
-.card p{color:#c7d3e6; font-size:14.5px; margin-top:12px}
+  padding:5px 13px 4px; border-radius:99px; margin-bottom:14px; line-height:1.15}
+.card h2{font-size:clamp(22px,3.2vw,30px); line-height:1.24; margin-bottom:4px; letter-spacing:-.02em; text-wrap:balance}
+/* 영문 소제목 = 계기판 판독값 — 고정폭·와이드 트래킹 */
+.card h2 small{display:block; margin-top:5px;
+  font-family:var(--mono); font-size:11px; font-weight:400; letter-spacing:.14em;
+  font-variant-numeric:tabular-nums lining-nums;
+  color:color-mix(in srgb,var(--acc,var(--dim)) 60%,var(--dim))}
+.card p{color:#c7d3e6; font-size:14.5px; margin-top:var(--sp-prose)}
+.card p, .card .fact, .hero .sub, .flownote, .widget .note{text-wrap:pretty}
+.card p b, .card .fact b, .hero .sub b, .flownote b{font-weight:600}
 .card p b{color:var(--ink)}
-.card .fact{margin-top:16px; padding:13px 16px; border-left:3px solid var(--amber); background:rgba(255,190,77,.07);
-  border-radius:0 10px 10px 0; font-size:13px; color:#e6d9bd}
+.card .fact{margin-top:var(--sp-block); padding:13px 16px; border-left:3px solid var(--amber);
+  background:linear-gradient(180deg,rgba(255,190,77,.10),rgba(255,190,77,.045));
+  border-radius:0 10px 10px 0; font-size:13px; color:#e6d9bd;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05), -14px 0 26px -22px var(--amber)}
+.card .fact + .fact{margin-top:10px}   /* 연속 팁은 한 묶음으로 */
 .card .fact b{color:var(--amber)}
-.chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:16px}
-.chip{font-size:12px; color:var(--dim); border:1px solid var(--line); border-radius:99px; padding:4px 11px; background:rgba(255,255,255,.03); transition:.2s ease}
-.chip:hover{color:var(--ink); transform:translateY(-1px);
-  border-color:color-mix(in srgb,var(--acc,var(--cyan)) 45%,transparent)}
+.chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:var(--sp-block)}
+.chip{font-size:12px; color:var(--dim); border:1px solid var(--line); border-radius:99px; padding:4px 11px; background:rgba(255,255,255,.03); transition:.2s ease; line-height:1.15}
 .chip b{color:var(--cyan); font-weight:600; color:var(--acc,var(--cyan))}
-.card .fact{transition:background .3s ease}
-.card .fact:hover{background:rgba(255,190,77,.11)}
+.card .fact{transition:background .3s ease, box-shadow .3s ease, border-left-color .3s ease}
+@media (hover:hover){
+  .chip:hover{color:var(--ink); transform:translateY(-1px);
+    border-color:color-mix(in srgb,var(--acc,var(--cyan)) 45%,transparent)}
+  .card .fact:hover{background:linear-gradient(180deg,rgba(255,190,77,.14),rgba(255,190,77,.07));
+    border-left-color:#ffd27a;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.06), -14px 0 30px -20px var(--amber)}
+}
 /* ---------- hero ---------- */
 .hero .card{background:transparent; border:none; box-shadow:none; backdrop-filter:none; max-width:760px}
-.hero h1{font-size:clamp(38px,7vw,72px); letter-spacing:-.03em; line-height:1.15;
-  background:linear-gradient(180deg,#fff 30%,#8fd8ff 80%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
-  filter:drop-shadow(0 6px 34px rgba(56,225,255,.22))}
+.hero h1{font-size:clamp(40px,7vw,72px); letter-spacing:-.03em; line-height:1.15;
+  background:linear-gradient(176deg,#ffffff 20%,#c8ecff 58%,#93b4ff 100%);
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 6px 30px rgba(56,225,255,.20)) drop-shadow(0 2px 10px rgba(177,140,255,.12))}
 .hero .step{letter-spacing:.26em}
 .hero .sub{margin-top:18px; color:var(--dim); font-size:clamp(14px,2vw,17px)}
 .hero .sub b{color:var(--ink)}
-.scrollcue{margin-top:52px; color:var(--dim); font-size:12px; letter-spacing:.32em;
-  display:flex; flex-direction:column; align-items:center; gap:12px}
+.scrollcue{margin-top:clamp(30px,6vh,52px); color:var(--dim); font-size:12px; letter-spacing:.32em;
+  display:flex; flex-direction:column; align-items:center; gap:12px;
+  animation:cuePulse 2.6s ease-in-out infinite}
+@keyframes cuePulse{0%,100%{opacity:.6}50%{opacity:1}}
 .scrollcue::after{content:''; width:1px; height:36px;
   background:linear-gradient(var(--cyan),transparent);
   animation:cueLine 2s ease-in-out infinite; transform-origin:top}
 @keyframes cueLine{0%,100%{opacity:.3;transform:scaleY(.55)}50%{opacity:1;transform:scaleY(1)}}
 /* ---------- widgets ---------- */
-.widget{margin-top:18px; border:1px solid var(--line); border-radius:14px; padding:16px 18px; background:rgba(7,11,20,.5)}
-.widget h3{font-size:13px; color:var(--cyan); letter-spacing:.1em; margin-bottom:12px; color:var(--acc,var(--cyan))}
+.widget{margin-top:var(--sp-module); border:1px solid var(--line);
+  border-color:color-mix(in srgb,var(--acc,var(--cyan)) 10%,var(--line));
+  border-radius:14px; padding:16px 18px;
+  background:linear-gradient(180deg,rgba(16,23,40,.5),rgba(7,11,20,.62));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05), inset 0 0 40px -28px var(--acc,transparent)}
+.widget h3{font-size:13px; color:var(--cyan); letter-spacing:.1em; margin-bottom:12px; color:var(--acc,var(--cyan)); text-wrap:balance}
 .widget .note{margin-top:8px; font-size:12px; color:var(--dim); text-align:center}
 .wrow{display:flex; align-items:center; gap:10px; margin-top:10px; font-size:13px}
 .wrow label{color:var(--dim); width:92px; flex:none}
@@ -172,27 +244,65 @@ html.js .card.in>*{opacity:1; transform:none}
   background:linear-gradient(90deg,color-mix(in srgb,var(--acc,var(--cyan)) 60%,transparent),var(--line))}
 .wrow input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; margin-top:-6px;
   width:16px; height:16px; border-radius:50%; background:var(--acc,var(--cyan));
-  box-shadow:0 0 10px color-mix(in srgb,var(--acc,var(--cyan)) 70%,transparent); cursor:pointer}
+  box-shadow:0 0 10px color-mix(in srgb,var(--acc,var(--cyan)) 70%,transparent); cursor:pointer;
+  transition:box-shadow .16s ease, background .16s ease}
+.wrow input[type=range]:hover::-webkit-slider-thumb{
+  box-shadow:0 0 0 5px color-mix(in srgb,var(--acc,var(--cyan)) 16%,transparent),
+             0 0 14px color-mix(in srgb,var(--acc,var(--cyan)) 85%,transparent)}
+.wrow input[type=range]:active::-webkit-slider-thumb,
+.wrow input[type=range]:focus-visible::-webkit-slider-thumb{
+  box-shadow:0 0 0 7px color-mix(in srgb,var(--acc,var(--cyan)) 22%,transparent),
+             0 0 18px color-mix(in srgb,var(--acc,var(--cyan)) 95%,transparent)}
 .wrow input[type=range]:not(:disabled){-webkit-appearance:none; appearance:none; background:transparent}
 .wrow input[type=range]::-moz-range-track{height:4px; border-radius:99px; background:var(--line)}
-.wrow input[type=range]::-moz-range-thumb{width:16px; height:16px; border:none; border-radius:50%; background:var(--acc,var(--cyan))}
-.wrow output{width:86px; text-align:right; color:var(--ink); font-variant-numeric:tabular-nums; flex:none; font-size:12.5px}
+.wrow input[type=range]::-moz-range-thumb{width:16px; height:16px; border:none; border-radius:50%; background:var(--acc,var(--cyan)); transition:box-shadow .16s ease}
+.wrow input[type=range]:hover::-moz-range-thumb{box-shadow:0 0 0 5px color-mix(in srgb,var(--acc,var(--cyan)) 16%,transparent),0 0 14px color-mix(in srgb,var(--acc,var(--cyan)) 85%,transparent)}
+.wrow output{width:86px; text-align:right; color:var(--ink); flex:none; font-size:12.5px;
+  font-family:var(--mono); font-variant-numeric:tabular-nums lining-nums}
 .lamps{display:flex; flex-wrap:wrap; gap:6px}
 .lamps button{font-size:12px; padding:5px 10px; border-radius:8px; border:1px solid var(--line); background:rgba(255,255,255,.04);
-  color:var(--dim); cursor:pointer; transition:.2s; font-family:inherit}
+  color:var(--dim); cursor:pointer; font-family:inherit; line-height:1.15;
+  transition:background .2s ease,color .2s ease,border-color .2s ease,box-shadow .2s ease,transform .09s ease}
+.lamps button:not(:disabled):hover{color:var(--ink);
+  border-color:color-mix(in srgb,var(--acc,var(--cyan)) 48%,transparent);
+  background:color-mix(in srgb,var(--acc,var(--cyan)) 10%,transparent)}
+.lamps button:not(:disabled):active{transform:translateY(1px) scale(.97)}
+.lamps button.on:hover{color:#0a0f1a;
+  box-shadow:0 0 16px color-mix(in srgb,var(--acc,var(--cyan)) 72%,transparent)}
 .lamps button.on{color:#0a0f1a; background:var(--acc,var(--cyan)); border-color:var(--acc,var(--cyan)); font-weight:700;
   box-shadow:0 0 12px color-mix(in srgb,var(--acc,var(--cyan)) 55%,transparent)}
-.bigout{margin-top:14px; padding:13px; border-radius:10px; background:rgba(56,225,255,.07); border:1px solid rgba(56,225,255,.25);
-  background:color-mix(in srgb,var(--acc,var(--cyan)) 7%,transparent);
-  border-color:color-mix(in srgb,var(--acc,var(--cyan)) 25%,transparent);
+.bigout{margin-top:var(--sp-block); padding:13px; border-radius:10px;
+  background:linear-gradient(180deg,
+    color-mix(in srgb,var(--acc,var(--cyan)) 10%,transparent),
+    color-mix(in srgb,var(--acc,var(--cyan)) 4%,transparent));
+  border:1px solid color-mix(in srgb,var(--acc,var(--cyan)) 25%,transparent);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06), inset 0 -22px 42px -32px var(--acc,transparent);
   text-align:center; font-size:13px; color:var(--dim)}
-.bigout .num{font-size:26px; font-weight:800; color:var(--acc,var(--cyan)); font-variant-numeric:tabular-nums;
+.bigout .num{font-size:26px; font-weight:800; color:var(--acc,var(--cyan));
+  font-family:var(--mono); font-variant-numeric:tabular-nums lining-nums;
   background:linear-gradient(180deg,#fff,var(--acc,var(--cyan))); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent}
 .bigout .note{margin-top:6px; font-size:12px; color:var(--amber)}
-#waferMap{display:block; margin:14px auto 4px; border-radius:50%; box-shadow:0 0 30px rgba(56,225,255,.15)}
-#mosCanvas{display:block; max-width:100%; height:auto; margin:2px auto 4px; border-radius:10px; background:#0a1220}
+/* 결과 숫자 변경 마이크로 펄스 */
+@keyframes numTick{0%{transform:scale(1)}30%{transform:scale(1.1)}100%{transform:scale(1)}}
+@keyframes bTick{0%{text-shadow:0 0 0 transparent}30%{text-shadow:0 0 9px color-mix(in srgb,var(--acc,var(--cyan)) 80%,transparent)}100%{text-shadow:0 0 0 transparent}}
+.bigout .num.tick{animation:numTick .34s ease; transform-origin:center}
+.ystats b.tick{animation:bTick .42s ease}
+/* 퀴즈 정답 셀레브레이션 — #qOpts 스코프 */
+@keyframes quizWin{
+  0%{transform:scale(.96); box-shadow:0 0 0 0 color-mix(in srgb,var(--good) 65%,transparent)}
+  45%{transform:scale(1.05)}
+  100%{transform:scale(1); box-shadow:0 0 0 14px transparent}
+}
+#qOpts button.on{animation:quizWin .5s cubic-bezier(.34,1.56,.64,1)}
+/* 포커스 링 일관 시스템 */
+.lamps button:focus-visible,
+.wrow input[type=range]:focus-visible,
+.finale .cta:focus-visible,
+#minimap a:focus-visible{outline:2px solid var(--acc,var(--cyan)); outline-offset:3px}
+#waferMap{display:block; margin:12px auto 4px; border-radius:50%; box-shadow:0 0 30px rgba(56,225,255,.15); max-width:100%; height:auto}
+#mosCanvas{display:block; max-width:100%; height:auto; margin:12px auto 4px; border-radius:10px; background:#0a1220}
 #mosState{background:none; -webkit-text-fill-color:currentColor}
-#mooreCv{display:block; max-width:100%; height:auto; margin:4px auto; background:#0a1220; border-radius:10px}
+#mooreCv{display:block; max-width:100%; height:auto; margin:12px auto 4px; background:#0a1220; border-radius:10px}
 .ystats{display:flex; justify-content:center; gap:18px; margin-top:10px; font-size:12.5px; color:var(--dim)}
 .ystats b{font-variant-numeric:tabular-nums}
 .yg{color:var(--good)} .yb{color:var(--bad)}
@@ -204,8 +314,12 @@ html.js .card.in>*{opacity:1; transform:none}
 .finale .cta{display:inline-block; margin-top:26px; padding:12px 26px; border-radius:12px; font-size:14px;
   border:1px solid rgba(177,140,255,.5); color:var(--violet); background:rgba(177,140,255,.08);
   transition:.25s ease; cursor:pointer; text-decoration:none}
-.finale .cta:hover{background:rgba(177,140,255,.16); border-color:var(--violet);
-  transform:translateY(-2px); box-shadow:0 14px 34px -14px var(--violet)}
+.finale .cta .ar{display:inline-block; transition:transform .25s ease}
+@media (hover:hover){
+  .finale .cta:hover{background:rgba(177,140,255,.16); border-color:var(--violet);
+    transform:translateY(-2px); box-shadow:0 14px 34px -14px var(--violet)}
+  .finale .cta:hover .ar{transform:translateX(5px)}
+}
 .flow{display:flex; flex-wrap:wrap; justify-content:center; gap:6px; margin-top:14px}
 .flow span{font-size:12px; color:var(--dim); border:1px solid var(--line);
   border-radius:99px; padding:3px 10px; background:rgba(255,255,255,.03)}
@@ -215,18 +329,41 @@ html.js .card.in>*{opacity:1; transform:none}
   #rail{display:none}
   .keyhint{display:none}
   section.stage{min-height:120vh; padding:8vh 5vw; justify-content:center !important}
-  .card{padding:24px 22px}
-  section.stage[data-ghost]::before{font-size:36vw; opacity:.25;
-    left:50% !important; right:auto !important; top:24%; transform:translate(-50%,-50%)}
+  .card{padding:22px 18px}
+  .widget{padding:14px 14px}
+  .ystats{gap:12px; font-size:12px}
+  section.stage[data-ghost]::before{font-size:33vw; opacity:.16;
+    left:50% !important; right:auto !important; top:18%; transform:translate(-50%,-50%);
+    -webkit-text-stroke-width:1px}
+  /* 슬라이더 2행 풀폭 — 44px 터치 타깃 */
+  .wrow{flex-wrap:wrap; row-gap:8px}
+  .wrow label{width:auto; margin-right:auto}
+  .wrow output{width:auto; text-align:right}
+  .wrow input[type=range]{order:3; flex:1 0 100%; height:44px}
+  .wrow input[type=range]::-webkit-slider-thumb{width:22px; height:22px; margin-top:-9px}
+  .wrow input[type=range]::-moz-range-thumb{width:22px; height:22px}
+  .lamps button{min-height:40px; padding:8px 12px; display:inline-flex; align-items:center; font-size:12.5px}
+  #qOpts{flex-direction:column}
+  #qOpts button{width:100%; justify-content:flex-start; min-height:44px}
+  /* 피날레 밀도 */
+  .flow{gap:5px 6px}
+  .flow span{font-size:11px; padding:3px 8px}
+  .flow .fa{padding:3px 1px}
+  .finale .cta{margin-top:24px; padding:13px 18px; font-size:13.5px}
+  .finale .credit{margin-top:28px}
   #minimap{display:flex; position:fixed; left:0; right:0; bottom:0; z-index:45; gap:6px;
-    padding:8px 10px; overflow-x:auto; background:rgba(7,11,20,.82);
+    padding:8px calc(10px + env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) calc(10px + env(safe-area-inset-left));
+    overflow-x:auto; background:rgba(7,11,20,.82);
     -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
-    border-top:1px solid var(--line); scrollbar-width:none}
+    border-top:1px solid var(--line); scrollbar-width:none;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 16px,#000 calc(100% - 16px),transparent);
+    mask-image:linear-gradient(90deg,transparent,#000 16px,#000 calc(100% - 16px),transparent)}
   #minimap::-webkit-scrollbar{display:none}
-  #minimap a{flex:none; font-size:11px; color:var(--dim); text-decoration:none; padding:5px 10px;
+  #minimap a{flex:none; font-size:12px; font-weight:600; color:var(--dim); text-decoration:none; padding:8px 12px;
     border:1px solid var(--line); border-radius:99px; white-space:nowrap; transition:.2s}
-  #minimap a.on{color:#0a0f1a; background:var(--cyan); border-color:var(--cyan); font-weight:700}
-  main{padding-bottom:52px}
+  #minimap a.on{color:#0a0f1a; background:var(--acc,var(--cyan)); border-color:var(--acc,var(--cyan)); font-weight:600; transform:scale(1.04)}
+  #minimap a:active{transform:scale(.96)}
+  main{padding-bottom:calc(56px + env(safe-area-inset-bottom))}
 }
 @media (prefers-reduced-motion: reduce){
   html{scroll-behavior:auto}
@@ -235,6 +372,13 @@ html.js .card.in>*{opacity:1; transform:none}
   .scrollcue{animation:none}
   .scrollcue::after{animation:none}
   .chip,.finale .cta{transition:none}
+  /* v4 마이크로인터랙션 전면 무력화 — 색·글로우 정적 상태만 유지 */
+  .lamps button, #rail a .dot, #minimap a, .finale .cta .ar,
+  .wrow input[type=range]::-webkit-slider-thumb,
+  .wrow input[type=range]::-moz-range-thumb{transition:none}
+  .lamps button:not(:disabled):active, #rail a.on .dot, #rail a:hover .dot,
+  #minimap a.on, #minimap a:active, .finale .cta:hover .ar{transform:none}
+  #qOpts button.on, .bigout .num.tick, .ystats b.tick{animation:none}
 }
 @media print{
   #bg,#veil,#topbar,#rail,#minimap,.scrollcue,.keyhint,.skip,.widget,.cta{display:none !important}
@@ -498,19 +642,19 @@ html.js .card.in>*{opacity:1; transform:none}
       <span class="chip">최소 배선 폭 <b>~20nm</b></span>
       <span class="chip">클린룸 청정도: 수술실의 <b>수천 배</b></span>
     </div>
-    <div class="widget" id="mooreWidget" style="max-width:520px; margin:22px auto 0; text-align:left">
+    <div class="widget" id="mooreWidget" style="max-width:520px; margin:var(--sp-module) auto 0; text-align:left">
       <h3>📈 무어의 법칙 — 트랜지스터 수 (로그 축)</h3>
       <canvas id="mooreCv" width="480" height="240" role="img" aria-label="무어의 법칙: 1971년 인텔 4004의 2,300개부터 2024년 엔비디아 B200의 2,080억 개까지, 트랜지스터 수가 로그 축에서 거의 직선으로 증가"></canvas>
       <div class="note" id="mooreNote">점을 탭하거나 커서를 올려보세요</div>
     </div>
-    <div class="widget" id="quizWidget" style="max-width:480px; margin:18px auto 0; text-align:left">
+    <div class="widget" id="quizWidget" style="max-width:480px; margin:var(--sp-module) auto 0; text-align:left">
       <h3>🧩 8대 공정 복습 퀴즈</h3>
       <div id="qStem" style="font-size:14px; color:#c7d3e6; min-height:40px">—</div>
       <div class="lamps" id="qOpts" style="margin-top:12px"></div>
       <div class="note" id="qFb" aria-live="polite" style="min-height:18px; text-align:left"></div>
       <div class="bigout" id="qScore" style="display:none"></div>
     </div>
-    <a class="cta" href="https://stkeo.itch.io/cleanroom-tycoon" target="_blank" rel="noopener">🏭 직접 팹을 운영해보고 싶다면 — <b>클린룸 타이쿤</b> 플레이 →</a>
+    <a class="cta" href="https://stkeo.itch.io/cleanroom-tycoon" target="_blank" rel="noopener">🏭 직접 팹을 운영해보고 싶다면 — <b>클린룸 타이쿤</b> 플레이 <span class="ar">→</span></a>
     <div class="credit">이 사이트는 <b>Claude Fable 5</b>가 three.js로 설계·제작했습니다 · 데이터는 공개 산업 자료 기준</div>
   </div>
 </section>
@@ -534,6 +678,9 @@ const LOW = window.innerWidth < 760 || (navigator.hardwareConcurrency||8) <= 4;
 const Q = LOW ? 0.6 : 1;
 const REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, LOW ? 1.5 : 2));
+/* 필르믹 컬러 그레이드 — 발광부(융액·퍼니스·코어)가 흰색으로 클립되지 않고 부드럽게 롤오프 */
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.12;
 const scene = new THREE.Scene();
 scene.fog = new THREE.FogExp2(0x070b14, 0.055);
 const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
@@ -564,6 +711,13 @@ const key = new THREE.DirectionalLight(0xffffff, 0.9); key.position.set(4,6,5); 
 const rim = new THREE.DirectionalLight(0x38e1ff, 0.5); rim.position.set(-5,2,-4); scene.add(rim);
 const warm = new THREE.PointLight(0xff8c3a, 0, 18); warm.position.set(0,-0.5,1.5); scene.add(warm);
 
+/* 스테이지 액센트 → 아트디렉션 허브 (인덱스 0~11 = S0~S11, CSS --acc와 동기 — 수정 시 함께 갱신) */
+const ACCHEX = ['#38e1ff','#8fb8e6','#ff7a26','#74e6ff','#59d6c8','#b18cff','#ff5df0','#7f9cf5','#d97a3c','#38e1ff','#d88cff','#b18cff'];
+const ACC = ACCHEX.map(h => new THREE.Color(h));
+const FOVS = [58,50,50,50,50,50,50,50,50,50,50,58];   // 히어로·피날레만 광각
+const accTint = new THREE.Color(), fogMix = new THREE.Color(), dustMix = new THREE.Color();
+const fogBase = new THREE.Color(0x070b14), dustBase = new THREE.Color(0x3d5a86);
+
 /* ---------- helpers ---------- */
 const M = THREE.MathUtils;
 function ease(x){ return x*x*(3-2*x); }
@@ -590,17 +744,33 @@ function glow(color, scale){
     blending:THREE.AdditiveBlending, depthWrite:false, opacity:.9}));
   s.scale.setScalar(scale); return s;
 }
-function pointCloud(n, spread, color, size, fn){
+/* 콘택트 셰도 — 슬래브 위 오브젝트의 접지감 (텍스처 1장 공유) */
+const SHADOWTEX = (function(){
+  const c = document.createElement('canvas'); c.width = c.height = 128;
+  const x = c.getContext('2d'); const g = x.createRadialGradient(64,64,0,64,64,64);
+  g.addColorStop(0,'rgba(0,0,0,.55)'); g.addColorStop(.6,'rgba(0,0,0,.26)'); g.addColorStop(1,'rgba(0,0,0,0)');
+  x.fillStyle = g; x.fillRect(0,0,128,128); return new THREE.CanvasTexture(c);
+})();
+function contactShadow(radius){
+  const m = new THREE.Mesh(new THREE.CircleGeometry(radius,32),
+    new THREE.MeshBasicMaterial({map:SHADOWTEX, transparent:true, opacity:.9, depthWrite:false}));
+  m.rotation.x = -Math.PI/2; return m;
+}
+function pointCloud(n, spread, color, size, fn, colorFn){
   n = Math.max(8, Math.round(n*Q));
   const pos = new Float32Array(n*3);
+  const col = colorFn ? new Float32Array(n*3) : null;
+  const tmp = new THREE.Color();
   for(let i=0;i<n;i++){
     const v = fn ? fn(i, n) : new THREE.Vector3((Math.random()-0.5)*spread,(Math.random()-0.5)*spread,(Math.random()-0.5)*spread);
     pos[i*3]=v.x; pos[i*3+1]=v.y; pos[i*3+2]=v.z;
+    if(col){ tmp.set(colorFn(i, n, v)); col[i*3]=tmp.r; col[i*3+1]=tmp.g; col[i*3+2]=tmp.b; }
   }
   const g = new THREE.BufferGeometry();
   g.setAttribute('position', new THREE.BufferAttribute(pos,3));
-  const m = new THREE.PointsMaterial({color, size, map:DOT, transparent:true, opacity:.9,
-    blending:THREE.AdditiveBlending, depthWrite:false, sizeAttenuation:true});
+  if(col) g.setAttribute('color', new THREE.BufferAttribute(col,3));
+  const m = new THREE.PointsMaterial({color: col?0xffffff:color, size, map:DOT, transparent:true, opacity:.9,
+    blending:THREE.AdditiveBlending, depthWrite:false, sizeAttenuation:true, vertexColors: !!col});
   return new THREE.Points(g,m);
 }
 
@@ -616,17 +786,28 @@ function reg(build){
 
 /* ============ S0 hero — 모래 소용돌이 + 칩 실루엣 ============ */
 reg(g => {
+  /* 안쪽 뜨거운 금빛 → 바깥 식은 톤: 소용돌이에 온도 그라데이션 */
+  const _sc = new THREE.Color();
   const sand = pointCloud(2600, 0, 0xd9b36c, 0.035, () => {
     const a = Math.random()*Math.PI*2, r = 1.6 + Math.random()*2.6;
     return new THREE.Vector3(Math.cos(a)*r, (Math.random()-0.5)*2.2, Math.sin(a)*r*0.6);
+  }, (i, n, v) => {
+    const rr = Math.hypot(v.x, v.z/0.6), k = M.clamp((rr-1.6)/2.6, 0, 1);
+    return _sc.setHSL(0.095 - k*0.03, 0.55 - k*0.25, 0.62 - k*0.20);
   });
   g.add(sand);
+  const embers = pointCloud(90, 0, 0xffe6b0, 0.06, () => {
+    const a = Math.random()*Math.PI*2, r = 1.7 + Math.random()*2.4;
+    return new THREE.Vector3(Math.cos(a)*r, (Math.random()-0.5)*2.0, Math.sin(a)*r*0.6);
+  });
+  embers.material.opacity = 0.55; g.add(embers);
   const chip = new THREE.Mesh(new THREE.BoxGeometry(1.2,0.12,1.2), mat({color:0x11182a, metalness:.6, roughness:.3}));
   const core = new THREE.Mesh(new THREE.BoxGeometry(0.55,0.14,0.55), mat({color:0x0c1322, emissive:0x38e1ff, emissiveIntensity:.7}));
   chip.add(core); g.add(chip);
   chip.scale.setScalar(1.15);
   return (p,t) => {
     sand.rotation.y = t*0.08;
+    embers.rotation.y = t*0.05;   // sand보다 느리게 — 소용돌이 깊이감
     chip.rotation.y = t*0.3; chip.rotation.x = 0.35 + Math.sin(t*0.4)*0.05;
     chip.position.y = -1.45 + Math.sin(t*0.7)*0.08;   // 히어로 텍스트 아래로
   };
@@ -842,6 +1023,7 @@ reg(g => {
   g.rotation.x = 0.45;
   const base = new THREE.Mesh(new THREE.BoxGeometry(2.2,0.5,2.2), mat({color:0x39415a, metalness:.5, roughness:.4}));
   base.position.y = -0.6; g.add(base);
+  const sh6 = contactShadow(1.2); sh6.position.y = -0.345; g.add(sh6);
   const barM = mat({color:0x6f7ea3, metalness:.7, roughness:.3});
   const capM = mat({color:0xb8452e, roughness:.4, emissive:0x531a0d, emissiveIntensity:.35});
   const bars = new THREE.Group();
@@ -933,6 +1115,7 @@ reg(g => {
   g.rotation.x = 0.5;
   const base = new THREE.Mesh(new THREE.BoxGeometry(2.4,0.16,2.4), mat({color:0x232a3d, metalness:.5, roughness:.5}));
   base.position.y = -0.85; g.add(base);
+  const sh8 = contactShadow(1.2); sh8.position.y = -0.765; g.add(sh8);
   const cu = mat({color:0xd97a3c, metalness:.95, roughness:.28, emissive:0x7a3210, emissiveIntensity:.25});
   const viaM = mat({color:0xffb066, metalness:.9, roughness:.3, emissive:0xff7a1a, emissiveIntensity:.3});
   const wires = new THREE.Group();
@@ -1072,6 +1255,8 @@ reg(g => {
   sub.position.y = -0.6; g.add(sub);
   const inter = new THREE.Mesh(new THREE.BoxGeometry(1.9,0.05,1.2), mat({color:0x39415a, metalness:.6, roughness:.3}));
   inter.position.y = -0.52; g.add(inter);
+  const shg = contactShadow(0.55); shg.position.set(-0.42,-0.492,0); g.add(shg);
+  const shh = contactShadow(0.5);  shh.position.set(0.55,-0.492,0);  g.add(shh);
   const gpu = new THREE.Mesh(new THREE.BoxGeometry(0.85,0.1,0.85), mat({color:0x11182a, metalness:.7, roughness:.25, emissive:0x38e1ff, emissiveIntensity:.28}));
   gpu.position.set(-0.42,-0.44,0); g.add(gpu);
   const hbm = new THREE.Group();
@@ -1151,12 +1336,25 @@ reg(g => {
     return new THREE.Vector3(Math.cos(a)*r, (Math.random()-0.5)*2.4, Math.sin(a)*r);
   });
   g.add(halo);
-  return (p,t) => {
+  /* 헤일로 세로 그라데이션 — 아래 시안(S0 모래의 색) → 위 바이올렛(피날레): 여정의 두 끝을 잇는다 */
+  const hp = halo.geometry.attributes.position, hc = new Float32Array(hp.count*3), _hc = new THREE.Color();
+  for(let i=0;i<hp.count;i++){
+    const k = M.clamp((hp.getY(i)+1.2)/2.4, 0, 1);
+    _hc.setHSL(M.lerp(0.52,0.74,k), 0.75, M.lerp(0.6,0.7,k));
+    hc[i*3]=_hc.r; hc[i*3+1]=_hc.g; hc[i*3+2]=_hc.b;
+  }
+  halo.geometry.setAttribute('color', new THREE.BufferAttribute(hc,3));
+  halo.material.vertexColors = true; halo.material.color.set(0xffffff); halo.material.needsUpdate = true;
+  const aura = glow(0x9fd0ff, 2.2); chip.add(aura);   // 칩을 감싸는 숨쉬는 후광
+  return (p,t,dt,ww) => {
+    const W = ww===undefined?1:ww;
     chip.rotation.y = t*0.4;
     chip.rotation.x = 0.4+Math.sin(t*0.5)*0.08;
     chip.position.y = -0.95 + Math.sin(t*0.8)*0.07;   // 피날레 텍스트 아래로
     halo.rotation.y = -t*0.05;
     core.material.emissiveIntensity = 0.7+Math.sin(t*2)*0.25;
+    aura.scale.setScalar(2.2 + Math.sin(t*0.9)*0.2);
+    aura.material.opacity = (0.22 + Math.sin(t*1.3)*0.06) * W;
   };
 });
 
@@ -1164,6 +1362,9 @@ reg(g => {
 const dust = pointCloud(700, 26, 0x3d5a86, 0.03);
 dust.material.opacity = 0.5;
 scene.add(dust);
+/* 원경 2겹 — 더 멀고 어둡고 굵게, 역회전 시차. 액센트 틴트는 근경에만(색 분리로 깊이) */
+const dust2 = pointCloud(320, 42, 0x243651, 0.05);
+dust2.material.opacity = 0.3; scene.add(dust2);
 
 /* ---------- 카메라 연출 ---------- */
 const camPath = [
@@ -1287,15 +1488,27 @@ function frame(){
     fadeW = ww; st.group.traverse(fadeCb);
     const p = M.clamp((sp - i + 1) / 1.5, 0, 1); // 국소 진행도 — 카드 중앙(sp=i)에서 ~74% 완성, i+0.5에서 완성 후 홀드
     st.update(p, t, dt, ww);
+    /* 고스트 챕터 넘버 미세 시차 — 카드와 다른 속도로 흐른다 (compositor-only) */
+    if(!REDUCE && !LOW && sections[i].hasAttribute('data-ghost'))
+      sections[i].style.setProperty('--gy', ((sp - i) * 26).toFixed(1) + 'px');
   }
 
   const ef = ease(M.clamp(frac,0,1));
   camTmp.lerpVectors(camPath[Math.min(i0,11)], camPath[Math.min(i0+1,11)], ef);
   const mx = REDUCE ? 0 : mouseX, my = REDUCE ? 0 : mouseY;
-  camera.position.set(camTmp.x + mx*0.5, camTmp.y - my*0.4, camTmp.z);
+  const zMul = window.innerWidth > 760 ? 1 : 1.12;   // 모바일: 살짝 줌아웃 — 입자장이 카드 밖으로 번지게
+  camera.position.set(camTmp.x + mx*0.5, camTmp.y - my*0.4, camTmp.z*zMul);
   const lx = window.innerWidth > 760 ? M.lerp(lookX[Math.min(i0,11)], lookX[Math.min(i0+1,11)], ef) : 0;
   camera.lookAt(lx,0,0);
   dust.rotation.y = t*0.01;
+  dust2.rotation.y = -t*0.004;
+  /* 스테이지 액센트를 씬 전체에 — 림라이트·안개·별먼지 틴트·화각 (드로우콜 0) */
+  accTint.copy(ACC[Math.min(i0,11)]).lerp(ACC[Math.min(i0+1,11)], ef);
+  rim.color.lerp(accTint, REDUCE?1:0.07);
+  scene.fog.color.lerp(fogMix.copy(fogBase).lerp(accTint,0.07), REDUCE?1:0.05);
+  dust.material.color.lerp(dustMix.copy(dustBase).lerp(accTint,0.22), REDUCE?1:0.05);
+  const fovT = M.lerp(FOVS[Math.min(i0,11)], FOVS[Math.min(i0+1,11)], ef);
+  if(Math.abs(camera.fov - fovT) > 0.02){ camera.fov = fovT; camera.updateProjectionMatrix(); }
 
   const act = Math.round(sp);
   if(act !== lastActive){
@@ -1305,10 +1518,12 @@ function frame(){
     if(railLinks[act]){ railLinks[act].setAttribute('aria-current','true'); miniLinks[act].setAttribute('aria-current','true'); }
     if(miniLinks[act]) miniLinks[act].scrollIntoView({inline:'center', block:'nearest', behavior:REDUCE?'auto':'smooth'});
     topbar.setAttribute('aria-valuenow', Math.round(act/(railNames.length-1)*100));
+    document.documentElement.style.setProperty('--acc', ACCHEX[act] || '#38e1ff');  // 진행 크롬(진행바·레일·미니맵·베일)을 공정색으로
     lastActive = act;
   }
   const denom = document.documentElement.scrollHeight - window.innerHeight;
   topbar.style.width = (denom>0 ? (window.scrollY/denom*100) : 0) + '%';
+  topbar.classList.toggle('go', window.scrollY > 4);   // 0%에서 코멧 스트레이 도트 방지
 
   renderer.render(scene, camera);
   if(!REDUCE) requestAnimationFrame(frame);
@@ -1534,7 +1749,7 @@ if(REDUCE){
   const py = c => 14 + (1-(Math.log10(c)-Math.log10(C0))/(Math.log10(C1)-Math.log10(C0)))*(H-14-22);
   function redraw(){
     ctx.clearRect(0,0,W,H);
-    ctx.strokeStyle = 'rgba(147,164,189,.15)'; ctx.fillStyle = '#93a4bd'; ctx.font = '10px sans-serif';
+    ctx.strokeStyle = 'rgba(147,164,189,.15)'; ctx.fillStyle = '#93a4bd'; ctx.font = '13px sans-serif';
     const SUP = {3:'10³',5:'10⁵',7:'10⁷',9:'10⁹',11:'10¹¹'};
     for(let e=3;e<=11;e+=2){
       const y = py(Math.pow(10,e));
@@ -1542,7 +1757,7 @@ if(REDUCE){
       ctx.fillText(SUP[e], 4, y+3);
     }
     for(let yr=1980; yr<=2020; yr+=10){
-      ctx.fillText(String(yr), px(yr)-11, H-6);
+      ctx.fillText(String(yr), px(yr)-14, H-6);
     }
     /* '2년마다 2배' 기준 점선 (4004 앵커) */
     ctx.strokeStyle = 'rgba(255,190,77,.5)'; ctx.setLineDash([4,4]); ctx.beginPath();
@@ -1552,7 +1767,7 @@ if(REDUCE){
     let started = false;
     D.forEach(d=>{ if(d[3]) return; const X=px(d[1]), Yv=py(d[2]); started?ctx.lineTo(X,Yv):ctx.moveTo(X,Yv); started = true; });
     ctx.stroke(); ctx.lineWidth = 1;
-    D.forEach(d=>{ ctx.fillStyle = d[3] ? '#ffbe4d' : '#38e1ff'; ctx.beginPath(); ctx.arc(px(d[1]),py(d[2]),3.5,0,7); ctx.fill(); });
+    D.forEach(d=>{ ctx.fillStyle = d[3] ? '#ffbe4d' : '#38e1ff'; ctx.beginPath(); ctx.arc(px(d[1]),py(d[2]),4,0,7); ctx.fill(); });
   }
   redraw();
   function probe(e){
@@ -1603,6 +1818,7 @@ if(REDUCE){
           btns.forEach(x=>{ if(x.textContent===cur.a){ x.textContent = '✓ '+cur.a; x.classList.add('on'); } });
         }
         qFb.textContent = hit ? '정답!' : '오답 — 정답은 "'+cur.a+'"';
+        qFb.style.color = hit ? 'var(--good)' : 'var(--bad)';
         btns.forEach(x=>x.disabled=true);
         setTimeout(next, hit ? 700 : 1500);
       };
@@ -1660,12 +1876,12 @@ if(REDUCE){
     ctx.clearRect(0,0,cv.width,cv.height);
     ctx.strokeStyle = 'rgba(147,164,189,.3)';
     ctx.beginPath(); ctx.moveTo(14,34); ctx.lineTo(cv.width-14,34); ctx.stroke();
-    ctx.font = '9px sans-serif'; ctx.fillStyle = '#93a4bd';
+    ctx.font = '12px sans-serif'; ctx.fillStyle = '#93a4bd';
     [[0,'1nm'],[1,'10nm'],[2,'100nm'],[3,'1µm'],[4,'10µm'],[5,'100µm']].forEach(pr=>{
       const x = X(pr[0]);
       ctx.strokeStyle = 'rgba(147,164,189,.2)';
       ctx.beginPath(); ctx.moveTo(x,28); ctx.lineTo(x,40); ctx.stroke();
-      ctx.fillText(pr[1], x-10, 56);
+      ctx.fillText(pr[1], x-12, 56);
     });
     ITEMS.forEach((m,i)=>{
       const x = X(Math.log10(m[1]));
@@ -1716,6 +1932,23 @@ if(REDUCE){
   pinR.oninput = render; stkR.oninput = render;
   sync(); render();
 })();
+
+/* ============================================================
+   결과 숫자 변경 마이크로 펄스 — 실제 값이 바뀔 때만 (REDUCE 제외)
+   ============================================================ */
+if(!REDUCE && 'MutationObserver' in window){
+  const seen = new WeakMap();
+  const pulse = el => {
+    const v = el.textContent;
+    if(seen.get(el) === v) return;
+    seen.set(el, v);
+    el.classList.remove('tick'); void el.offsetWidth; el.classList.add('tick');
+  };
+  document.querySelectorAll('.bigout .num, .ystats b').forEach(el => {
+    seen.set(el, el.textContent);
+    new MutationObserver(() => pulse(el)).observe(el, {childList:true, characterData:true, subtree:true});
+  });
+}
 
 })();
 </script>
