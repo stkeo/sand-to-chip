@@ -4,18 +4,43 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>모래에서 칩까지 — 반도체 8대 공정 인터랙티브</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23070b14'/%3E%3Crect x='9' y='9' width='14' height='14' rx='2' fill='none' stroke='%2338e1ff' stroke-width='2'/%3E%3Crect x='13' y='13' width='6' height='6' fill='%2338e1ff'/%3E%3C/svg%3E">
 <meta name="description" content="모래 한 줌이 수백억 트랜지스터의 칩이 되기까지 — 스크롤로 떠나는 반도체 8대 공정 3D 여행. 잉곳 성장부터 EUV 노광, 수율 실험실까지.">
 <meta property="og:title" content="모래에서 칩까지">
 <meta property="og:description" content="스크롤로 떠나는 반도체 8대 공정 인터랙티브 여행">
 <meta property="og:image" content="https://stkeo.github.io/sand-to-chip/og.png">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
+<meta property="og:url" content="https://stkeo.github.io/sand-to-chip/">
+<link rel="canonical" href="https://stkeo.github.io/sand-to-chip/">
+<meta name="theme-color" content="#070b14">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"LearningResource",
+ "name":"모래에서 칩까지 — 반도체 8대 공정 인터랙티브",
+ "description":"모래 한 줌이 수백억 트랜지스터의 칩이 되기까지 — 스크롤로 떠나는 반도체 8대 공정 3D 여행.",
+ "inLanguage":"ko","url":"https://stkeo.github.io/sand-to-chip/",
+ "learningResourceType":"인터랙티브 설명",
+ "image":"https://stkeo.github.io/sand-to-chip/og.png"}
+</script>
 <style>
 :root{
   --bg:#070b14; --ink:#e8eef7; --dim:#93a4bd; --line:rgba(147,164,189,.18);
   --cyan:#38e1ff; --amber:#ffbe4d; --violet:#b18cff; --good:#41e396; --bad:#ff5d73;
   --card:rgba(13,19,33,.78);
 }
+/* 스테이지별 액센트 — 3D 씬의 대표색과 매칭 */
+section.hero{--acc:var(--cyan)}
+section.stage[data-stage="1"]{--acc:#8fb8e6}  /* 정제·석영 */
+section.stage[data-stage="2"]{--acc:#ff7a26}  /* 잉곳·융액 */
+section.stage[data-stage="3"]{--acc:#74e6ff}  /* 웨이퍼 */
+section.stage[data-stage="4"]{--acc:#59d6c8}  /* 산화 */
+section.stage[data-stage="5"]{--acc:#b18cff}  /* 포토 */
+section.stage[data-stage="6"]{--acc:#ff5df0}  /* 식각 */
+section.stage[data-stage="7"]{--acc:#7f9cf5}  /* 증착·주입 */
+section.stage[data-stage="8"]{--acc:#d97a3c}  /* 배선·구리 */
+section.stage[data-stage="9"]{--acc:#38e1ff}  /* 테스트 */
+section.stage[data-stage="10"]{--acc:#d88cff} /* 패키징·HBM */
+section.finale{--acc:var(--violet)}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
@@ -26,10 +51,15 @@ body{
 #bg{position:fixed; inset:0; width:100%; height:100%; display:block; z-index:0}
 #veil{position:fixed; inset:0; z-index:1; pointer-events:none;
   background:radial-gradient(ellipse 120% 90% at 50% 40%, transparent 55%, rgba(7,11,20,.75) 100%)}
+#veil::after{content:''; position:absolute; inset:0; pointer-events:none;
+  opacity:.05; mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 #topbar{position:fixed; top:0; left:0; height:3px; width:0%; z-index:50;
   background:linear-gradient(90deg,var(--cyan),var(--violet)); box-shadow:0 0 12px var(--cyan)}
 /* ---------- progress rail ---------- */
 #rail{position:fixed; left:22px; top:50%; transform:translateY(-50%); z-index:40; display:flex; flex-direction:column; gap:10px}
+#rail::before{content:''; position:absolute; left:3px; top:6px; bottom:6px;
+  width:1.5px; border-radius:2px; background:var(--line); z-index:-1}
 #rail a{display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--dim); font-size:11px; opacity:.75; transition:.25s}
 #rail a .dot{width:8px; height:8px; border-radius:50%; background:transparent; border:1.5px solid var(--dim); transition:.25s; flex:none}
 #rail a .lbl{opacity:0; transform:translateX(-4px); transition:.25s; white-space:nowrap}
@@ -37,57 +67,114 @@ body{
 #rail a.on{color:var(--cyan); opacity:1}
 #rail a.on .dot{background:var(--cyan); border-color:var(--cyan); box-shadow:0 0 10px var(--cyan)}
 #rail a.on .lbl{opacity:1; transform:none}
+#rail a:focus-visible{outline:2px solid var(--cyan); outline-offset:4px; border-radius:6px}
+#rail a:focus-visible .lbl{opacity:1; transform:none}
 /* ---------- sections & cards ---------- */
 main{position:relative; z-index:10}
-section.stage{min-height:150vh; display:flex; align-items:center; padding:8vh 6vw}
+section.stage{min-height:150vh; display:flex; align-items:center; padding:8vh 6vw; position:relative}
+/* 거대 고스트 챕터 넘버 — 에디토리얼 워터마크 */
+section.stage[data-ghost]::before{
+  content:attr(data-ghost);
+  position:absolute; top:50%; transform:translateY(-50%);
+  font-size:clamp(150px,24vw,320px); font-weight:800; line-height:.8;
+  letter-spacing:-.05em; font-variant-numeric:tabular-nums;
+  color:transparent;
+  -webkit-text-stroke:1.2px rgba(147,164,189,.14);
+  -webkit-text-stroke:1.2px color-mix(in srgb,var(--acc,var(--dim)) 24%,transparent);
+  opacity:.55; pointer-events:none; z-index:0; user-select:none}
+section.stage:nth-child(odd)[data-ghost]::before{right:5vw}
+section.stage:nth-child(even)[data-ghost]::before{left:5vw}
 section.stage:nth-child(even){justify-content:flex-end}
 section.stage:nth-child(odd){justify-content:flex-start}
 section.hero{min-height:100vh; justify-content:center !important; text-align:center}
 section.finale{min-height:120vh; justify-content:center !important; text-align:center}
 .card{
-  max-width:540px; background:var(--card); border:1px solid var(--line); border-radius:18px;
-  padding:30px 32px; backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
-  box-shadow:0 20px 60px rgba(0,0,0,.45);
+  max-width:540px; position:relative; z-index:1;
+  background:linear-gradient(158deg,rgba(22,30,50,.82),rgba(10,15,27,.8));
+  border:1px solid var(--line); border-radius:18px;
+  border-color:color-mix(in srgb,var(--acc,#fff) 16%,var(--line));
+  padding:30px 32px; backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  box-shadow:0 28px 70px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.07),
+    inset 0 0 60px -30px var(--acc,transparent);
   opacity:0; transform:translateY(36px); transition:opacity .7s ease,transform .7s ease;
 }
 .card.in{opacity:1; transform:none}
-.step{display:inline-flex; align-items:center; gap:8px; font-size:12px; letter-spacing:.14em; color:var(--cyan);
-  border:1px solid rgba(56,225,255,.35); padding:4px 12px; border-radius:99px; margin-bottom:14px; background:rgba(56,225,255,.06)}
-.step.pre{color:var(--amber); border-color:rgba(255,190,77,.35); background:rgba(255,190,77,.06)}
+/* 카드 내부 요소 등장 스태거 */
+.card>*{opacity:0; transform:translateY(16px); transition:opacity .55s ease,transform .55s ease}
+.card.in>*{opacity:1; transform:none}
+.card.in>*:nth-child(1){transition-delay:.06s}
+.card.in>*:nth-child(2){transition-delay:.14s}
+.card.in>*:nth-child(3){transition-delay:.22s}
+.card.in>*:nth-child(4){transition-delay:.30s}
+.card.in>*:nth-child(5){transition-delay:.38s}
+.card.in>*:nth-child(n+6){transition-delay:.44s}
+.step{display:inline-flex; align-items:center; gap:8px; font-size:12px; letter-spacing:.14em;
+  color:var(--cyan); border:1px solid rgba(56,225,255,.35); background:rgba(56,225,255,.06);
+  color:var(--acc,var(--cyan));
+  border-color:color-mix(in srgb,var(--acc,var(--cyan)) 35%,transparent);
+  background:color-mix(in srgb,var(--acc,var(--cyan)) 7%,transparent);
+  padding:4px 12px; border-radius:99px; margin-bottom:14px}
 .card h2{font-size:clamp(22px,3.2vw,30px); margin-bottom:4px; letter-spacing:-.02em}
-.card h2 small{display:block; font-size:12.5px; color:var(--dim); font-weight:500; letter-spacing:.06em; margin-top:2px}
+.card h2 small{display:block; font-size:12.5px; color:var(--dim); font-weight:500; letter-spacing:.06em; margin-top:2px;
+  color:color-mix(in srgb,var(--acc,var(--dim)) 55%,var(--dim))}
 .card p{color:#c7d3e6; font-size:14.5px; margin-top:12px}
 .card p b{color:var(--ink)}
 .card .fact{margin-top:16px; padding:13px 16px; border-left:3px solid var(--amber); background:rgba(255,190,77,.07);
   border-radius:0 10px 10px 0; font-size:13px; color:#e6d9bd}
 .card .fact b{color:var(--amber)}
 .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:16px}
-.chip{font-size:12px; color:var(--dim); border:1px solid var(--line); border-radius:99px; padding:4px 11px; background:rgba(255,255,255,.03)}
-.chip b{color:var(--cyan); font-weight:600}
+.chip{font-size:12px; color:var(--dim); border:1px solid var(--line); border-radius:99px; padding:4px 11px; background:rgba(255,255,255,.03); transition:.2s ease}
+.chip:hover{color:var(--ink); transform:translateY(-1px);
+  border-color:color-mix(in srgb,var(--acc,var(--cyan)) 45%,transparent)}
+.chip b{color:var(--cyan); font-weight:600; color:var(--acc,var(--cyan))}
+.card .fact{transition:background .3s ease}
+.card .fact:hover{background:rgba(255,190,77,.11)}
 /* ---------- hero ---------- */
 .hero .card{background:transparent; border:none; box-shadow:none; backdrop-filter:none; max-width:760px}
 .hero h1{font-size:clamp(38px,7vw,72px); letter-spacing:-.03em; line-height:1.15;
-  background:linear-gradient(180deg,#fff 30%,#8fd8ff 80%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent}
+  background:linear-gradient(180deg,#fff 30%,#8fd8ff 80%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 6px 34px rgba(56,225,255,.22))}
+.hero .step{letter-spacing:.26em}
 .hero .sub{margin-top:18px; color:var(--dim); font-size:clamp(14px,2vw,17px)}
 .hero .sub b{color:var(--ink)}
-.scrollcue{margin-top:52px; color:var(--dim); font-size:12px; letter-spacing:.2em; animation:bob 2s ease-in-out infinite}
-@keyframes bob{0%,100%{transform:translateY(0);opacity:.6}50%{transform:translateY(8px);opacity:1}}
+.scrollcue{margin-top:52px; color:var(--dim); font-size:12px; letter-spacing:.32em;
+  display:flex; flex-direction:column; align-items:center; gap:12px}
+.scrollcue::after{content:''; width:1px; height:36px;
+  background:linear-gradient(var(--cyan),transparent);
+  animation:cueLine 2s ease-in-out infinite; transform-origin:top}
+@keyframes cueLine{0%,100%{opacity:.3;transform:scaleY(.55)}50%{opacity:1;transform:scaleY(1)}}
 /* ---------- widgets ---------- */
 .widget{margin-top:18px; border:1px solid var(--line); border-radius:14px; padding:16px 18px; background:rgba(7,11,20,.5)}
-.widget h3{font-size:13px; color:var(--cyan); letter-spacing:.1em; margin-bottom:12px}
+.widget h3{font-size:13px; color:var(--cyan); letter-spacing:.1em; margin-bottom:12px; color:var(--acc,var(--cyan))}
+.widget .note{margin-top:8px; font-size:12px; color:var(--dim); text-align:center}
 .wrow{display:flex; align-items:center; gap:10px; margin-top:10px; font-size:13px}
 .wrow label{color:var(--dim); width:92px; flex:none}
-.wrow input[type=range]{flex:1; accent-color:var(--cyan); height:4px}
+.wrow input[type=range]{flex:1; accent-color:var(--cyan); height:22px}
+.wrow input[type=range]::-webkit-slider-runnable-track{height:4px; border-radius:99px;
+  background:linear-gradient(90deg,color-mix(in srgb,var(--acc,var(--cyan)) 60%,transparent),var(--line))}
+.wrow input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; margin-top:-6px;
+  width:16px; height:16px; border-radius:50%; background:var(--acc,var(--cyan));
+  box-shadow:0 0 10px color-mix(in srgb,var(--acc,var(--cyan)) 70%,transparent); cursor:pointer}
+.wrow input[type=range]:not(:disabled){-webkit-appearance:none; appearance:none; background:transparent}
+.wrow input[type=range]::-moz-range-track{height:4px; border-radius:99px; background:var(--line)}
+.wrow input[type=range]::-moz-range-thumb{width:16px; height:16px; border:none; border-radius:50%; background:var(--acc,var(--cyan))}
 .wrow output{width:86px; text-align:right; color:var(--ink); font-variant-numeric:tabular-nums; flex:none; font-size:12.5px}
 .lamps{display:flex; flex-wrap:wrap; gap:6px}
 .lamps button{font-size:12px; padding:5px 10px; border-radius:8px; border:1px solid var(--line); background:rgba(255,255,255,.04);
   color:var(--dim); cursor:pointer; transition:.2s; font-family:inherit}
-.lamps button.on{color:#0a0f1a; background:var(--cyan); border-color:var(--cyan); font-weight:700}
+.lamps button.on{color:#0a0f1a; background:var(--acc,var(--cyan)); border-color:var(--acc,var(--cyan)); font-weight:700;
+  box-shadow:0 0 12px color-mix(in srgb,var(--acc,var(--cyan)) 55%,transparent)}
 .bigout{margin-top:14px; padding:13px; border-radius:10px; background:rgba(56,225,255,.07); border:1px solid rgba(56,225,255,.25);
+  background:color-mix(in srgb,var(--acc,var(--cyan)) 7%,transparent);
+  border-color:color-mix(in srgb,var(--acc,var(--cyan)) 25%,transparent);
   text-align:center; font-size:13px; color:var(--dim)}
-.bigout .num{font-size:26px; font-weight:800; color:var(--cyan); font-variant-numeric:tabular-nums}
+.bigout .num{font-size:26px; font-weight:800; color:var(--acc,var(--cyan)); font-variant-numeric:tabular-nums;
+  background:linear-gradient(180deg,#fff,var(--acc,var(--cyan))); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent}
 .bigout .note{margin-top:6px; font-size:12px; color:var(--amber)}
 #waferMap{display:block; margin:14px auto 4px; border-radius:50%; box-shadow:0 0 30px rgba(56,225,255,.15)}
+#mosCanvas{display:block; max-width:100%; height:auto; margin:2px auto 4px; border-radius:10px; background:#0a1220}
+#mosState{background:none; -webkit-text-fill-color:currentColor}
+#mooreCv{display:block; max-width:100%; height:auto; margin:4px auto; background:#0a1220; border-radius:10px}
 .ystats{display:flex; justify-content:center; gap:18px; margin-top:10px; font-size:12.5px; color:var(--dim)}
 .ystats b{font-variant-numeric:tabular-nums}
 .yg{color:var(--good)} .yb{color:var(--bad)}
@@ -97,24 +184,47 @@ section.finale{min-height:120vh; justify-content:center !important; text-align:c
 .finale .credit{margin-top:40px; font-size:12.5px; color:var(--dim)}
 .finale .credit b{color:var(--violet)}
 .finale .cta{display:inline-block; margin-top:26px; padding:12px 26px; border-radius:12px; font-size:14px;
-  border:1px solid rgba(177,140,255,.5); color:var(--violet); background:rgba(177,140,255,.08)}
+  border:1px solid rgba(177,140,255,.5); color:var(--violet); background:rgba(177,140,255,.08);
+  transition:.25s ease; cursor:default}
+.finale .cta:hover{background:rgba(177,140,255,.16); border-color:var(--violet);
+  transform:translateY(-2px); box-shadow:0 14px 34px -14px var(--violet)}
+.flow{display:flex; flex-wrap:wrap; justify-content:center; gap:6px; margin-top:14px}
+.flow span{font-size:12px; color:var(--dim); border:1px solid var(--line);
+  border-radius:99px; padding:3px 10px; background:rgba(255,255,255,.03)}
+.flow .fa{color:var(--dim); border:none; background:none; padding:3px 0}
+#minimap{display:none}
 @media (max-width:760px){
   #rail{display:none}
-  section.stage{padding:8vh 5vw; justify-content:center !important}
+  section.stage{min-height:120vh; padding:8vh 5vw; justify-content:center !important}
   .card{padding:24px 22px}
+  section.stage[data-ghost]::before{font-size:36vw; opacity:.25;
+    left:50% !important; right:auto !important; top:24%; transform:translate(-50%,-50%)}
+  #minimap{display:flex; position:fixed; left:0; right:0; bottom:0; z-index:45; gap:6px;
+    padding:8px 10px; overflow-x:auto; background:rgba(7,11,20,.82);
+    -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+    border-top:1px solid var(--line); scrollbar-width:none}
+  #minimap::-webkit-scrollbar{display:none}
+  #minimap a{flex:none; font-size:11px; color:var(--dim); text-decoration:none; padding:5px 10px;
+    border:1px solid var(--line); border-radius:99px; white-space:nowrap; transition:.2s}
+  #minimap a.on{color:#0a0f1a; background:var(--cyan); border-color:var(--cyan); font-weight:700}
+  main{padding-bottom:52px}
 }
 @media (prefers-reduced-motion: reduce){
   html{scroll-behavior:auto}
   .card{transition:none}
+  .card>*{transition:none; opacity:1; transform:none}
   .scrollcue{animation:none}
+  .scrollcue::after{animation:none}
+  .chip,.finale .cta{transition:none}
 }
 </style>
 </head>
 <body>
-<canvas id="bg"></canvas>
-<div id="veil"></div>
-<div id="topbar"></div>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div id="veil" aria-hidden="true"></div>
+<div id="topbar" role="progressbar" aria-label="읽기 진행도" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
 <nav id="rail" aria-label="공정 단계"></nav>
+<nav id="minimap" aria-label="공정 단계 (모바일)"></nav>
 
 <main>
 
@@ -127,11 +237,11 @@ section.finale{min-height:120vh; justify-content:center !important; text-align:c
     <div class="chips" style="justify-content:center">
       <span class="chip">8대 공정</span><span class="chip">소요 <b>2~3개월</b></span><span class="chip">공정 단계 <b>수백 개</b></span>
     </div>
-    <div class="scrollcue">SCROLL ▼</div>
+    <div class="scrollcue">SCROLL</div>
   </div>
 </section>
 
-<section class="stage" data-stage="1" id="s1">
+<section class="stage" data-stage="1" data-ghost="Ⅰ" id="s1">
   <div class="card">
     <div class="step pre">프롤로그 Ⅰ · 정제</div>
     <h2>모든 칩은 모래에서 시작된다<small>REFINING — 99.9999999%</small></h2>
@@ -141,11 +251,12 @@ section.finale{min-height:120vh; justify-content:center !important; text-align:c
     <p>탄소와 함께 녹여 산소를 떼어내면 순도 ~98%의 야금급 실리콘.
     이를 염화수소와 반응시켜 증류하고 다시 석출시키는 <b>지멘스 공정</b>을 거치면,
     불순물이 10억 분의 1 수준인 <b>폴리실리콘</b> 덩어리가 남는다.</p>
+    <div class="chips"><span class="chip">아크로 <b>~1,900°C</b> 탄소 환원</span><span class="chip">정제 매개 <b>삼염화실란(SiHCl₃)</b></span></div>
     <div class="fact"><b>💡 10억 분의 1이란?</b> 지구 인구 80억 명 중 딱 8명만 '이방인'인 수준의 순도다.</div>
   </div>
 </section>
 
-<section class="stage" data-stage="2" id="s2">
+<section class="stage" data-stage="2" data-ghost="Ⅱ" id="s2">
   <div class="card">
     <div class="step pre">프롤로그 Ⅱ · 잉곳 성장</div>
     <h2>회전하며 자라나는 단결정 기둥<small>CZOCHRALSKI GROWTH</small></h2>
@@ -156,10 +267,13 @@ section.finale{min-height:120vh; justify-content:center !important; text-align:c
     <p>1916년 폴란드 화학자 <b>얀 초크랄스키</b>가 펜을 잉크병 대신
     녹은 주석에 잘못 담갔다가 발견한 방법이 100년 넘게 반도체 산업을 떠받치고 있다.</p>
     <div class="chips"><span class="chip">지름 <b>300mm</b></span><span class="chip">길이 <b>1~2m</b></span><span class="chip">무게 <b>수백 kg</b></span></div>
+    <div class="fact"><b>💡 왜 하필 '단'결정일까?</b> 결정 알갱이 경계(결정립계)가 있으면
+    그 자리에서 전자가 흩어져 소자 특성이 흐트러진다. 웨이퍼 한 장 전체가
+    <b>하나의 결정</b>이어야 수백억 개 트랜지스터가 균일하게 동작한다.</div>
   </div>
 </section>
 
-<section class="stage" data-stage="3" id="s3">
+<section class="stage" data-stage="3" data-ghost="01" id="s3">
   <div class="card">
     <div class="step">공정 ① 웨이퍼 제조</div>
     <h2>다이아몬드 톱으로 썰어낸 캔버스<small>WAFER SLICING & POLISHING</small></h2>
@@ -171,7 +285,7 @@ section.finale{min-height:120vh; justify-content:center !important; text-align:c
   </div>
 </section>
 
-<section class="stage" data-stage="4" id="s4">
+<section class="stage" data-stage="4" data-ghost="02" id="s4">
   <div class="card">
     <div class="step">공정 ② 산화</div>
     <h2>실리콘 위에 유리 갑옷을 입히다<small>OXIDATION</small></h2>
@@ -181,10 +295,13 @@ section.finale{min-height:120vh; justify-content:center !important; text-align:c
     트랜지스터의 스위치 역할을 하는 <b>게이트 절연막</b>의 재료가 된다.
     두께는 나노미터 단위로 정밀하게 제어한다.</p>
     <div class="chips"><span class="chip">건식: 산소, 얇고 치밀</span><span class="chip">습식: 수증기, 빠르고 두껍게</span></div>
+    <div class="fact"><b>💡 SiO₂를 넘어서:</b> 45nm 세대(2007년)부터 트랜지스터 게이트 절연막은
+    얇은 SiO₂ 대신 <b>하프늄 산화물(HfO₂) 같은 high-k 물질</b>로 바뀌었다.
+    막을 더 두껍게 하고도 같은 전기적 효과를 내 <b>누설 전류</b>를 억제하기 위해서다.</div>
   </div>
 </section>
 
-<section class="stage" data-stage="5" id="s5">
+<section class="stage" data-stage="5" data-ghost="03" id="s5">
   <div class="card">
     <div class="step">공정 ③ 포토 (노광)</div>
     <h2>빛으로 회로를 그리다<small>PHOTOLITHOGRAPHY — 칩 제조의 심장</small></h2>
@@ -195,18 +312,23 @@ section.finale{min-height:120vh; justify-content:center !important; text-align:c
     레이저로 초당 5만 번</b> 맞혀 플라즈마로 만들어 얻고, 렌즈(유리)에 흡수되므로
     초정밀 <b>다층 거울</b>로만 다룬다. 이 장비를 만드는 회사는 지구상에 <b>ASML 하나</b>,
     대당 가격은 <b>2억 달러</b>를 넘는다.</p>
+    <div class="chips">
+      <span class="chip">① 감광액 도포(스핀 코팅)</span><span class="chip">② 소프트베이크</span>
+      <span class="chip">③ 노광</span><span class="chip">④ 노광후 베이크(PEB)</span><span class="chip">⑤ 현상</span>
+      <span class="chip">도포·현상 트랙 장비 <b>도쿄일렉트론(TEL)</b></span>
+    </div>
     <div class="widget" id="lithoWidget">
       <h3>⚗️ 해상도 실험실 — 레일리 공식 CD = k₁·λ/NA</h3>
       <div class="lamps" id="lamps"></div>
-      <div class="wrow"><label>개구수 NA</label><input type="range" id="naR" min="0" max="100" value="60"><output id="naO"></output></div>
-      <div class="wrow"><label>공정상수 k₁</label><input type="range" id="k1R" min="25" max="80" value="35"><output id="k1O"></output></div>
+      <div class="wrow"><label for="naR">개구수 NA</label><input type="range" id="naR" min="0" max="100" value="60"><output id="naO"></output></div>
+      <div class="wrow"><label for="k1R">공정상수 k₁</label><input type="range" id="k1R" min="25" max="80" value="35"><output id="k1O"></output></div>
       <div class="bigout">최소 선폭(하프피치) <div class="num" id="cdO">—</div><div class="note" id="cdNote"></div></div>
     </div>
     <div class="fact"><b>💡 팹은 왜 노란빛일까?</b> 감광액이 파란빛·자외선에 반응하기 때문에, 포토 구역은 반응하지 않는 노란 조명만 켠다. 참고로 '3nm 공정'의 3nm는 실제 선폭이 아니라 세대를 뜻하는 마케팅 명칭이다.</div>
   </div>
 </section>
 
-<section class="stage" data-stage="6" id="s6">
+<section class="stage" data-stage="6" data-ghost="04" id="s6">
   <div class="card">
     <div class="step">공정 ④ 식각</div>
     <h2>플라즈마로 새기는 나노 조각<small>ETCHING</small></h2>
@@ -215,11 +337,11 @@ section.finale{min-height:120vh; justify-content:center !important; text-align:c
     깊고 좁은 도랑을 팔 수 있다.</p>
     <p>최신 3D 낸드에서는 <b>종횡비 100:1</b>이 넘는 — 폭보다 깊이가 100배인 —
     구멍을 수백 층의 막을 관통해 한 번에 뚫는다. 우물 지름이 1m라면 깊이 100m를 수직으로 파는 셈.</p>
-    <div class="chips"><span class="chip">건식: 플라즈마, 정밀·수직</span><span class="chip">습식: 용액, 빠르지만 등방성</span></div>
+    <div class="chips"><span class="chip">건식: 플라즈마, 정밀·수직</span><span class="chip">습식: 용액, 빠르지만 등방성</span><span class="chip">식각 장비 선두 <b>램리서치·TEL</b></span></div>
   </div>
 </section>
 
-<section class="stage" data-stage="7" id="s7">
+<section class="stage" data-stage="7" data-ghost="05" id="s7">
   <div class="card">
     <div class="step">공정 ⑤ 증착 & 이온주입</div>
     <h2>원자 한 층씩 쌓고, 심는다<small>DEPOSITION & ION IMPLANTATION</small></h2>
@@ -228,11 +350,21 @@ section.finale{min-height:120vh; justify-content:center !important; text-align:c
     <p>그리고 <b>이온주입기</b>로 붕소(B)·인(P)·비소(As) 이온을 가속해 실리콘 속
     정확한 깊이에 박아 넣는다. 순수 실리콘은 전기가 잘 안 통하지만, 이 미량의 불순물이
     들어가는 순간 전기를 <b>제어할 수 있는</b> 진짜 '반도체'가 된다 — n형과 p형이 이렇게 만들어진다.</p>
+    <p>주입 직후의 실리콘은 이온 충격으로 원자 배열이 헝클어진 상태다.
+    곧바로 <b>급속 열처리(RTA)</b>로 1,000°C 안팎까지 순간 가열해 격자를 복구하고,
+    박힌 불순물을 제자리에 앉혀 <b>활성화</b>시켜야 비로소 전기가 흐른다.</p>
+    <div class="widget" id="mosWidget">
+      <h3>🔀 MOSFET 스위치 — 도핑이 만든 트랜지스터</h3>
+      <canvas id="mosCanvas" width="300" height="180"></canvas>
+      <div class="wrow"><label for="vgR">게이트 전압</label><input type="range" id="vgR" min="0" max="100" value="0"><output id="vgO"></output></div>
+      <div class="bigout">상태 <div class="num" id="mosState">—</div><div class="note" id="mosNote"></div></div>
+    </div>
     <div class="fact"><b>💡 도핑의 마법:</b> 실리콘 원자 백만 개당 불순물 몇 개 수준의 차이가 도체와 부도체 사이를 오가는 스위치를 만든다.</div>
+    <div class="chips"><span class="chip">증착·이온주입 장비 <b>어플라이드 머티어리얼즈(AMAT)</b></span></div>
   </div>
 </section>
 
-<section class="stage" data-stage="8" id="s8">
+<section class="stage" data-stage="8" data-ghost="06" id="s8">
   <div class="card">
     <div class="step">공정 ⑥ 금속 배선</div>
     <h2>수백억 개를 잇는 입체 고속도로<small>METALLIZATION & CMP</small></h2>
@@ -241,11 +373,14 @@ section.finale{min-height:120vh; justify-content:center !important; text-align:c
     <p>한 층을 쌓을 때마다 <b>CMP(화학기계연마)</b>로 표면을 평탄하게 갈아내고,
     그 위에 다시 노광→식각→증착을 반복한다. 이 <b>재진입 루프</b>를 수십 번 돌기 때문에
     칩 하나에 수백 개의 공정 단계와 2~3개월이 걸리는 것이다.</p>
-    <div class="chips"><span class="chip">알루미늄 → <b>구리</b> (1997, IBM 다마신)</span><span class="chip">배선 총길이: 다이당 <b>수 km</b></span></div>
+    <div class="fact"><b>💡 보이지 않는 절반, 세정:</b> 거의 모든 공정 단계 사이에는
+    <b>세정</b>이 끼어든다. 입자 하나, 금속 원자 하나만 남아도 회로가 죽기 때문에,
+    <b>초순수(UPW)</b>와 화학액으로 씻어내는 이 과정이 팹에서 가장 여러 번 반복되는 축에 든다.</div>
+    <div class="chips"><span class="chip">알루미늄 → <b>구리</b> (1997, IBM 다마신)</span><span class="chip">배선 총길이: 다이당 <b>수 km</b></span><span class="chip">배선 사이엔 <b>저유전율(low-k)</b> 절연막</span><span class="chip">구리 확산 막는 <b>배리어막</b></span></div>
   </div>
 </section>
 
-<section class="stage" data-stage="9" id="s9">
+<section class="stage" data-stage="9" data-ghost="07" id="s9">
   <div class="card">
     <div class="step">공정 ⑦ EDS 테스트</div>
     <h2>수율 — 생사를 가르는 숫자<small>WAFER TEST & YIELD</small></h2>
@@ -255,18 +390,23 @@ section.finale{min-height:120vh; justify-content:center !important; text-align:c
     <p>불량 대부분은 공정 중 내려앉은 눈에 보이지 않는 <b>미세 결함</b> 때문이다.
     결함은 면적당 무작위로 떨어지므로, <b>다이가 클수록 수율은 기하급수적으로 떨어진다</b>.
     아래에서 직접 실험해 보자.</p>
+    <div class="fact"><b>💡 불량도 되살린다:</b> 메모리 칩은 여분의 셀 배열을 미리 심어 두고,
+    테스트에서 걸린 불량 셀을 <b>여분으로 대체(리페어)</b>해 양품으로 살린다.
+    양·불량을 가르는 전기 검사는 <b>어드밴테스트·테라다인</b> 같은 테스트 장비(ATE)가 수행한다.</div>
     <div class="widget" id="yieldWidget">
       <h3>🎯 수율 실험실 — 300mm 웨이퍼</h3>
-      <div class="wrow"><label>다이 한 변</label><input type="range" id="dieR" min="40" max="220" value="90"><output id="dieO"></output></div>
-      <div class="wrow"><label>결함 밀도 D₀</label><input type="range" id="d0R" min="2" max="40" value="10"><output id="d0O"></output></div>
+      <div class="wrow"><label for="dieR">다이 한 변</label><input type="range" id="dieR" min="40" max="220" value="90"><output id="dieO"></output></div>
+      <div class="wrow"><label for="d0R">결함 밀도 D₀</label><input type="range" id="d0R" min="2" max="40" value="10"><output id="d0O"></output></div>
       <canvas id="waferMap" width="280" height="280"></canvas>
-      <div class="ystats"><span>다이 <b id="nDie">—</b>개</span><span class="yg">양품 <b id="nGood">—</b></span><span class="yb">불량 <b id="nBad">—</b></span><span>수율 <b id="yPct" style="color:var(--cyan)">—</b></span></div>
-      <div class="bigout" style="margin-top:12px"><span style="font-size:12px">푸아송 수율 모델 Y = e<sup>−A·D₀</sup> — 같은 결함 밀도라도 다이 면적(A)이 크면 수율이 급락한다</span></div>
+      <div class="ystats" aria-live="polite" aria-atomic="true"><span>다이 <b id="nDie">—</b>개</span><span class="yg">양품 <b id="nGood">—</b></span><span class="yb">불량 <b id="nBad">—</b></span><span>수율 <b id="yPct" style="color:var(--cyan)">—</b></span></div>
+      <div class="wrow"><label for="wcR">웨이퍼 가공비</label><input type="range" id="wcR" min="10" max="150" value="50"><output id="wcO"></output></div>
+      <div class="ystats"><span>양품당 원가 <b id="cpd" style="color:var(--amber)">—</b></span></div>
+      <div class="bigout" style="margin-top:12px"><span style="font-size:12px">푸아송 수율 모델 Y = e<sup>−A·D₀</sup> — 같은 결함 밀도라도 다이 면적(A)이 크면 수율이 급락하고, <b>양품당 원가 = 웨이퍼 가공비 ÷ 양품 수</b>는 폭증한다</span></div>
     </div>
   </div>
 </section>
 
-<section class="stage" data-stage="10" id="s10">
+<section class="stage" data-stage="10" data-ghost="08" id="s10">
   <div class="card">
     <div class="step">공정 ⑧ 패키징</div>
     <h2>칩에 옷을 입히다, 그리고 쌓다<small>PACKAGING — 제2의 미세공정</small></h2>
@@ -276,7 +416,7 @@ section.finale{min-height:120vh; justify-content:center !important; text-align:c
     <p>최신 AI 칩은 여기서 한 번 더 도약한다 — D램을 <b>8~12층으로 쌓고</b> 실리콘을 관통하는
     전극 <b>TSV</b>로 수직 연결한 <b>HBM</b>, GPU와 HBM을 한 기판에 나란히 얹는
     <b>2.5D 패키징(CoWoS)</b>까지. 패키징이 '제2의 미세공정'이라 불리는 이유다.</p>
-    <div class="chips"><span class="chip">HBM: 대역폭 <b>TB/s급</b></span><span class="chip">TSV 지름 <b>수 µm</b></span></div>
+    <div class="chips"><span class="chip">HBM: 대역폭 <b>TB/s급</b></span><span class="chip">TSV 지름 <b>수 µm</b></span><span class="chip">차세대 <b>HBM4</b>: 2,048비트·최대 16단</span><span class="chip"><b>칩렛</b>: 큰 칩을 조각으로 나눠 이어붙임</span></div>
   </div>
 </section>
 
@@ -284,13 +424,26 @@ section.finale{min-height:120vh; justify-content:center !important; text-align:c
   <div class="card">
     <div class="step pre">FIN · 그리고 당신의 손안으로</div>
     <h2>모래 한 줌이 걸어온 길</h2>
-    <p style="font-size:15.5px">정제 → 잉곳 → 웨이퍼 → 산화 → 노광 → 식각 → 증착·주입 → 배선 → 테스트 → 패키징.<br>
-    <b>2~3개월, 수백 개의 공정</b>을 거친 손톱만 한 칩 안에는<br>
+    <div class="flow" aria-label="공정 요약">
+      <span>정제</span><span class="fa">→</span><span>잉곳</span><span class="fa">→</span><span>웨이퍼</span><span class="fa">→</span><span>산화</span><span class="fa">→</span><span>노광</span><span class="fa">→</span><span>식각</span><span class="fa">→</span><span>증착·주입</span><span class="fa">→</span><span>배선</span><span class="fa">→</span><span>테스트</span><span class="fa">→</span><span>패키징</span>
+    </div>
+    <p style="font-size:15.5px"><b>2~3개월, 수백 개의 공정</b>을 거친 손톱만 한 칩 안에는<br>
     바이러스보다 작은 트랜지스터가 <b>수백억 개</b> 들어 있다.</p>
     <div class="chips" style="justify-content:center; margin-top:22px">
       <span class="chip">최신 스마트폰 AP 트랜지스터 <b>190억+</b></span>
       <span class="chip">최소 배선 폭 <b>~20nm</b></span>
       <span class="chip">클린룸 청정도: 수술실의 <b>수천 배</b></span>
+    </div>
+    <div class="widget" id="mooreWidget" style="max-width:520px; margin:22px auto 0; text-align:left">
+      <h3>📈 무어의 법칙 — 트랜지스터 수 (로그 축)</h3>
+      <canvas id="mooreCv" width="480" height="240"></canvas>
+      <div class="note" id="mooreNote">점에 커서를 올려보세요</div>
+    </div>
+    <div class="widget" id="quizWidget" style="max-width:480px; margin:18px auto 0; text-align:left">
+      <h3>🧩 8대 공정 복습 퀴즈</h3>
+      <div id="qStem" style="font-size:14px; color:#c7d3e6; min-height:40px">—</div>
+      <div class="lamps" id="qOpts" style="margin-top:12px"></div>
+      <div class="bigout" id="qScore" style="display:none"></div>
     </div>
     <div class="cta">🏭 직접 팹을 운영해보고 싶다면 — <b>클린룸 타이쿤</b> (곧 공개)</div>
     <div class="credit">이 사이트는 <b>Claude Fable 5</b>가 three.js로 설계·제작했습니다 · 데이터는 공개 산업 자료 기준</div>
@@ -311,10 +464,34 @@ if (typeof THREE === 'undefined'){ document.getElementById('veil').style.backgro
 
 const canvas = document.getElementById('bg');
 const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+/* 저사양(좁은 화면·코어 적음) 폴백: 픽셀비 ↓ + 파티클 수 ↓ */
+const LOW = window.innerWidth < 760 || (navigator.hardwareConcurrency||8) <= 4;
+const Q = LOW ? 0.6 : 1;
+const REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, LOW ? 1.5 : 2));
 const scene = new THREE.Scene();
 scene.fog = new THREE.FogExp2(0x070b14, 0.055);
 const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+
+/* 절차적 환경맵 — 금속 재질 반사용 (외부 요청 없음) */
+(function(){
+  const c = document.createElement('canvas'); c.width = 256; c.height = 128;
+  const x = c.getContext('2d');
+  const grad = x.createLinearGradient(0,0,0,128);
+  grad.addColorStop(0,'#0b1a34'); grad.addColorStop(.45,'#1c3d61');
+  grad.addColorStop(.55,'#274f78'); grad.addColorStop(1,'#05080f');
+  x.fillStyle = grad; x.fillRect(0,0,256,128);
+  const h = x.createRadialGradient(72,38,0,72,38,64);
+  h.addColorStop(0,'rgba(190,224,255,.95)'); h.addColorStop(1,'rgba(190,224,255,0)');
+  x.fillStyle = h; x.fillRect(0,0,256,128);
+  const r = x.createRadialGradient(200,64,0,200,64,52);
+  r.addColorStop(0,'rgba(56,225,255,.5)'); r.addColorStop(1,'rgba(56,225,255,0)');
+  x.fillStyle = r; x.fillRect(0,0,256,128);
+  const tex = new THREE.CanvasTexture(c); tex.mapping = THREE.EquirectangularReflectionMapping;
+  const pm = new THREE.PMREMGenerator(renderer);
+  scene.environment = pm.fromEquirectangular(tex).texture;
+  tex.dispose(); pm.dispose();
+})();
 
 /* ---------- lights ---------- */
 scene.add(new THREE.HemisphereLight(0x8fb8ff, 0x131b2c, 0.75));
@@ -327,15 +504,37 @@ const M = THREE.MathUtils;
 function ease(x){ return x*x*(3-2*x); }
 function mat(opts){ return new THREE.MeshStandardMaterial(Object.assign({roughness:.45, metalness:.2}, opts)); }
 function basic(opts){ return new THREE.MeshBasicMaterial(opts); }
+/* 소프트 원형 입자 텍스처 — 사각 점을 발광 입자로 */
+const DOT = (function(){
+  const c = document.createElement('canvas'); c.width = c.height = 64;
+  const x = c.getContext('2d'); const g = x.createRadialGradient(32,32,0,32,32,32);
+  g.addColorStop(0,'rgba(255,255,255,1)'); g.addColorStop(.35,'rgba(255,255,255,.55)');
+  g.addColorStop(1,'rgba(255,255,255,0)');
+  x.fillStyle = g; x.fillRect(0,0,64,64); return new THREE.CanvasTexture(c);
+})();
+/* 가짜 블룸 — 카메라를 향하는 발광 스프라이트 */
+const GLOWTEX = (function(){
+  const c = document.createElement('canvas'); c.width = c.height = 128;
+  const x = c.getContext('2d'); const g = x.createRadialGradient(64,64,0,64,64,64);
+  g.addColorStop(0,'rgba(255,255,255,1)'); g.addColorStop(.25,'rgba(255,255,255,.5)');
+  g.addColorStop(1,'rgba(255,255,255,0)');
+  x.fillStyle = g; x.fillRect(0,0,128,128); return new THREE.CanvasTexture(c);
+})();
+function glow(color, scale){
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({map:GLOWTEX, color, transparent:true,
+    blending:THREE.AdditiveBlending, depthWrite:false, opacity:.9}));
+  s.scale.setScalar(scale); return s;
+}
 function pointCloud(n, spread, color, size, fn){
+  n = Math.max(8, Math.round(n*Q));
   const pos = new Float32Array(n*3);
   for(let i=0;i<n;i++){
-    const v = fn ? fn(i) : new THREE.Vector3((Math.random()-0.5)*spread,(Math.random()-0.5)*spread,(Math.random()-0.5)*spread);
+    const v = fn ? fn(i, n) : new THREE.Vector3((Math.random()-0.5)*spread,(Math.random()-0.5)*spread,(Math.random()-0.5)*spread);
     pos[i*3]=v.x; pos[i*3+1]=v.y; pos[i*3+2]=v.z;
   }
   const g = new THREE.BufferGeometry();
   g.setAttribute('position', new THREE.BufferAttribute(pos,3));
-  const m = new THREE.PointsMaterial({color, size, transparent:true, opacity:.9,
+  const m = new THREE.PointsMaterial({color, size, map:DOT, transparent:true, opacity:.9,
     blending:THREE.AdditiveBlending, depthWrite:false, sizeAttenuation:true});
   return new THREE.Points(g,m);
 }
@@ -382,7 +581,7 @@ reg(g => {
   }
   quartz.position.x = -1.15; g.add(quartz);
   const poly = new THREE.Group();
-  const pm = mat({color:0x9aa7b8, metalness:.85, roughness:.35});
+  const pm = mat({color:0x9aa7b8, metalness:.85, roughness:.35, emissive:0x2f6ad6, emissiveIntensity:.04});
   for(let i=0;i<14;i++){
     const s = 0.13+Math.random()*0.17;
     const k = new THREE.Mesh(new THREE.DodecahedronGeometry(s,0), pm);
@@ -392,12 +591,18 @@ reg(g => {
     poly.add(k);
   }
   poly.position.x = 1.15; g.add(poly);
-  const flow = pointCloud(160, 0, 0xffbe4d, 0.03, i => new THREE.Vector3(-1.15+(i/160)*2.3, Math.sin(i/160*Math.PI)*0.75-0.1, (Math.random()-0.5)*0.2));
+  const flow = pointCloud(160, 0, 0xffbe4d, 0.03, (i,n) => new THREE.Vector3(-1.15+(i/n)*2.3, Math.sin(i/n*Math.PI)*0.75-0.1, (Math.random()-0.5)*0.2));
   g.add(flow);
-  return (p,t) => {
+  return (p,t,dt,ww) => {
+    const e = ease(p), W = ww===undefined?1:ww;
     quartz.rotation.y = Math.sin(t*0.25)*0.25;
+    quartz.scale.setScalar(1 - e*0.5);          // 원료 소모
+    quartz.position.y = -e*0.15;
     poly.rotation.y = -t*0.15;
+    poly.scale.setScalar(0.5 + e*0.55);          // 폴리실리콘 석출 성장
+    pm.emissiveIntensity = 0.04 + e*0.4;         // 순도↑ → 발광↑
     flow.rotation.z = Math.sin(t*0.6)*0.03;
+    flow.material.opacity = (0.35 + e*0.55) * W;
   };
 });
 
@@ -407,8 +612,9 @@ reg(g => {
   cru.position.y = -1.05; g.add(cru);
   const melt = new THREE.Mesh(new THREE.CircleGeometry(1.02,40), basic({color:0xff7a26, transparent:true, opacity:.95}));
   melt.rotation.x = -Math.PI/2; melt.position.y = -0.72; g.add(melt);
-  const glow = new THREE.Mesh(new THREE.CircleGeometry(1.35,40), basic({color:0xff5a1a, transparent:true, opacity:.18, blending:THREE.AdditiveBlending}));
-  glow.rotation.x = -Math.PI/2; glow.position.y = -0.70; g.add(glow);
+  const meltRing = new THREE.Mesh(new THREE.CircleGeometry(1.35,40), basic({color:0xff5a1a, transparent:true, opacity:.18, blending:THREE.AdditiveBlending}));
+  meltRing.rotation.x = -Math.PI/2; meltRing.position.y = -0.70; g.add(meltRing);
+  const meltGlow = glow(0xff7a26, 2.4); meltGlow.position.y = -0.55; g.add(meltGlow);
   const ingot = new THREE.Group();
   const body = new THREE.Mesh(new THREE.CylinderGeometry(0.42,0.42,1.9,48), mat({color:0xc8ccd4, metalness:.95, roughness:.18}));
   body.position.y = 0.95;
@@ -423,12 +629,14 @@ reg(g => {
   });
   g.add(sparks);
   return (p,t,dt,ww) => {
-    warm.intensity = 2.2*(ww===undefined?1:ww);   // 페이드와 동기화
+    const W = ww===undefined?1:ww;
+    warm.intensity = 2.2*W;   // 페이드와 동기화
     ingot.rotation.y = t*0.9;
     ingot.position.y = -0.45 + ease(p)*1.15;   // 스크롤에 따라 위로 인상
     ingot.scale.y = 0.55 + ease(p)*0.45;
     sparks.rotation.y = -t*0.25;
-    melt.material.opacity = 0.85 + Math.sin(t*3)*0.1;
+    melt.material.opacity = (0.85 + Math.sin(t*3)*0.1) * W;
+    meltGlow.material.opacity = (0.55 + Math.sin(t*3)*0.15) * W;
   };
 });
 
@@ -472,6 +680,7 @@ reg(g => {
   oxide.position.y = 0.045; g.add(oxide);
   const ring = new THREE.Mesh(new THREE.TorusGeometry(1.5,0.075,16,80), mat({color:0x51221a, emissive:0xff4d1a, emissiveIntensity:1.4}));
   ring.rotation.x = Math.PI/2; g.add(ring);
+  const furnace = glow(0xff4d1a, 3.6); furnace.material.opacity = .3; g.add(furnace);
   const heat = pointCloud(260, 0, 0xff9a55, 0.026, () => {
     const a = Math.random()*Math.PI*2, r = 1.32+Math.random()*0.36;
     return new THREE.Vector3(Math.cos(a)*r, (Math.random()-0.5)*0.85, Math.sin(a)*r);
@@ -479,10 +688,12 @@ reg(g => {
   g.add(heat);
   return (p,t,dt,ww) => {
     warm.intensity = Math.max(warm.intensity, 1.4*(ww===undefined?1:ww));  // 페이드 동기화 + 인접 스테이지와 최댓값 합성
-    const e = ease(p);
+    const e = ease(p), W = ww===undefined?1:ww;
     g.rotation.y = t*0.18;
     oxide.scale.set(e>0.02?1:0.001, 0.2+e*1.6, e>0.02?1:0.001);
-    oxide.material.opacity = 0.15+e*0.45;
+    oxide.material.opacity = (0.15+e*0.45) * W;
+    oxide.material.color.setHSL(0.5 - e*0.55, 0.6, 0.55);      // 막 두께에 따른 간섭색: 청록→금→자홍
+    oxide.material.emissive.setHSL((0.5 - e*0.5 % 1 + 1) % 1, 0.6, 0.22);
     ring.material.emissiveIntensity = 1.1 + Math.sin(t*4)*0.35;
     heat.position.y = Math.sin(t*0.9)*0.06;
     g.rotation.x = 0.42;
@@ -512,6 +723,10 @@ reg(g => {
   beam.position.y = 0.02; g.add(beam);
   const src = new THREE.Mesh(new THREE.SphereGeometry(0.14,20,20), basic({color:0xd8c1ff}));
   src.position.y = 1.55; g.add(src);
+  const srcGlow = glow(0xd8c1ff, 1.7); srcGlow.position.y = 1.55; g.add(srcGlow);
+  const slit = new THREE.Mesh(new THREE.PlaneGeometry(2.0,0.12),
+    basic({color:0xd8c1ff, transparent:true, opacity:0, blending:THREE.AdditiveBlending, depthWrite:false}));
+  slit.rotation.x = -Math.PI/2; slit.position.y = -0.645; g.add(slit);
   const pat = new THREE.Group();
   const pm2 = basic({color:0x38e1ff, transparent:true, opacity:0, blending:THREE.AdditiveBlending});
   for(let i=0;i<5;i++){
@@ -521,12 +736,16 @@ reg(g => {
     l2.rotation.x = -Math.PI/2; l2.position.set((i-2)*0.24,-0.648,0); pat.add(l2);
   }
   g.add(pat);
-  return (p,t) => {
-    const e = ease(p);
+  return (p,t,dt,ww) => {
+    const e = ease(p), W = ww===undefined?1:ww;
     const pulse = 0.6+Math.sin(t*5)*0.4;
-    beam.material.opacity = (0.05 + e*0.16) * pulse;
+    beam.material.opacity = (0.05 + e*0.16) * pulse * W;
     src.scale.setScalar(0.8+pulse*0.35);
-    pm2.opacity = e*0.85;
+    srcGlow.scale.setScalar(1.2+pulse*0.9);
+    srcGlow.material.opacity = 0.9 * W;
+    slit.position.z = M.lerp(-0.9, 0.9, e);            // 노광 슬릿이 웨이퍼를 훑는다
+    slit.material.opacity = (0.25 + 0.5*pulse) * e * W;
+    pm2.opacity = e*0.85 * W;
     mask.position.y = 0.75 + Math.sin(t*0.6)*0.02;
   };
 });
@@ -547,20 +766,33 @@ reg(g => {
     bars.add(bar);
   }
   g.add(bars);
-  const N=420, pos=new Float32Array(N*3), vel=new Float32Array(N);
+  /* 마스크 없는 노출부 — 식각으로 실제로 깎여 내려가는 슬래브 */
+  const gaps = new THREE.Group();
+  for(let i=0;i<5;i++){
+    const s = new THREE.Mesh(new THREE.BoxGeometry(0.22,0.55,2.2), barM);
+    s.position.set((i-2)*0.38, -0.075, 0);
+    gaps.add(s);
+  }
+  g.add(gaps);
+  const N=Math.round(420*Q), pos=new Float32Array(N*3), vel=new Float32Array(N);
   for(let i=0;i<N;i++){ pos[i*3]=(Math.random()-0.5)*2.4; pos[i*3+1]=Math.random()*2.2+0.2; pos[i*3+2]=(Math.random()-0.5)*2.4; vel[i]=0.6+Math.random()*1.4; }
   const pg = new THREE.BufferGeometry(); pg.setAttribute('position', new THREE.BufferAttribute(pos,3));
-  const plasma = new THREE.Points(pg, new THREE.PointsMaterial({color:0xff5df0, size:0.03, transparent:true, opacity:.85, blending:THREE.AdditiveBlending, depthWrite:false}));
+  const plasma = new THREE.Points(pg, new THREE.PointsMaterial({color:0xff5df0, size:0.03, map:DOT, transparent:true, opacity:.85, blending:THREE.AdditiveBlending, depthWrite:false}));
   g.add(plasma);
   return (p,t,dt) => {
     const e = ease(p);
     for(let i=0;i<N;i++){
-      let y = pos[i*3+1] - vel[i]*dt*(0.5+e);
+      let y = pos[i*3+1] - vel[i]*dt*(0.5+e*1.8);
       if(y < 0.25){ y = 2.2+Math.random()*0.3; pos[i*3]=(Math.random()-0.5)*2.4; }
       pos[i*3+1]=y;
     }
     pg.attributes.position.needsUpdate = true;
-    bars.children.forEach((b,i)=>{ b.scale.y = 1 - e*0.0; });
+    /* 노출부가 위에서부터 깎여 내려간다 — 하단은 base 윗면(-0.35)에 고정 */
+    gaps.children.forEach(s=>{
+      const sy = Math.max(1 - e*0.92, 0.02);
+      s.scale.y = sy;
+      s.position.y = -0.35 + 0.275*sy;
+    });
     g.rotation.y = Math.sin(t*0.3)*0.15;
   };
 });
@@ -581,19 +813,20 @@ reg(g => {
   const gunPos = new THREE.Vector3(1.6,1.5,0.4);
   const gun = new THREE.Mesh(new THREE.CylinderGeometry(0.09,0.14,0.5,16), mat({color:0x3a4254, metalness:.7}));
   gun.position.copy(gunPos); gun.lookAt(0,-0.2,0); gun.rotateX(Math.PI/2); g.add(gun);
-  const NI=140, ip=new Float32Array(NI*3), ph=new Float32Array(NI);
+  const NI=Math.round(140*Q), ip=new Float32Array(NI*3), ph=new Float32Array(NI);
   for(let i=0;i<NI;i++){ ph[i]=Math.random(); }
   const ig = new THREE.BufferGeometry(); ig.setAttribute('position', new THREE.BufferAttribute(ip,3));
-  const ions = new THREE.Points(ig, new THREE.PointsMaterial({color:0xffe27a, size:0.035, transparent:true, opacity:.95, blending:THREE.AdditiveBlending, depthWrite:false}));
+  const ions = new THREE.Points(ig, new THREE.PointsMaterial({color:0xffe27a, size:0.035, map:DOT, transparent:true, opacity:.95, blending:THREE.AdditiveBlending, depthWrite:false}));
   g.add(ions);
   const target = new THREE.Vector3(-0.2,-0.1,-0.1);
-  return (p,t,dt) => {
-    const e = ease(p);
+  return (p,t,dt,ww) => {
+    const e = ease(p), W = ww===undefined?1:ww;
     layers.forEach((L,i)=>{
       const li = M.clamp(e*6 - i, 0, 1);
       L.visible = li > 0.01;
       L.scale.set(li>0.01?1:0.001, li, li>0.01?1:0.001);
-      L.material.opacity = 0.85*li;
+      L.material.opacity = 0.85*li*W;
+      L.material.emissiveIntensity = 0.12 + ((li>0.02 && li<0.98) ? 0.55 : 0);  // 증착되는 순간 플래시
     });
     for(let i=0;i<NI;i++){
       ph[i] += dt*(0.5+Math.random()*0.25);
@@ -640,6 +873,7 @@ reg(g => {
       const k = M.clamp(e*1.4 - (w.position.y+0.72)/1.2*0.55, 0, 1);
       w.visible = k>0.02; w.scale.setScalar(Math.max(k,0.001));
     });
+    cu.emissiveIntensity = 0.2 + e*0.1 + Math.abs(Math.sin(t*1.6))*0.35;  // 통전 맥동
     cmp.position.x = Math.sin(t*1.2)*0.6;
     cmp.position.z = Math.cos(t*0.9)*0.4;
     g.rotation.y = t*0.12;
@@ -685,15 +919,18 @@ reg(g => {
     pin.position.set((i%3-1)*0.1, -0.12, (Math.floor(i/3)-1)*0.1);
     probe.add(pin);
   }
+  const spark = glow(0x38e1ff, 0.5); spark.position.y = -0.14; probe.add(spark);
   probe.position.y = 0.45; g.add(probe);
   const scan = new THREE.Mesh(new THREE.BoxGeometry(2.5,0.005,0.05), basic({color:0x38e1ff, transparent:true, opacity:.6, blending:THREE.AdditiveBlending}));
   scan.position.y = 0.07; g.add(scan);
-  return (p,t) => {
+  return (p,t,dt,ww) => {
+    const e = ease(p), W = ww===undefined?1:ww;
     g.rotation.y = t*0.1;
     probe.position.x = Math.sin(t*0.8)*0.5;
     probe.position.z = Math.cos(t*0.55)*0.5;
     probe.position.y = 0.32 + Math.abs(Math.sin(t*1.6))*0.12;
-    scan.position.z = Math.sin(t*0.5)*1.1;
+    spark.material.opacity = (1 - Math.abs(Math.sin(t*1.6))) * 0.8 * W;  // 접촉 순간 번쩍
+    scan.position.z = M.lerp(-1.15, 1.15, e);                            // 스크롤로 검사 스윕
   };
 });
 
@@ -767,7 +1004,7 @@ reg(g => {
   return (p,t) => {
     chip.rotation.y = t*0.4;
     chip.rotation.x = 0.4+Math.sin(t*0.5)*0.08;
-    chip.position.y = Math.sin(t*0.8)*0.07;
+    chip.position.y = -0.95 + Math.sin(t*0.8)*0.07;   // 피날레 텍스트 아래로
     halo.rotation.y = -t*0.05;
     core.material.emissiveIntensity = 0.7+Math.sin(t*2)*0.25;
   };
@@ -829,6 +1066,14 @@ railNames.forEach((n,i)=>{
 });
 const railLinks = Array.from(rail.children);
 const topbar = document.getElementById('topbar');
+/* 모바일 하단 스테퍼 */
+const minimap = document.getElementById('minimap');
+railNames.forEach((n,i)=>{
+  const a = document.createElement('a');
+  a.href = '#s'+i; a.textContent = n;
+  minimap.appendChild(a);
+});
+const miniLinks = Array.from(minimap.children);
 
 /* ---------- 카드 등장 ---------- */
 const io = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); }), {threshold:0.22});
@@ -842,13 +1087,16 @@ function resize(){
   measure();
 }
 window.addEventListener('resize', resize);
+if(window.visualViewport) window.visualViewport.addEventListener('resize', measure, {passive:true});
 resize();
 
 const clock = new THREE.Clock();
 let lastActive = -1;
+let animT = 0;   // 캡된 dt 누적 — 탭 복귀 시 elapsedTime 점프 방지
 function frame(){
-  const dt = Math.min(clock.getDelta(), 0.05);
-  const t = clock.elapsedTime;
+  const dt = REDUCE ? 0 : Math.min(clock.getDelta(), 0.05);
+  animT += dt;
+  const t = REDUCE ? 4.2 : animT;   // 모션 최소화: 유휴 회전·펄스 고정, 스크롤 연출(p)은 유지
   const sp = stagePosNow();
   const i0 = Math.floor(sp), frac = sp - i0;
 
@@ -859,6 +1107,7 @@ function frame(){
     if(w <= 0.005){ st.group.visible = false; continue; }
     st.group.visible = true;
     const ww = ease(w);
+    st.group.scale.setScalar(0.9 + 0.1*ww);   // 크로스페이드 스케일 팝인
     st.group.traverse(o => {
       if(o.material && o.userData.baseOp !== undefined) o.material.opacity = o.userData.baseOp * ww;
     });
@@ -868,7 +1117,8 @@ function frame(){
 
   const ef = ease(M.clamp(frac,0,1));
   camTmp.lerpVectors(camPath[Math.min(i0,11)], camPath[Math.min(i0+1,11)], ef);
-  camera.position.set(camTmp.x + mouseX*0.5, camTmp.y - mouseY*0.4, camTmp.z);
+  const mx = REDUCE ? 0 : mouseX, my = REDUCE ? 0 : mouseY;
+  camera.position.set(camTmp.x + mx*0.5, camTmp.y - my*0.4, camTmp.z);
   const lx = window.innerWidth > 760 ? M.lerp(lookX[Math.min(i0,11)], lookX[Math.min(i0+1,11)], ef) : 0;
   camera.lookAt(lx,0,0);
   dust.rotation.y = t*0.01;
@@ -876,13 +1126,16 @@ function frame(){
   const act = Math.round(sp);
   if(act !== lastActive){
     railLinks.forEach((a,k)=>a.classList.toggle('on', k===act));
+    miniLinks.forEach((a,k)=>a.classList.toggle('on', k===act));
+    if(miniLinks[act]) miniLinks[act].scrollIntoView({inline:'center', block:'nearest', behavior:REDUCE?'auto':'smooth'});
+    topbar.setAttribute('aria-valuenow', Math.round(act/(railNames.length-1)*100));
     lastActive = act;
   }
   const denom = document.documentElement.scrollHeight - window.innerHeight;
   topbar.style.width = (denom>0 ? (window.scrollY/denom*100) : 0) + '%';
 
   renderer.render(scene, camera);
-  requestAnimationFrame(frame);
+  if(!REDUCE) requestAnimationFrame(frame);
 }
 
 /* 재질 baseOp 수집 (모든 스테이지 빌드 후 1회) */
@@ -893,8 +1146,15 @@ stages.forEach(st => st.group.traverse(o => {
   }
 }));
 
-document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) clock.getDelta(); });
 frame();
+/* 모션 최소화: 상시 루프 대신 스크롤·리사이즈·위젯 조작 시에만 렌더 */
+if(REDUCE){
+  let queued = false;
+  const kick = ()=>{ if(!queued){ queued = true; requestAnimationFrame(()=>{ queued = false; frame(); }); } };
+  addEventListener('scroll', kick, {passive:true});
+  addEventListener('resize', kick);
+  addEventListener('input', kick, {passive:true});
+}
 
 /* ============================================================
    위젯 1 — 리소그래피 해상도 계산기 (레일리 공식)
@@ -952,6 +1212,8 @@ frame();
   const dieO = document.getElementById('dieO'), d0O = document.getElementById('d0O');
   const nDie = document.getElementById('nDie'), nGood = document.getElementById('nGood'),
         nBad = document.getElementById('nBad'), yPct = document.getElementById('yPct');
+  const wcR = document.getElementById('wcR'), wcO = document.getElementById('wcO'),
+        cpd = document.getElementById('cpd');
   const R = 140;                 // px, 웨이퍼 반지름 (=150mm)
   const PX_PER_MM = R/150;
   let seed = 42;
@@ -987,10 +1249,159 @@ frame();
     nGood.textContent = good;
     nBad.textContent = total-good;
     yPct.textContent = total ? Math.round(good/total*100)+'%' : '—';
+    const waferUSD = wcR.value*100;                    // $1,000 ~ $15,000
+    wcO.textContent = '$'+waferUSD.toLocaleString();
+    cpd.textContent = good>0 ? '$'+Math.round(waferUSD/good).toLocaleString() : '—';
     if(edsApi) edsApi.paint(D0*0.9);      // 3D 웨이퍼도 함께 물들인다
   }
-  dieR.oninput = render; d0R.oninput = render;
+  dieR.oninput = render; d0R.oninput = render; wcR.oninput = render;
   render();
+})();
+
+/* ============================================================
+   위젯 3 — MOSFET 게이트 스위치 시뮬레이터 (NMOS 단면, 정성 모델)
+   ============================================================ */
+(function(){
+  const cv = document.getElementById('mosCanvas');
+  if(!cv) return;
+  const ctx = cv.getContext('2d');
+  const vgR = document.getElementById('vgR'), vgO = document.getElementById('vgO');
+  const stO = document.getElementById('mosState'), noteO = document.getElementById('mosNote');
+  const VTH = 45;                              // 문턱전압 ≈ 0.45 V (개념값)
+  const els = Array.from({length:14}, ()=>Math.random());
+  let visible = false, running = false;
+  function draw(){
+    const vg = +vgR.value, on = vg >= VTH;
+    vgO.textContent = (vg/100).toFixed(2)+' V';
+    ctx.clearRect(0,0,300,180);
+    ctx.fillStyle = '#39415a'; ctx.fillRect(10,70,280,100);              // p-기판
+    ctx.fillStyle = '#2b6f8f'; ctx.fillRect(20,80,70,60); ctx.fillRect(210,80,70,60); // n+ 소스/드레인
+    ctx.font = '11px sans-serif'; ctx.fillStyle = '#7fd6ff';
+    ctx.fillText('n+ 소스',30,152); ctx.fillText('n+ 드레인',216,152);
+    ctx.fillStyle = '#93a4bd'; ctx.fillText('p형 기판',130,164);
+    ctx.fillStyle = 'rgba(255,190,77,.9)'; ctx.fillRect(90,72,120,6);    // 게이트 산화막
+    ctx.fillStyle = on ? '#ffbe4d' : '#5a6373'; ctx.fillRect(96,54,108,16); // 게이트 전극
+    ctx.fillStyle = '#93a4bd'; ctx.fillText('게이트',128,50);
+    if(on){
+      const k = Math.min(1,(vg-VTH)/(100-VTH));
+      ctx.fillStyle = 'rgba(56,225,255,'+(0.25+0.5*k).toFixed(2)+')';
+      ctx.fillRect(90,80,120,6);                                          // 반전층(전자 통로)
+      ctx.fillStyle = '#eaf7ff';
+      for(let i=0;i<els.length;i++){
+        els[i] += 0.004 + 0.014*k; if(els[i]>1) els[i]-=1;
+        ctx.beginPath(); ctx.arc(28+els[i]*244, 83+Math.sin(els[i]*22)*1.2, 1.6, 0, 7); ctx.fill();
+      }
+    }
+    stO.textContent = on ? 'ON — 논리 1' : 'OFF — 논리 0';
+    stO.style.color = on ? 'var(--good)' : 'var(--bad)';
+    noteO.textContent = on
+      ? '문턱전압을 넘어 반전층(전자 통로)이 열렸다 — 소스→드레인 전류가 흐른다'
+      : '문턱전압 미만: 채널이 없어 전류 차단 (스위치 열림)';
+  }
+  function loop(){ if(!visible || REDUCE){ running = false; return; } draw(); requestAnimationFrame(loop); }
+  new IntersectionObserver(es => es.forEach(e => {
+    visible = e.isIntersecting;
+    if(!visible) return;
+    if(REDUCE) draw();                                  // 모션 최소화: 1회만 그림
+    else if(!running){ running = true; requestAnimationFrame(loop); }
+  }), {threshold:0}).observe(cv);
+  vgR.oninput = draw;
+  draw();
+})();
+
+/* ============================================================
+   위젯 4 — 무어의 법칙 로그 차트 (대표 칩, 널리 문서화된 값만)
+   ============================================================ */
+(function(){
+  const cv = document.getElementById('mooreCv');
+  if(!cv) return;
+  const ctx = cv.getContext('2d'), note = document.getElementById('mooreNote');
+  const D = [
+    ['Intel 4004',1971,2300],['Intel 8086',1978,29000],['Intel 80386',1985,275000],
+    ['Pentium',1993,3.1e6],['Pentium 4',2000,42e6],['Core 2 Duo',2006,2.91e8],
+    ['Apple A7',2013,1e9],['Apple A14',2020,1.18e10],['Apple A17 Pro',2023,1.9e10]
+  ];
+  const Y0=1971, Y1=2023, C0=1e3, C1=1e11, PAD=40, W=480, H=240;
+  const px = y => PAD + (y-Y0)/(Y1-Y0)*(W-PAD-12);
+  const py = c => 14 + (1-(Math.log10(c)-Math.log10(C0))/(Math.log10(C1)-Math.log10(C0)))*(H-14-22);
+  function redraw(){
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle = 'rgba(147,164,189,.15)'; ctx.fillStyle = '#93a4bd'; ctx.font = '10px sans-serif';
+    const SUP = {3:'10³',5:'10⁵',7:'10⁷',9:'10⁹',11:'10¹¹'};
+    for(let e=3;e<=11;e+=2){
+      const y = py(Math.pow(10,e));
+      ctx.beginPath(); ctx.moveTo(PAD,y); ctx.lineTo(W-12,y); ctx.stroke();
+      ctx.fillText(SUP[e], 4, y+3);
+    }
+    for(let yr=1980; yr<=2020; yr+=10){
+      ctx.fillText(String(yr), px(yr)-11, H-6);
+    }
+    /* '2년마다 2배' 기준 점선 (4004 앵커) */
+    ctx.strokeStyle = 'rgba(255,190,77,.5)'; ctx.setLineDash([4,4]); ctx.beginPath();
+    ctx.moveTo(px(Y0), py(2300)); ctx.lineTo(px(Y1), py(2300*Math.pow(2,(Y1-Y0)/2))); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.strokeStyle = 'rgba(56,225,255,.7)'; ctx.lineWidth = 2; ctx.beginPath();
+    D.forEach((d,i)=>{ const X=px(d[1]), Yv=py(d[2]); i?ctx.lineTo(X,Yv):ctx.moveTo(X,Yv); });
+    ctx.stroke(); ctx.lineWidth = 1;
+    D.forEach(d=>{ ctx.fillStyle = '#38e1ff'; ctx.beginPath(); ctx.arc(px(d[1]),py(d[2]),3.5,0,7); ctx.fill(); });
+  }
+  redraw();
+  cv.addEventListener('pointermove', e => {
+    const r = cv.getBoundingClientRect(), sx = cv.width/r.width, sy = cv.height/r.height;
+    const mx = (e.clientX-r.left)*sx, my = (e.clientY-r.top)*sy;
+    let hit = null;
+    D.forEach(d=>{ if(Math.hypot(px(d[1])-mx, py(d[2])-my) < 12) hit = d; });
+    note.textContent = hit ? hit[0]+' ('+hit[1]+') — 트랜지스터 '+hit[2].toLocaleString()+'개'
+                           : '점에 커서를 올려보세요 — 점선은 "2년마다 2배"';
+  });
+})();
+
+/* ============================================================
+   위젯 5 — 8대 공정 복습 퀴즈 (본문에서 도출한 문항)
+   ============================================================ */
+(function(){
+  const stem = document.getElementById('qStem'), opts = document.getElementById('qOpts'),
+        scoreEl = document.getElementById('qScore');
+  if(!stem) return;
+  const NAMES = ['정제','잉곳 성장','웨이퍼 제조','산화','포토(노광)','식각','증착·이온주입','금속 배선','EDS 테스트','패키징'];
+  const Q = [
+    {q:'빛에 반응하는 감광액에 마스크로 회로 패턴을 축소 투영하는 공정은?', a:'포토(노광)'},
+    {q:'웨이퍼 표면에 SiO₂(유리) 절연막을 고온에서 자라게 하는 공정은?', a:'산화'},
+    {q:'붕소·인·비소 이온을 실리콘에 심어 n형·p형을 만드는 공정은?', a:'증착·이온주입'},
+    {q:'플라즈마 이온으로 노출된 부분만 수직으로 깎아내는 공정은?', a:'식각'},
+    {q:'프로브 카드로 다이의 양품/불량을 가려 수율을 판정하는 공정은?', a:'EDS 테스트'},
+    {q:'다이를 잘라 기판에 붙이고 HBM처럼 쌓아 옷을 입히는 공정은?', a:'패키징'}
+  ];
+  let i = 0, score = 0;
+  const sh = a => { for(let k=a.length-1;k>0;k--){ const j=Math.random()*(k+1)|0; [a[k],a[j]]=[a[j],a[k]]; } return a; };
+  function show(){
+    const cur = Q[i];
+    stem.textContent = (i+1)+' / '+Q.length+' · '+cur.q;
+    opts.innerHTML = '';
+    sh([cur.a, ...sh(NAMES.filter(n=>n!==cur.a)).slice(0,3)]).forEach(c=>{
+      const b = document.createElement('button');
+      b.textContent = c;
+      b.onclick = ()=>{
+        if(c===cur.a){ b.classList.add('on'); score++; }
+        else { b.style.borderColor='var(--bad)'; b.style.color='var(--bad)'; }
+        Array.from(opts.children).forEach(x=>x.disabled=true);
+        setTimeout(next, 700);
+      };
+      opts.appendChild(b);
+    });
+  }
+  function next(){
+    if(++i < Q.length){ show(); return; }
+    stem.textContent = '복습 완료!';
+    opts.innerHTML = '';
+    const again = document.createElement('button');
+    again.textContent = '다시 풀기';
+    again.onclick = ()=>{ i=0; score=0; scoreEl.style.display='none'; show(); };
+    opts.appendChild(again);
+    scoreEl.style.display = 'block';
+    scoreEl.innerHTML = '<div class="num">'+score+' / '+Q.length+'</div><div class="note">틀린 공정은 위로 스크롤해 복습해보자</div>';
+  }
+  show();
 })();
 
 })();
