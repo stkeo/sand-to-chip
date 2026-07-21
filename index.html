@@ -106,6 +106,12 @@ body{
 #rail{position:fixed; left:22px; top:50%; transform:translateY(-50%); z-index:40; display:flex; flex-direction:column; gap:10px}
 #rail::before{content:''; position:absolute; left:3px; top:6px; bottom:6px;
   width:1.5px; border-radius:2px; background:var(--line); z-index:-1}
+#rail::after{content:''; position:absolute; left:-9px; top:6px; bottom:6px; width:9px; z-index:-1;
+  background:repeating-linear-gradient(180deg,
+    color-mix(in srgb,var(--acc,var(--dim)) 34%,transparent) 0 1px,
+    transparent 1px 11px);
+  -webkit-mask:linear-gradient(90deg,transparent,#000 88%);
+          mask:linear-gradient(90deg,transparent,#000 88%)}
 #rail a{display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--dim); font-size:11px; opacity:.75; transition:.25s}
 #rail a .dot{width:8px; height:8px; border-radius:50%; background:transparent; border:1.5px solid var(--dim); flex:none;
   transition:transform .3s cubic-bezier(.34,1.56,.64,1), background .25s ease, border-color .25s ease, box-shadow .25s ease}
@@ -192,7 +198,7 @@ section.stage:not(.hero):not(.finale) .card .chips{order:99; margin-top:var(--sp
       0 0 40px -20px color-mix(in srgb,var(--acc,var(--cyan)) 60%,transparent)}
 }
 /* JS 활성 시에만 카드 숨김→등장 — JS 꺼진 환경·크롤러도 본문 판독 가능 */
-html.js .card{opacity:0; transform:translateY(36px)}
+html.js .card{opacity:0; transform:translateY(22px)}
 html.js .card.in{opacity:1; transform:none}
 /* 카드 내부 요소 등장 스태거 */
 .card>*{transition:opacity .55s ease,transform .55s ease}
@@ -210,12 +216,14 @@ html.js .card.in>*{opacity:1; transform:none}
   border-color:color-mix(in srgb,var(--acc,var(--cyan)) 35%,transparent);
   background:color-mix(in srgb,var(--acc,var(--cyan)) 7%,transparent);
   padding:5px 13px 4px; border-radius:99px; margin-bottom:14px; line-height:1.15}
-.card h2{font-size:clamp(22px,3.2vw,30px); line-height:1.24; margin-bottom:4px; letter-spacing:-.02em; text-wrap:balance}
+.card h2{font-size:clamp(25px,4.2vw,38px); line-height:1.1; margin-bottom:4px; letter-spacing:-.03em; font-weight:800; text-wrap:balance}
 /* 영문 소제목 = 계기판 판독값 — 고정폭·와이드 트래킹 */
-.card h2 small{display:block; margin-top:5px;
-  font-family:var(--mono); font-size:11px; font-weight:400; letter-spacing:.14em;
+.card h2 small{display:block; position:relative; margin-top:11px; padding-left:15px;
+  font-family:var(--mono); font-size:10.5px; font-weight:400; letter-spacing:.2em; text-transform:uppercase;
   font-variant-numeric:tabular-nums lining-nums;
   color:color-mix(in srgb,var(--acc,var(--dim)) 60%,var(--dim))}
+.card h2 small::before{content:""; position:absolute; left:0; top:.15em; width:8px; height:8px;
+  border-left:1.5px solid; border-top:1.5px solid; opacity:.7}
 .card p{color:#c7d3e6; font-size:14.5px; margin-top:var(--sp-prose)}
 .card p, .card .fact, .hero .sub, .flownote, .widget .note{text-wrap:pretty}
 .card p b, .card .fact b, .hero .sub b, .flownote b{font-weight:600}
@@ -239,7 +247,7 @@ html.js .card.in>*{opacity:1; transform:none}
 }
 /* ---------- hero ---------- */
 .hero .card{background:transparent; border:none; box-shadow:none; backdrop-filter:none; max-width:760px}
-.hero h1{font-size:clamp(40px,7vw,72px); letter-spacing:-.03em; line-height:1.15;
+.hero h1{font-size:clamp(52px,12vw,128px); letter-spacing:-.045em; line-height:.9; font-weight:800; text-wrap:balance;
   background:linear-gradient(176deg,#ffffff 20%,#c8ecff 58%,#93b4ff 100%);
   -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
   filter:drop-shadow(0 6px 30px rgba(56,225,255,.20)) drop-shadow(0 2px 10px rgba(177,140,255,.12))}
@@ -303,8 +311,10 @@ html.js .card.in>*{opacity:1; transform:none}
   border:1px solid color-mix(in srgb,var(--acc,var(--cyan)) 25%,transparent);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.06), inset 0 -22px 42px -32px var(--acc,transparent);
   text-align:center; font-size:13px; color:var(--dim)}
-.bigout .num{font-size:26px; font-weight:800; color:var(--acc,var(--cyan));
-  font-family:var(--mono); font-variant-numeric:tabular-nums lining-nums;
+.bigout .num{font-size:clamp(30px,7.2vw,44px); font-weight:800; color:var(--acc,var(--cyan));
+  font-family:var(--mono); line-height:1; letter-spacing:-.01em;
+  font-variant-numeric:tabular-nums lining-nums slashed-zero;
+  filter:drop-shadow(0 2px 10px color-mix(in srgb,var(--acc,var(--cyan)) 30%,transparent));
   background:linear-gradient(180deg,#fff,var(--acc,var(--cyan))); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent}
 .bigout .note{margin-top:6px; font-size:12px; color:var(--amber)}
 /* 결과 숫자 변경 마이크로 펄스 */
@@ -334,7 +344,7 @@ html.js .card.in>*{opacity:1; transform:none}
 .yg{color:var(--good)} .yb{color:var(--bad)}
 /* ---------- finale ---------- */
 .finale .card{max-width:660px; background:transparent; border:none; box-shadow:none; backdrop-filter:none}
-.finale h2{font-size:clamp(28px,4.5vw,44px)}
+.finale h2{font-size:clamp(33px,6.4vw,64px); line-height:1.04; letter-spacing:-.03em; font-weight:800; text-wrap:balance}
 .finale .credit{margin-top:40px; font-size:12.5px; color:var(--dim)}
 .finale .credit b{color:var(--violet)}
 .finale .cta{display:inline-block; margin-top:26px; padding:12px 26px; border-radius:12px; font-size:14px;
@@ -351,6 +361,167 @@ html.js .card.in>*{opacity:1; transform:none}
   border-radius:99px; padding:3px 10px; background:rgba(255,255,255,.03)}
 .flow .fa{color:var(--dim); border:none; background:none; padding:3px 0}
 #minimap{display:none}
+
+/* ===================== v9 DWG 도면 플레이트 시스템 ===================== */
+/* 공정 영문명 세로 워터마크 — 카드 뒤로 흐르는 스파인 타이포 */
+.dwg-wm{
+  position:absolute; top:50%; transform:translateY(-50%) scaleX(.9);
+  writing-mode:vertical-rl; text-orientation:mixed;
+  font-size:clamp(34px,5.4vw,68px); font-weight:800; line-height:1;
+  letter-spacing:.04em; white-space:nowrap; font-variant-numeric:tabular-nums;
+  color:transparent;
+  -webkit-text-stroke:1px color-mix(in srgb,var(--acc,var(--dim)) 18%,transparent);
+  opacity:.42; pointer-events:none; user-select:none; z-index:0}
+section.stage:nth-child(odd) .dwg-wm{left:2.5vw}
+section.stage:nth-child(even) .dwg-wm{right:2.5vw}
+/* 'Si' 원소 워터마크 — 히어로·피날레 북엔드 */
+.heromark{position:absolute; z-index:0; left:50%; top:50%;
+  transform:translate(-50%,-56%) scaleX(.94);
+  font-size:min(58vh,66vw); line-height:.8; font-weight:800; letter-spacing:-.04em;
+  color:transparent; -webkit-text-stroke:1.5px color-mix(in srgb,var(--cyan) 22%,transparent);
+  opacity:.5; pointer-events:none; user-select:none}
+.finale .heromark{opacity:.4; -webkit-text-stroke-color:color-mix(in srgb,var(--violet) 22%,transparent)}
+.hero .elem{margin-top:16px; font-family:var(--mono); font-size:11px; letter-spacing:.28em;
+  color:color-mix(in srgb,var(--cyan) 55%,var(--dim)); font-variant-numeric:tabular-nums}
+/* 카드가 '제도되듯' 등장 — 액센트 코너 브래킷 드로잉 */
+section.stage:not(.hero):not(.finale) .card::before,
+section.stage:not(.hero):not(.finale) .card::after{
+  content:''; position:absolute; width:0; height:0; pointer-events:none; z-index:2; opacity:0;
+  transition:width .55s cubic-bezier(.2,.75,.25,1), height .55s cubic-bezier(.2,.75,.25,1), opacity .3s ease}
+section.stage:not(.hero):not(.finale) .card::before{top:-1px; left:-1px;
+  border-top:1.6px solid var(--acc,var(--cyan)); border-left:1.6px solid var(--acc,var(--cyan));
+  border-top-left-radius:18px}
+section.stage:not(.hero):not(.finale) .card::after{bottom:-1px; right:-1px;
+  border-bottom:1.6px solid var(--acc,var(--cyan)); border-right:1.6px solid var(--acc,var(--cyan));
+  border-bottom-right-radius:18px}
+section.stage:not(.hero):not(.finale) .card.in::before,
+section.stage:not(.hero):not(.finale) .card.in::after{width:34px; height:34px; opacity:.9}
+section.stage:not(.hero):not(.finale) .card.in::after{transition-delay:.12s}
+/* 제목이 '인쇄되듯' — 좌→우 마스크 와이프 */
+html.js section.stage:not(.hero) .card h2{
+  -webkit-mask-image:linear-gradient(90deg,#000 0 42%,transparent 62%);
+          mask-image:linear-gradient(90deg,#000 0 42%,transparent 62%);
+  -webkit-mask-size:250% 100%; mask-size:250% 100%;
+  -webkit-mask-position:100% 0; mask-position:100% 0;
+  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+  transform:none;
+  transition:opacity .55s ease,
+             -webkit-mask-position .8s cubic-bezier(.3,.7,.2,1),
+                     mask-position .8s cubic-bezier(.3,.7,.2,1)}
+html.js section.stage:not(.hero) .card.in h2{-webkit-mask-position:0 0; mask-position:0 0}
+/* 고스트 챕터 넘버 — 등록 스탬프 정착 */
+section.stage[data-ghost]::before{transition:scale .85s cubic-bezier(.16,.9,.28,1), opacity .7s ease}
+html.js section.stage[data-ghost]:has(.card:not(.in))::before{scale:1.12; opacity:.16}
+/* 카드 타이틀블록 — FIG 라벨(제목란 노치) + 하단 치수선 */
+.dwg-fig{position:absolute; top:-11px; left:20px; z-index:4; pointer-events:none;
+  font-family:var(--mono); font-size:10px; letter-spacing:.2em; text-transform:uppercase;
+  font-variant-numeric:tabular-nums lining-nums;
+  color:color-mix(in srgb,var(--acc,var(--cyan)) 82%,var(--dim));
+  background:var(--bg); padding:1px 9px; border-radius:2px; white-space:nowrap; font-weight:400}
+.dwg-fig::before{content:''; position:absolute; left:-1px; top:50%; width:5px; height:5px;
+  transform:translate(-100%,-50%) rotate(45deg); background:var(--acc,var(--cyan));
+  box-shadow:0 0 6px color-mix(in srgb,var(--acc,var(--cyan)) 70%,transparent)}
+section.stage:nth-child(even) .dwg-fig{left:auto; right:20px}
+section.stage:nth-child(even) .dwg-fig::before{left:auto; right:-1px; transform:translate(100%,-50%) rotate(45deg)}
+.dwg-dim{position:absolute; left:26px; right:26px; bottom:-9px; height:0; z-index:3; pointer-events:none;
+  border-top:1px solid color-mix(in srgb,var(--acc,var(--cyan)) 32%,transparent)}
+.dwg-dim::after{content:''; position:absolute; left:0; right:0; top:-3px; height:6px;
+  border-left:1px solid color-mix(in srgb,var(--acc,var(--cyan)) 42%,transparent);
+  border-right:1px solid color-mix(in srgb,var(--acc,var(--cyan)) 42%,transparent)}
+.dwg-dim::before{content:attr(data-dim); position:absolute; left:50%; top:0; transform:translate(-50%,-50%);
+  background:var(--bg); padding:0 9px; white-space:nowrap;
+  font-family:var(--mono); font-size:9.5px; letter-spacing:.14em; font-variant-numeric:tabular-nums lining-nums;
+  color:color-mix(in srgb,var(--acc,var(--cyan)) 62%,var(--dim)); font-style:normal}
+/* 방향성 명암 — 카드 반대편 압흑 + 카드 쪽 액센트 블룸 */
+.dwg-shade{position:absolute; inset:0; z-index:0; pointer-events:none}
+section.stage:nth-child(even) .dwg-shade{
+  background:
+    linear-gradient(100deg, rgba(3,6,12,.5) 0%, rgba(3,6,12,.14) 30%, transparent 56%),
+    radial-gradient(66% 58% at 84% 50%, color-mix(in srgb,var(--acc,var(--cyan)) 9%,transparent), transparent 72%)}
+section.stage:nth-child(odd) .dwg-shade{
+  background:
+    linear-gradient(260deg, rgba(3,6,12,.5) 0%, rgba(3,6,12,.14) 30%, transparent 56%),
+    radial-gradient(66% 58% at 16% 50%, color-mix(in srgb,var(--acc,var(--cyan)) 9%,transparent), transparent 72%)}
+/* 고정 시트 프레임 — 등록 크로스헤어 + 라이브 시리얼/바코드 */
+#dwgSheet{position:fixed; inset:0; z-index:36; pointer-events:none;
+  color:color-mix(in srgb,var(--acc,var(--cyan)) 52%,transparent)}
+#dwgSheet i{position:absolute; width:15px; height:15px; opacity:.4; transition:color .6s ease}
+#dwgSheet i::before,#dwgSheet i::after{content:''; position:absolute; background:currentColor}
+#dwgSheet i::before{left:50%; top:0; width:1px; height:100%; transform:translateX(-.5px)}
+#dwgSheet i::after{top:50%; left:0; height:1px; width:100%; transform:translateY(-.5px)}
+#dwgSheet .tl{left:16px; top:16px} #dwgSheet .tr{right:16px; top:16px} #dwgSheet .bl{left:16px; bottom:16px}
+.dwg-serial{position:fixed; right:16px; bottom:15px; z-index:36; pointer-events:none;
+  font-family:var(--mono); font-size:9.5px; letter-spacing:.22em; opacity:.62;
+  font-variant-numeric:tabular-nums lining-nums;
+  color:color-mix(in srgb,var(--acc,var(--cyan)) 48%,var(--dim))}
+.dwg-serial::before{content:''; display:inline-block; vertical-align:-1px; width:34px; height:9px; margin-right:8px;
+  background:repeating-linear-gradient(90deg,
+    color-mix(in srgb,var(--acc,var(--cyan)) 60%,var(--dim)) 0 1px, transparent 1px 2px,
+    color-mix(in srgb,var(--acc,var(--cyan)) 60%,var(--dim)) 2px 4px, transparent 4px 5px)}
+/* 정밀 제도지 그리드 — 미세선 33px + 주선 132px, 중앙은 비워 3D와 공존 */
+#veil::before{
+  content:''; position:absolute; inset:0; pointer-events:none;
+  --gl:color-mix(in srgb,var(--acc,var(--cyan)) 7%,transparent);
+  --gM:color-mix(in srgb,var(--acc,var(--cyan)) 15%,transparent);
+  background-image:
+    repeating-linear-gradient(0deg,  var(--gM) 0 1px, transparent 1px 132px),
+    repeating-linear-gradient(90deg, var(--gM) 0 1px, transparent 1px 132px),
+    repeating-linear-gradient(0deg,  var(--gl) 0 1px, transparent 1px 33px),
+    repeating-linear-gradient(90deg, var(--gl) 0 1px, transparent 1px 33px);
+  -webkit-mask-image:radial-gradient(125% 90% at 50% 40%, transparent 24%, #000 84%);
+          mask-image:radial-gradient(125% 90% at 50% 40%, transparent 24%, #000 84%)}
+/* 지평 데이텀 라인 */
+body::after{
+  content:''; position:fixed; left:0; right:0; top:66%; height:1px; z-index:1; pointer-events:none;
+  background:linear-gradient(90deg, transparent,
+     color-mix(in srgb,var(--acc,var(--cyan)) 40%,transparent) 18%,
+     color-mix(in srgb,var(--acc,var(--cyan)) 55%,transparent) 50%,
+     color-mix(in srgb,var(--acc,var(--cyan)) 40%,transparent) 82%, transparent);
+  box-shadow:0 0 24px 1px color-mix(in srgb,var(--acc,var(--cyan)) 20%,transparent);
+  opacity:.42}
+/* 계기 패널 코너 브래킷 (전 위젯 공통) */
+.bigout{position:relative}
+.bigout::before,.bigout::after{content:""; position:absolute; width:11px; height:11px;
+  border:0 solid color-mix(in srgb,var(--acc,var(--cyan)) 55%,transparent);
+  opacity:.55; pointer-events:none}
+.bigout::before{top:7px; left:7px; border-top-width:1.5px; border-left-width:1.5px}
+.bigout::after{bottom:7px; right:7px; border-bottom-width:1.5px; border-right-width:1.5px}
+/* 피날레 콜로폰 — 판권면 타이틀블록 */
+.colophon{max-width:440px; margin:44px auto 0; text-align:left; position:relative}
+.colophon .crule{display:block; height:1px; margin-bottom:16px;
+  background:linear-gradient(90deg, color-mix(in srgb,var(--acc,var(--violet)) 55%,transparent), transparent)}
+.colophon dl{display:grid; grid-template-columns:auto 1fr; gap:8px 20px;
+  font-family:var(--mono); font-size:11px; letter-spacing:.06em}
+.colophon dt{align-self:center; font-size:9.5px; letter-spacing:.2em;
+  color:color-mix(in srgb,var(--acc,var(--dim)) 40%,var(--dim))}
+.colophon dd{color:var(--ink); font-variant-numeric:tabular-nums}
+.finale .credit{margin-top:16px; font-size:11px; opacity:.68}
+/* v9 반응형·접근성·인쇄 */
+@media (max-width:760px){
+  .dwg-wm{display:none}
+  .heromark{font-size:76vw; opacity:.34; -webkit-text-stroke-width:1px}
+  .finale .heromark{opacity:.26}
+  #dwgSheet,.dwg-serial,.dwg-shade,.dwg-dim{display:none}
+  .dwg-fig{font-size:9px; left:14px}
+  body::after{top:70%; opacity:.32}
+  .colophon{max-width:100%}
+}
+@media (prefers-reduced-motion: reduce){
+  section.stage:not(.hero):not(.finale) .card::before,
+  section.stage:not(.hero):not(.finale) .card::after{transition:none; width:34px; height:34px; opacity:.9}
+  html.js section.stage:not(.hero) .card h2{-webkit-mask-image:none; mask-image:none; transition:opacity .55s ease}
+  section.stage[data-ghost]::before{transition:none}
+  html.js section.stage[data-ghost]:has(.card:not(.in))::before{scale:1; opacity:.55}
+}
+@media print{
+  .dwg-wm,.heromark,.hero .elem,
+  .dwg-fig,.dwg-dim,.dwg-shade,#dwgSheet,.dwg-serial{display:none !important}
+  section.stage:not(.hero):not(.finale) .card::before,
+  section.stage:not(.hero):not(.finale) .card::after{display:none !important}
+  html.js section.stage:not(.hero) .card h2{-webkit-mask-image:none !important; mask-image:none !important}
+  body::after{display:none !important}
+  .colophon dd,.colophon dt{color:#333}
+}
 @media (max-width:760px){
   #rail{display:none}
   .keyhint{display:none}
@@ -439,6 +610,7 @@ html.js .card.in>*{opacity:1; transform:none}
 <main>
 
 <section class="stage hero" data-stage="0" id="s0">
+  <div class="heromark" aria-hidden="true">Si</div>
   <div class="card">
     <div class="step pre">INTERACTIVE JOURNEY</div>
     <h1>모래에서<br>칩까지</h1>
@@ -447,12 +619,13 @@ html.js .card.in>*{opacity:1; transform:none}
     <div class="chips" style="justify-content:center">
       <span class="chip">8대 공정</span><span class="chip">소요 <b>2~3개월</b></span><span class="chip">공정 단계 <b>수백 개</b></span>
     </div>
+    <div class="elem" aria-hidden="true">14 · Si · 28.0855 u</div>
     <div class="scrollcue">SCROLL</div>
     <div class="keyhint">← · → 또는 J · K 키로 공정 사이를 건너뛸 수 있다</div>
   </div>
 </section>
 
-<section class="stage" data-stage="1" data-ghost="Ⅰ" id="s1">
+<section class="stage" data-stage="1" data-ghost="Ⅰ" data-wm="SILICON" id="s1">
   <div class="card">
     <div class="step pre">프롤로그 Ⅰ · 정제</div>
     <h2>모든 칩은 모래에서 시작된다<small>REFINING — 99.9999999%</small></h2>
@@ -467,7 +640,7 @@ html.js .card.in>*{opacity:1; transform:none}
   </div>
 </section>
 
-<section class="stage" data-stage="2" data-ghost="Ⅱ" id="s2">
+<section class="stage" data-stage="2" data-ghost="Ⅱ" data-wm="CRYSTAL" id="s2">
   <div class="card">
     <div class="step pre">프롤로그 Ⅱ · 잉곳 성장</div>
     <h2>회전하며 자라나는 단결정 기둥<small>CZOCHRALSKI GROWTH</small></h2>
@@ -485,7 +658,7 @@ html.js .card.in>*{opacity:1; transform:none}
   </div>
 </section>
 
-<section class="stage" data-stage="3" data-ghost="01" id="s3">
+<section class="stage" data-stage="3" data-ghost="01" data-wm="WAFER" id="s3">
   <div class="card">
     <div class="step">공정 ① 웨이퍼 제조</div>
     <h2>다이아몬드 톱으로 썰어낸 캔버스<small>WAFER SLICING & POLISHING</small></h2>
@@ -503,7 +676,7 @@ html.js .card.in>*{opacity:1; transform:none}
   </div>
 </section>
 
-<section class="stage" data-stage="4" data-ghost="02" id="s4">
+<section class="stage" data-stage="4" data-ghost="02" data-wm="OXIDE" id="s4">
   <div class="card">
     <div class="step">공정 ② 산화</div>
     <h2>실리콘 위에 유리 갑옷을 입히다<small>OXIDATION</small></h2>
@@ -520,7 +693,7 @@ html.js .card.in>*{opacity:1; transform:none}
   </div>
 </section>
 
-<section class="stage" data-stage="5" data-ghost="03" id="s5">
+<section class="stage" data-stage="5" data-ghost="03" data-wm="LITHO" id="s5">
   <div class="card">
     <div class="step">공정 ③ 포토 (노광)</div>
     <h2>빛으로 회로를 그리다<small>PHOTOLITHOGRAPHY — 칩 제조의 심장</small></h2>
@@ -551,7 +724,7 @@ html.js .card.in>*{opacity:1; transform:none}
   </div>
 </section>
 
-<section class="stage" data-stage="6" data-ghost="04" id="s6">
+<section class="stage" data-stage="6" data-ghost="04" data-wm="ETCH" id="s6">
   <div class="card">
     <div class="step">공정 ④ 식각</div>
     <h2>플라즈마로 새기는 나노 조각<small>ETCHING</small></h2>
@@ -580,7 +753,7 @@ html.js .card.in>*{opacity:1; transform:none}
   </div>
 </section>
 
-<section class="stage" data-stage="7" data-ghost="05" id="s7">
+<section class="stage" data-stage="7" data-ghost="05" data-wm="DOPING" id="s7">
   <div class="card">
     <div class="step">공정 ⑤ 증착 & 이온주입</div>
     <h2>원자 한 층씩 쌓고, 심는다<small>DEPOSITION & ION IMPLANTATION</small></h2>
@@ -604,7 +777,7 @@ html.js .card.in>*{opacity:1; transform:none}
   </div>
 </section>
 
-<section class="stage" data-stage="8" data-ghost="06" id="s8">
+<section class="stage" data-stage="8" data-ghost="06" data-wm="COPPER" id="s8">
   <div class="card">
     <div class="step">공정 ⑥ 금속 배선</div>
     <h2>수백억 개를 잇는 입체 고속도로<small>METALLIZATION & CMP</small></h2>
@@ -631,7 +804,7 @@ html.js .card.in>*{opacity:1; transform:none}
   </div>
 </section>
 
-<section class="stage" data-stage="9" data-ghost="07" id="s9">
+<section class="stage" data-stage="9" data-ghost="07" data-wm="YIELD" id="s9">
   <div class="card">
     <div class="step">공정 ⑦ EDS 테스트</div>
     <h2>수율 — 생사를 가르는 숫자<small>WAFER TEST & YIELD</small></h2>
@@ -658,7 +831,7 @@ html.js .card.in>*{opacity:1; transform:none}
   </div>
 </section>
 
-<section class="stage" data-stage="10" data-ghost="08" id="s10">
+<section class="stage" data-stage="10" data-ghost="08" data-wm="STACK" id="s10">
   <div class="card">
     <div class="step">공정 ⑧ 패키징</div>
     <h2>칩에 옷을 입히다, 그리고 쌓다<small>PACKAGING — 제2의 미세공정</small></h2>
@@ -685,6 +858,7 @@ html.js .card.in>*{opacity:1; transform:none}
 </section>
 
 <section class="stage finale" data-stage="11" id="s11">
+  <div class="heromark" aria-hidden="true">Si</div>
   <div class="card">
     <div class="step pre">FIN · 그리고 당신의 손안으로</div>
     <h2>모래 한 줌이 걸어온 길</h2>
@@ -713,6 +887,16 @@ html.js .card.in>*{opacity:1; transform:none}
       <div class="bigout" id="qScore" style="display:none"></div>
     </div>
     <a class="cta" href="https://stkeo.itch.io/cleanroom-tycoon" target="_blank" rel="noopener">🏭 직접 팹을 운영해보고 싶다면 — <b>클린룸 타이쿤</b> 플레이 <span class="ar">→</span></a>
+    <div class="colophon" aria-hidden="true">
+      <span class="crule"></span>
+      <dl>
+        <dt>TITLE</dt><dd>SAND → CHIP</dd>
+        <dt>PLATES</dt><dd>12 · PLATE 00–11</dd>
+        <dt>ENGINE</dt><dd>three.js r128 · WebGL</dd>
+        <dt>BUILD</dt><dd>2026 · REV 9</dd>
+        <dt>AUTHOR</dt><dd>CLAUDE FABLE 5</dd>
+      </dl>
+    </div>
     <div class="credit">이 사이트는 <b>Claude Fable 5</b>가 three.js로 설계·제작했습니다 · 데이터는 공개 산업 자료 기준</div>
   </div>
 </section>
@@ -734,6 +918,29 @@ html.js .card.in>*{opacity:1; transform:none}
     'color:#93a4bd',
     'color:#b18cff');
   /* PWA — 오프라인 캐시 서비스워커 */
+  /* DWG plate ornaments — decorative layer, EN/numeric only */
+  try{
+    var FIGS=[['FIG.01 · REFINING','9N · 1,900°C'],['FIG.02 · CZ GROWTH','Ø300 mm · 1,414°C'],
+      ['FIG.03 · WAFER','Ø300 mm × 0.775 mm'],['FIG.04 · OXIDATION','SiO2 · 800–1,200°C'],
+      ['FIG.05 · LITHOGRAPHY','λ 13.5 nm · EUV'],['FIG.06 · ETCH','A/R 100 : 1'],
+      ['FIG.07 · DEPOSITION','ALD · 1 atom/cycle'],['FIG.08 · METALLIZATION','Cu · ≥10 layers'],
+      ['FIG.09 · EDS TEST','Y = e^(−A·D0)'],['FIG.10 · PACKAGING','HBM · ≤16-Hi']];
+    for(var fi=1;fi<=10;fi++){
+      var _sec=document.getElementById('s'+fi); if(!_sec) continue;
+      var _card=_sec.querySelector('.card'); if(!_card) continue;
+      var _lb=document.createElement('b'); _lb.className='dwg-fig'; _lb.setAttribute('aria-hidden','true'); _lb.textContent=FIGS[fi-1][0];
+      var _dm=document.createElement('i'); _dm.className='dwg-dim'; _dm.setAttribute('aria-hidden','true'); _dm.setAttribute('data-dim',FIGS[fi-1][1]);
+      var _sh=document.createElement('i'); _sh.className='dwg-shade'; _sh.setAttribute('aria-hidden','true');
+      var _wm=document.createElement('i'); _wm.className='dwg-wm'; _wm.setAttribute('aria-hidden','true');
+      _wm.textContent=_sec.getAttribute('data-wm')||'';
+      _card.appendChild(_lb); _card.appendChild(_dm); _sec.insertBefore(_sh,_sec.firstChild); _sec.insertBefore(_wm,_sec.firstChild);
+    }
+    var _sheet=document.createElement('div'); _sheet.id='dwgSheet'; _sheet.setAttribute('aria-hidden','true');
+    _sheet.innerHTML='<i class="tl"></i><i class="tr"></i><i class="bl"></i>';
+    var _ser=document.createElement('div'); _ser.className='dwg-serial'; _ser.setAttribute('aria-hidden','true');
+    _ser.textContent='LOT S2C \u00b7 PLATE 00 / 11';
+    document.body.appendChild(_sheet); document.body.appendChild(_ser);
+  }catch(e){}
   if('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')){
     addEventListener('load', function(){ navigator.serviceWorker.register('./sw.js'); });
   }
@@ -851,6 +1058,15 @@ function contactShadow(radius){
     new THREE.MeshBasicMaterial({map:SHADOWTEX, transparent:true, opacity:.9, depthWrite:false}));
   m.rotation.x = -Math.PI/2; return m;
 }
+/* 도면 윗선 — 크로스페이드 순간에만 나타나는 엣지 오버레이 */
+function blueprintEdges(mesh, hex){
+  const eg = new THREE.EdgesGeometry(mesh.geometry, 30);
+  const ls = new THREE.LineSegments(eg, new THREE.LineBasicMaterial({
+    color: hex||0xbfe9ff, transparent:true, opacity:0.9,
+    blending:THREE.AdditiveBlending, depthWrite:false, depthTest:false}));
+  ls.userData.edge = true; mesh.add(ls);
+  return ls;
+}
 function pointCloud(n, spread, color, size, fn, colorFn){
   n = Math.max(8, Math.round(n*Q));
   const pos = new Float32Array(n*3);
@@ -963,6 +1179,7 @@ reg(g => {
   const ingot = new THREE.Group();
   const body = new THREE.Mesh(new THREE.CylinderGeometry(0.42,0.42,1.9,48), mat({color:0xc8ccd4, metalness:.95, roughness:.18}));
   body.position.y = 0.95;
+  blueprintEdges(body);
   const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.42,0.5,48), mat({color:0xc8ccd4, metalness:.95, roughness:.18}));
   neck.position.y = -0.25;
   const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.045,0.045,2.2,12), mat({color:0x3a4254, metalness:.6}));
@@ -1011,6 +1228,7 @@ reg(g => {
   grit.position.set(-0.4,0.15,0); g.add(grit);
   const wafer = new THREE.Group();
   const disc = new THREE.Mesh(new THREE.CylinderGeometry(0.85,0.85,0.028,64), mat({color:0xaeb9cc, metalness:1, roughness:.08}));
+  blueprintEdges(disc);
   const sheen = new THREE.Mesh(new THREE.CircleGeometry(0.83,64), basic({color:0x74e6ff, transparent:true, opacity:.16, blending:THREE.AdditiveBlending}));
   sheen.rotation.x = -Math.PI/2; sheen.position.y = 0.016;
   const notch = new THREE.Mesh(new THREE.BoxGeometry(0.07,0.034,0.06), mat({color:0x2a3142, metalness:.6, roughness:.4}));
@@ -1432,6 +1650,7 @@ reg(g => {
   const chip = new THREE.Group();
   const body = new THREE.Mesh(new THREE.BoxGeometry(1.5,0.16,1.5), mat({color:0x11182a, metalness:.65, roughness:.3}));
   chip.add(body);
+  blueprintEdges(body);
   const core = new THREE.Mesh(new THREE.BoxGeometry(0.7,0.18,0.7), mat({color:0x0c1322, emissive:0x38e1ff, emissiveIntensity:.9}));
   chip.add(core);
   const pinGeo = new THREE.BoxGeometry(0.05,0.03,0.14);
@@ -1485,6 +1704,23 @@ scene.add(dust);
 /* 원경 2겹 — 더 멀고 어둡고 굵게, 역회전 시차. 액센트 틴트는 근경에만(색 분리로 깊이) */
 const dust2 = pointCloud(320, 42, 0x243651, 0.05);
 dust2.material.opacity = 0.3; scene.add(dust2);
+/* 블루프린트 데이텀 그리드 — 전 씬이 '제도판 위'에 놓인다 */
+const grid = (function(){
+  const N = LOW ? 16 : 24, span = 16, step = span/N, half = span/2;
+  const pos = [], col = [];
+  for(let i=0;i<=N;i++){ const u = -half + i*step;
+    pos.push(-half,0,u, half,0,u,  u,0,-half, u,0,half); }
+  for(let k=0;k<pos.length;k+=3){
+    const r = Math.hypot(pos[k], pos[k+2])/half, a = Math.max(0, 1 - r*r);
+    col.push(a,a,a); }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(pos,3));
+  geo.setAttribute('color',    new THREE.Float32BufferAttribute(col,3));
+  const m = new THREE.LineBasicMaterial({color:0x38e1ff, vertexColors:true,
+    transparent:true, opacity:0.16, blending:THREE.AdditiveBlending, depthWrite:false});
+  const ls = new THREE.LineSegments(geo, m); ls.position.y = -1.25; return ls;
+})();
+scene.add(grid);
 
 /* ---------- 카메라 연출 ---------- */
 const camPath = [
@@ -1502,7 +1738,8 @@ const camPath = [
   [0, 0.5, 7.0],  // 11
 ].map(a => new THREE.Vector3(a[0],a[1],a[2]));
 /* 데스크톱: 카드 반대편으로 씬을 밀어 겹침 방지 (카드가 오른쪽이면 +, 왼쪽이면 -) */
-const lookX = [0, .85, -.85, .85, -.85, .85, -.85, .85, -.85, .85, -.85, 0];
+const lookX = [0, .90, -.72, .78, -.95, .82, -.68, .88, -.80, .70, -.92, 0];
+const lookY = [0, .18, -.12, .22, .10, -.16, .20, -.10, .24, -.14, .16, 0];   // 씨별 수직 앵글 변주
 const camTmp = new THREE.Vector3();
 let mouseX = 0, mouseY = 0;
 window.addEventListener('pointermove', e => {
@@ -1585,7 +1822,12 @@ resize();
 const clock = new THREE.Clock();
 let lastActive = -1;
 let fadeW = 1;
-const fadeCb = o => { if(o.material && o.userData.baseOp !== undefined) o.material.opacity = o.userData.baseOp * fadeW; };
+const fadeCb = o => {
+  if(!o.material || o.userData.baseOp === undefined) return;
+  o.material.opacity = o.userData.edge
+    ? o.userData.baseOp * 4 * fadeW * (1 - fadeW)   // 전환 순간만 도면선(ww=.5 피크), 정착 시 소멸
+    : o.userData.baseOp * fadeW;
+};
 let animT = 0;   // 캡된 dt 누적 — 탭 복귀 시 elapsedTime 점프 방지
 function frame(){
   const dt = REDUCE ? 0 : Math.min(clock.getDelta(), 0.05);
@@ -1617,7 +1859,8 @@ function frame(){
   const zMul = window.innerWidth > 760 ? 1 : 1.12;   // 모바일: 살짝 줌아웃 — 입자장이 카드 밖으로 번지게
   camera.position.set(camTmp.x + mx*0.5, camTmp.y - my*0.4, camTmp.z*zMul);
   const lx = window.innerWidth > 760 ? M.lerp(lookX[Math.min(i0,11)], lookX[Math.min(i0+1,11)], ef) : 0;
-  camera.lookAt(lx,0,0);
+  const ly = window.innerWidth > 760 ? M.lerp(lookY[Math.min(i0,11)], lookY[Math.min(i0+1,11)], ef) : 0;
+  camera.lookAt(lx,ly,0);
   dust.rotation.y = t*0.01;
   dust2.rotation.y = -t*0.004;
   /* 스테이지 액센트를 씬 전체에 — 림라이트·안개·별먼지 틴트·화각 (드로우콜 0) */
@@ -1625,6 +1868,8 @@ function frame(){
   rim.color.lerp(accTint, REDUCE?1:0.07);
   scene.fog.color.lerp(fogMix.copy(fogBase).lerp(accTint,0.07), REDUCE?1:0.05);
   dust.material.color.lerp(dustMix.copy(dustBase).lerp(accTint,0.22), REDUCE?1:0.05);
+  grid.material.color.lerp(accTint, REDUCE?1:0.05);
+  grid.material.opacity = 0.16 * (0.3 + 0.7*M.clamp(Math.min(sp,11-sp),0,1));
   const fovT = M.lerp(FOVS[Math.min(i0,11)], FOVS[Math.min(i0+1,11)], ef);
   if(Math.abs(camera.fov - fovT) > 0.02){ camera.fov = fovT; camera.updateProjectionMatrix(); }
 
@@ -1637,6 +1882,8 @@ function frame(){
     if(miniLinks[act]) miniLinks[act].scrollIntoView({inline:'center', block:'nearest', behavior:REDUCE?'auto':'smooth'});
     topbar.setAttribute('aria-valuenow', Math.round(act/(railNames.length-1)*100));
     document.documentElement.style.setProperty('--acc', ACCHEX[act] || '#38e1ff');  // 진행 크롬(진행바·레일·미니맵·베일)을 공정색으로
+    var _dser = document.querySelector('.dwg-serial');
+    if(_dser) _dser.textContent = 'LOT S2C \u00b7 PLATE ' + ('0'+act).slice(-2) + ' / 11';
     lastActive = act;
   }
   const denom = document.documentElement.scrollHeight - window.innerHeight;
@@ -1713,6 +1960,27 @@ if(REDUCE){
   }
   naR.oninput = render; k1R.oninput = render;
   syncRange(); render();
+  /* 계기 부팅 — 최초 진입 시 CD 0→값 카운트업(1회) */
+  (function(){
+    let booted = false, rafId = 0, booting = false;
+    const fmt = v => v >= 1000 ? (v/1000).toFixed(2)+' \u00b5m' : v.toFixed(1)+' nm';
+    const stopBoot = () => { if(!booting) return; booting = false; cancelAnimationFrame(rafId); delete cdO.dataset.boot; render(); };
+    naR.addEventListener('input', stopBoot); k1R.addEventListener('input', stopBoot);
+    new IntersectionObserver((es,ob) => es.forEach(e => {
+      if(!e.isIntersecting || booted) return; booted = true; ob.disconnect();
+      if(REDUCE){ render(); return; }
+      const s = SRC[cur], target = k1()*s.l/na();
+      const t0 = performance.now();
+      booting = true; cdO.dataset.boot = '1';   // 부팅 중 펄스 옵저버 억제
+      rafId = requestAnimationFrame(function tick(now){
+        if(!booting) return;
+        const k = Math.min((now-t0)/900, 1), ee = 1-Math.pow(1-k,3);
+        cdO.textContent = fmt(target*ee);
+        if(k < 1) rafId = requestAnimationFrame(tick);
+        else { booting = false; delete cdO.dataset.boot; render(); cdO.classList.add('tick'); }
+      });
+    }), {threshold:0.6}).observe(cdO);
+  })();
 })();
 
 /* ============================================================
@@ -2301,6 +2569,7 @@ if(REDUCE){
 if(!REDUCE && 'MutationObserver' in window){
   const seen = new WeakMap();
   const pulse = el => {
+    if(el.dataset && el.dataset.boot){ seen.set(el, el.textContent); return; }   // 계기 부팅 중엔 침묵
     const v = el.textContent;
     if(seen.get(el) === v) return;
     seen.set(el, v);
