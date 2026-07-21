@@ -912,9 +912,11 @@ reg(g => {
 reg(g => {
   const quartz = new THREE.Group();
   const qm = mat({color:0xcfe3f4, roughness:.15, metalness:0, transparent:true, opacity:.75, emissive:0x6fb6d8, emissiveIntensity:.12});
+  const coneGeo = new THREE.ConeGeometry(1, 1, 6);   // 단위 콘 공유 — 크기는 per-mesh scale
   for(let i=0;i<9;i++){
-    const h = 0.5+Math.random()*0.9;
-    const c = new THREE.Mesh(new THREE.ConeGeometry(0.14+Math.random()*0.1, h, 6), qm);
+    const h = 0.5+Math.random()*0.9, rr = 0.14+Math.random()*0.1;
+    const c = new THREE.Mesh(coneGeo, qm);
+    c.scale.set(rr, h, rr);
     const a = i/9*Math.PI*2;
     c.position.set(Math.cos(a)*0.45*(0.4+Math.random()), h*0.3-0.55, Math.sin(a)*0.45*(0.4+Math.random()));
     c.rotation.set((Math.random()-0.5)*0.7, Math.random()*3, (Math.random()-0.5)*0.7);
@@ -923,9 +925,11 @@ reg(g => {
   quartz.position.x = -1.15; g.add(quartz);
   const poly = new THREE.Group();
   const pm = mat({color:0x9aa7b8, metalness:.85, roughness:.35, emissive:0x2f6ad6, emissiveIntensity:.04});
+  const dodecaGeo = new THREE.DodecahedronGeometry(1, 0);   // 단위 12면체 공유
   for(let i=0;i<14;i++){
     const s = 0.13+Math.random()*0.17;
-    const k = new THREE.Mesh(new THREE.DodecahedronGeometry(s,0), pm);
+    const k = new THREE.Mesh(dodecaGeo, pm);
+    k.scale.setScalar(s);
     const a = Math.random()*Math.PI*2, r = Math.random()*0.55;
     k.position.set(Math.cos(a)*r, -0.62+s+(r<0.25?0.28:0)*Math.random(), Math.sin(a)*r);
     k.rotation.set(Math.random()*3,Math.random()*3,Math.random()*3);
