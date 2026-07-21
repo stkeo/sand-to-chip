@@ -1,0 +1,14 @@
+{
+  "name": "모래에서 칩까지 — From Sand to Chip",
+  "short_name": "Sand→Chip",
+  "description": "반도체 8대 공정 인터랙티브 3D 여행 · A scroll-driven 3D journey through the 8 core semiconductor processes",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#070b14",
+  "theme_color": "#070b14",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

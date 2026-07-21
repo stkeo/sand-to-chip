@@ -23,6 +23,8 @@
 <link rel="alternate" hreflang="en" href="https://stkeo.github.io/sand-to-chip/en.html">
 <link rel="alternate" hreflang="x-default" href="https://stkeo.github.io/sand-to-chip/">
 <meta name="theme-color" content="#070b14">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <meta name="author" content="Claude Fable 5">
 <script>document.documentElement.classList.add('js')</script>
 <script type="application/ld+json">
@@ -126,6 +128,17 @@ section.stage:focus{outline:none}
 .langtoggle a{color:var(--dim); text-decoration:none; padding:4px 10px; border-radius:99px; transition:.2s}
 .langtoggle a:hover{color:var(--ink)}
 .langtoggle a.on{color:#0a0f1a; background:var(--acc,var(--cyan))}
+/* 첫 방문 온보딩 토스트 — 1회만 */
+.toast{position:fixed; left:50%; bottom:22px; transform:translate(-50%,14px); z-index:56;
+  display:flex; align-items:center; gap:10px; max-width:92vw;
+  background:var(--card); border:1px solid var(--line); border-radius:99px; padding:9px 14px 9px 16px;
+  font-size:12.5px; color:var(--dim); opacity:0; pointer-events:none;
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  transition:opacity .45s ease, transform .45s ease}
+.toast.up{opacity:1; transform:translate(-50%,0); pointer-events:auto}
+.toast b{color:var(--cyan)}
+.toast button{background:none; border:none; color:var(--dim); cursor:pointer; font-size:12px; padding:2px 4px; font-family:inherit}
+.toast button:hover{color:var(--ink)}
 .keyhint{margin-top:14px; font-size:11px; color:var(--dim); letter-spacing:.14em; opacity:.75}
 .flownote{margin-top:10px; font-size:12px; color:var(--dim)}
 .flownote b{color:var(--ink)}
@@ -376,6 +389,7 @@ html.js .card.in>*{opacity:1; transform:none}
     border:1px solid var(--line); border-radius:99px; white-space:nowrap; transition:.2s}
   #minimap a.on{color:#0a0f1a; background:var(--acc,var(--cyan)); border-color:var(--acc,var(--cyan)); font-weight:600; transform:scale(1.04)}
   #minimap a:active{transform:scale(.96)}
+  .toast{bottom:calc(64px + env(safe-area-inset-bottom))}   /* 미니맵 위로 */
   main{padding-bottom:calc(56px + env(safe-area-inset-bottom))}
 }
 @media (prefers-reduced-motion: reduce){
@@ -393,9 +407,10 @@ html.js .card.in>*{opacity:1; transform:none}
   #minimap a.on, #minimap a:active, .finale .cta:hover .ar{transform:none}
   #qOpts button.on, .bigout .num.tick, .ystats b.tick{animation:none}
   #bg{transition:none}
+  .toast{transition:none}
 }
 @media print{
-  #bg,#veil,#topbar,#rail,#minimap,.scrollcue,.keyhint,.skip,.langtoggle,.widget,.cta{display:none !important}
+  #bg,#veil,#topbar,#rail,#minimap,.scrollcue,.keyhint,.skip,.langtoggle,.toast,.widget,.cta{display:none !important}
   body{background:#fff; color:#111}
   section.stage{min-height:auto; padding:18px 0; display:block}
   section.stage[data-ghost]::before{display:none}
@@ -718,6 +733,27 @@ html.js .card.in>*{opacity:1; transform:none}
     'font:800 15px sans-serif;color:#38e1ff',
     'color:#93a4bd',
     'color:#b18cff');
+  /* PWA — 오프라인 캐시 서비스워커 */
+  if('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')){
+    addEventListener('load', function(){ navigator.serviceWorker.register('./sw.js'); });
+  }
+  /* 첫 방문 온보딩 토스트 — 1회만, 위젯 존재를 알린다 */
+  try{
+    if(!localStorage.getItem('s2c_seen')){
+      var toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.setAttribute('role','status');   // 빈 라이브 리전을 먼저 두고 내용은 표시 시점에 주입(SR 낭독 안정)
+      document.body.appendChild(toast);
+      var killToast = function(){ toast.classList.remove('up'); setTimeout(function(){ toast.remove(); }, 500); };
+      setTimeout(function(){
+        try{ localStorage.setItem('s2c_seen', '1'); }catch(e){}   // 실제 표시 시점에 마킹 — 조기 이탈 시 다음 방문에 재시도
+        toast.innerHTML = '💡 이 여정의 <b>실험실 위젯</b>들은 직접 조작할 수 있어요 — 슬라이더와 버튼을 만져 보세요 <button aria-label="닫기">✕</button>';
+        toast.querySelector('button').onclick = killToast;
+        toast.classList.add('up');
+      }, 1800);
+      setTimeout(killToast, 10500);
+    }
+  }catch(e){}
 })();
 </script>
 <script src="three.min.js"></script>
