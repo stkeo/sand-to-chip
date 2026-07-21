@@ -71,7 +71,8 @@ body{
   text-rendering:optimizeLegibility;
   font-optical-sizing:auto;
 }
-#bg{position:fixed; inset:0; width:100%; height:100%; display:block; z-index:0}
+#bg{position:fixed; inset:0; width:100%; height:100%; display:block; z-index:0; opacity:0; transition:opacity 1s ease}
+#bg.up{opacity:1}
 #veil{position:fixed; inset:0; z-index:1; pointer-events:none;
   background:
     radial-gradient(60% 42% at 50% 40%, color-mix(in srgb,var(--acc,var(--cyan)) 6%,transparent), transparent 76%),
@@ -303,6 +304,7 @@ html.js .card.in>*{opacity:1; transform:none}
 #mosCanvas{display:block; max-width:100%; height:auto; margin:12px auto 4px; border-radius:10px; background:#0a1220}
 #mosState{background:none; -webkit-text-fill-color:currentColor}
 #mooreCv{display:block; max-width:100%; height:auto; margin:12px auto 4px; background:#0a1220; border-radius:10px}
+#mpCv{display:block; max-width:100%; height:auto; margin:12px auto 4px; border-radius:10px; background:#0a1220}
 .ystats{display:flex; justify-content:center; gap:18px; margin-top:10px; font-size:12.5px; color:var(--dim)}
 .ystats b{font-variant-numeric:tabular-nums}
 .yg{color:var(--good)} .yb{color:var(--bad)}
@@ -379,6 +381,7 @@ html.js .card.in>*{opacity:1; transform:none}
   .lamps button:not(:disabled):active, #rail a.on .dot, #rail a:hover .dot,
   #minimap a.on, #minimap a:active, .finale .cta:hover .ar{transform:none}
   #qOpts button.on, .bigout .num.tick, .ystats b.tick{animation:none}
+  #bg{transition:none}
 }
 @media print{
   #bg,#veil,#topbar,#rail,#minimap,.scrollcue,.keyhint,.skip,.widget,.cta{display:none !important}
@@ -529,6 +532,20 @@ html.js .card.in>*{opacity:1; transform:none}
     구멍을 수백 층의 막을 관통해 한 번에 뚫는다. 우물 지름이 1m라면 깊이 100m를 수직으로 파는 셈.</p>
     <p>여기까지가 회로 <b>한 층</b>을 새기는 한 바퀴다. 층을 만들고(산화·증착) → 빛으로 그리고(포토) →
     깎아내는(식각) 이 사이클이 층을 바꿔 가며 <b>수십 번</b> 되풀이된다 — 지금 보는 ①~⑧은 그 반복을 한 줄로 편 것이다.</p>
+    <div class="widget" id="mpWidget">
+      <h3>🪞 멀티패터닝 — 단일 노광보다 가는 피치는 나눠 찍는다</h3>
+      <div class="lamps" id="mpLamps"></div>
+      <div class="wrow"><label for="mpTgt">목표 하프피치</label><input type="range" id="mpTgt" min="6" max="40" value="19"><output id="mpTgtO"></output></div>
+      <canvas id="mpCv" width="460" height="160" aria-hidden="true"></canvas>
+      <div class="bigout" aria-live="polite" aria-atomic="true">분할 차수 (필요 마스크·노광)
+        <div class="num" id="mpN">—</div>
+        <div class="note" id="mpTech"></div>
+        <div class="note" id="mpCost" style="color:var(--dim)"></div>
+        <div class="note" id="mpUse" style="color:var(--dim)"></div>
+      </div>
+      <div class="note">N = ⌈최소 하프피치 ÷ 목표 하프피치⌉ — 해상도 실험실(공정 ③)의 광원별 단일 노광 하한을 이어받았다.
+      SADP·SAQP는 실제로는 마스크가 아니라 스페이서로 나누지만, '여러 번 나눠 찍는다'는 직관은 같다.</div>
+    </div>
     <div class="chips"><span class="chip">건식: 플라즈마, 정밀·수직</span><span class="chip">습식: 용액, 빠르지만 등방성</span><span class="chip">식각 장비 선두 <b>램리서치·TEL</b></span></div>
   </div>
 </section>
@@ -569,6 +586,17 @@ html.js .card.in>*{opacity:1; transform:none}
     <div class="fact"><b>💡 보이지 않는 절반, 세정:</b> 거의 모든 공정 단계 사이에는
     <b>세정</b>이 끼어든다. 입자 하나, 금속 원자 하나만 남아도 회로가 죽기 때문에,
     <b>초순수(UPW)</b>와 화학액으로 씻어내는 이 과정이 팹에서 가장 여러 번 반복되는 축에 든다.</div>
+    <div class="widget" id="reentryWidget">
+      <h3>🔁 재진입 루프 카운터 — 한 장의 칩, 수십 번의 되돌이</h3>
+      <div class="lamps" id="rlChips"></div>
+      <div class="wrow"><label for="rlStepR">층당 단위공정</label><input type="range" id="rlStepR" min="8" max="15" value="10"><output id="rlStepO"></output></div>
+      <canvas id="rlCv" width="320" height="200" aria-hidden="true" style="display:block; max-width:100%; height:auto; margin:12px auto 4px"></canvas>
+      <div class="ystats" aria-live="polite" aria-atomic="true"><span>재진입 루프 <b id="rlLoops">—</b></span><span>누적 마스크 층 <b id="rlLayers">—</b></span><span>총 공정 단계 <b id="rlSteps" style="color:var(--acc)">—</b></span></div>
+      <div class="bigout" aria-live="polite" aria-atomic="true">예상 기간 <div class="num" id="rlPeriod">—</div><div class="note" id="rlNote"></div><div class="note" id="rlSub" style="color:var(--dim)"></div></div>
+      <div class="note">모델: <b>총 단계 = 마스크(포토) 층수 × 층당 단위공정</b>, <b>기간 = 총 단계 × 2.0h ÷ 24</b> —
+      시간당 소요는 대기(큐)·재작업·계측을 포함한 <b>근사 추정</b>이며, 실제 팹 체류의 대부분은 대기시간이다.
+      마스크 층수는 공개 산업 자료 기준 대표값.</div>
+    </div>
     <div class="chips"><span class="chip">알루미늄 → <b>구리</b> (1997, IBM 다마신)</span><span class="chip">배선 총길이: 다이당 <b>수 km</b></span><span class="chip">배선 사이엔 <b>저유전율(low-k)</b> 절연막</span><span class="chip">구리 확산 막는 <b>배리어막</b></span></div>
   </div>
 </section>
@@ -661,6 +689,22 @@ html.js .card.in>*{opacity:1; transform:none}
 
 </main>
 
+<script>
+/* 카드 등장을 3D와 분리 — three.min.js(603KB)가 늦거나 실패해도 본문은 즉시 뜬다 */
+(function(){
+  var cards = document.querySelectorAll('.card');
+  if(!('IntersectionObserver' in window)){ cards.forEach(function(c){ c.classList.add('in'); }); return; }
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:0.22});
+  cards.forEach(function(c){ io.observe(c); });
+  console.log(
+    '%c🔬 모래에서 칩까지%c — 반도체 8대 공정\n한 줌의 규소가 수백억 개의 스위치가 되기까지.\n소스가 궁금해 여기까지 오셨다면, 환영합니다.\n%c▶ 클린룸 타이쿤  https://stkeo.itch.io/cleanroom-tycoon',
+    'font:800 15px sans-serif;color:#38e1ff',
+    'color:#93a4bd',
+    'color:#b18cff');
+})();
+</script>
 <script src="three.min.js"></script>
 <script>
 'use strict';
@@ -889,10 +933,11 @@ reg(g => {
 /* ============ S3 웨이퍼 — 슬라이싱 ============ */
 reg(g => {
   const im = mat({color:0xc8ccd4, metalness:.95, roughness:.2});
+  const sliceGeo = new THREE.CylinderGeometry(0.62,0.62,0.06,48);   // 11장 공유
   const slices = new THREE.Group();
   const N = 11;
   for(let i=0;i<N;i++){
-    const s = new THREE.Mesh(new THREE.CylinderGeometry(0.62,0.62,0.06,48), im);
+    const s = new THREE.Mesh(sliceGeo, im);
     s.rotation.z = Math.PI/2;
     slices.add(s);
   }
@@ -1026,10 +1071,13 @@ reg(g => {
   const sh6 = contactShadow(1.2); sh6.position.y = -0.345; g.add(sh6);
   const barM = mat({color:0x6f7ea3, metalness:.7, roughness:.3});
   const capM = mat({color:0xb8452e, roughness:.4, emissive:0x531a0d, emissiveIntensity:.35});
+  const barGeo = new THREE.BoxGeometry(0.16,0.55,2.2);   // 6개 공유
+  const capGeo = new THREE.BoxGeometry(0.16,0.06,2.2);   // 6개 공유
+  const gapGeo = new THREE.BoxGeometry(0.22,0.55,2.2);   // 5개 공유
   const bars = new THREE.Group();
   for(let i=0;i<6;i++){
-    const bar = new THREE.Mesh(new THREE.BoxGeometry(0.16,0.55,2.2), barM);
-    const cap = new THREE.Mesh(new THREE.BoxGeometry(0.16,0.06,2.2), capM);
+    const bar = new THREE.Mesh(barGeo, barM);
+    const cap = new THREE.Mesh(capGeo, capM);
     cap.position.y = 0.305; bar.add(cap);
     bar.position.set((i-2.5)*0.38, -0.075, 0);
     bars.add(bar);
@@ -1038,7 +1086,7 @@ reg(g => {
   /* 마스크 없는 노출부 — 식각으로 실제로 깎여 내려가는 슬래브 */
   const gaps = new THREE.Group();
   for(let i=0;i<5;i++){
-    const s = new THREE.Mesh(new THREE.BoxGeometry(0.22,0.55,2.2), barM);
+    const s = new THREE.Mesh(gapGeo, barM);
     s.position.set((i-2)*0.38, -0.075, 0);
     gaps.add(s);
   }
@@ -1072,9 +1120,10 @@ reg(g => {
   const base = new THREE.Mesh(new THREE.BoxGeometry(2.0,0.28,2.0), mat({color:0x39415a, metalness:.5, roughness:.4}));
   base.position.y = -0.75; g.add(base);
   const colors = [0x59d6c8, 0x7f9cf5, 0xffbe4d, 0xd88cff, 0x41e396];
+  const layerGeo = new THREE.BoxGeometry(2.0,0.11,2.0);   // 5개 층 공유(재질은 색·발광 개별)
   const layers = [];
   for(let i=0;i<5;i++){
-    const L = new THREE.Mesh(new THREE.BoxGeometry(2.0,0.11,2.0),
+    const L = new THREE.Mesh(layerGeo,
       mat({color:colors[i], transparent:true, opacity:.85, roughness:.3, metalness:.3, emissive:colors[i], emissiveIntensity:.12}));
     L.position.y = -0.545 + i*0.115;
     layers.push(L); g.add(L);
@@ -1118,6 +1167,7 @@ reg(g => {
   const sh8 = contactShadow(1.2); sh8.position.y = -0.765; g.add(sh8);
   const cu = mat({color:0xd97a3c, metalness:.95, roughness:.28, emissive:0x7a3210, emissiveIntensity:.25});
   const viaM = mat({color:0xffb066, metalness:.9, roughness:.3, emissive:0xff7a1a, emissiveIntensity:.3});
+  const viaGeo = new THREE.CylinderGeometry(0.035,0.035,0.3,10);   // via 전체 공유
   const wires = new THREE.Group();
   const rng = (s => () => (s = s*16807%2147483647)/2147483647)(1234);
   for(let lv=0; lv<4; lv++){
@@ -1129,7 +1179,7 @@ reg(g => {
       w.position.set(horiz?(rng()-0.5)*0.9:(i-3)*0.34, y, horiz?(i-3)*0.34:(rng()-0.5)*0.9);
       wires.add(w);
       if(lv<3 && rng()>0.45){
-        const via = new THREE.Mesh(new THREE.CylinderGeometry(0.035,0.035,0.3,10), viaM);
+        const via = new THREE.Mesh(viaGeo, viaM);
         via.position.set(w.position.x + (horiz?(rng()-0.5)*len*0.8:0), y+0.15, w.position.z + (horiz?0:(rng()-0.5)*len*0.8));
         wires.add(via);
       }
@@ -1228,11 +1278,17 @@ reg(g => {
   const probe = new THREE.Group();
   const head = new THREE.Mesh(new THREE.BoxGeometry(0.5,0.1,0.5), mat({color:0x3a4254, metalness:.6}));
   probe.add(head);
-  for(let i=0;i<9;i++){
-    const pin = new THREE.Mesh(new THREE.CylinderGeometry(0.008,0.002,0.16,6), mat({color:0xd7dee9, metalness:.9}));
-    pin.position.set((i%3-1)*0.1, -0.12, (Math.floor(i/3)-1)*0.1);
-    probe.add(pin);
+  const ppGeo = new THREE.CylinderGeometry(0.008,0.002,0.16,6);
+  const ppMat = mat({color:0xd7dee9, metalness:.9});
+  const ppins = new THREE.InstancedMesh(ppGeo, ppMat, 9);   // 9콜 → 1콜
+  { const d = new THREE.Object3D();
+    for(let i=0;i<9;i++){
+      d.position.set((i%3-1)*0.1, -0.12, (Math.floor(i/3)-1)*0.1);
+      d.updateMatrix(); ppins.setMatrixAt(i, d.matrix);
+    }
+    ppins.instanceMatrix.needsUpdate = true;
   }
+  probe.add(ppins);
   const spark = glow(0x38e1ff, 0.5); spark.position.y = -0.14; probe.add(spark);
   probe.position.y = 0.45; g.add(probe);
   const scan = new THREE.Mesh(new THREE.BoxGeometry(2.5,0.005,0.05), basic({color:0x38e1ff, transparent:true, opacity:.6, blending:THREE.AdditiveBlending}));
@@ -1275,12 +1331,15 @@ reg(g => {
     }
   }
   hbm.position.x = 0.55; g.add(hbm);
-  const bumps = new THREE.Group();
+  const bumpGeo = new THREE.SphereGeometry(0.03,10,10);
   const bm = mat({color:0xe8c766, metalness:.95, roughness:.2});
-  for(let i=0;i<10;i++){
-    const b = new THREE.Mesh(new THREE.SphereGeometry(0.03,10,10), bm);
-    b.position.set(-0.42+(i%5-2)*0.16, -0.495, (Math.floor(i/5)-0.5)*0.5);
-    bumps.add(b);
+  const bumps = new THREE.InstancedMesh(bumpGeo, bm, 10);   // 10콜 → 1콜
+  { const d = new THREE.Object3D();
+    for(let i=0;i<10;i++){
+      d.position.set(-0.42+(i%5-2)*0.16, -0.495, (Math.floor(i/5)-0.5)*0.5);
+      d.updateMatrix(); bumps.setMatrixAt(i, d.matrix);
+    }
+    bumps.instanceMatrix.needsUpdate = true;
   }
   g.add(bumps);
   const lid = new THREE.Mesh(new THREE.BoxGeometry(2.1,0.07,1.45), mat({color:0x8d93a8, metalness:.9, roughness:.3, transparent:true, opacity:.9}));
@@ -1320,16 +1379,22 @@ reg(g => {
   chip.add(body);
   const core = new THREE.Mesh(new THREE.BoxGeometry(0.7,0.18,0.7), mat({color:0x0c1322, emissive:0x38e1ff, emissiveIntensity:.9}));
   chip.add(core);
+  const pinGeo = new THREE.BoxGeometry(0.05,0.03,0.14);
   const pinM = mat({color:0xd7dee9, metalness:.95, roughness:.25});
-  for(let s=0;s<4;s++) for(let i=0;i<8;i++){
-    const pin = new THREE.Mesh(new THREE.BoxGeometry(0.05,0.03,0.14), pinM);
-    const off = (i-3.5)*0.17;
-    if(s===0) pin.position.set(off,-0.02,0.8);
-    if(s===1) pin.position.set(off,-0.02,-0.8);
-    if(s===2){ pin.position.set(0.8,-0.02,off); pin.rotation.y=Math.PI/2; }
-    if(s===3){ pin.position.set(-0.8,-0.02,off); pin.rotation.y=Math.PI/2; }
-    chip.add(pin);
+  const pins = new THREE.InstancedMesh(pinGeo, pinM, 32);   // 32콜 → 1콜
+  { const d = new THREE.Object3D(); let k = 0;
+    for(let s=0;s<4;s++) for(let i=0;i<8;i++){
+      const off = (i-3.5)*0.17;
+      d.rotation.set(0,0,0);
+      if(s===0) d.position.set(off,-0.02,0.8);
+      if(s===1) d.position.set(off,-0.02,-0.8);
+      if(s===2){ d.position.set(0.8,-0.02,off); d.rotation.y=Math.PI/2; }
+      if(s===3){ d.position.set(-0.8,-0.02,off); d.rotation.y=Math.PI/2; }
+      d.updateMatrix(); pins.setMatrixAt(k++, d.matrix);
+    }
+    pins.instanceMatrix.needsUpdate = true;
   }
+  chip.add(pins);
   g.add(chip);
   const halo = pointCloud(900, 0, 0x74e6ff, 0.025, () => {
     const a = Math.random()*Math.PI*2, r = 1.6+Math.random()*2.2;
@@ -1449,9 +1514,7 @@ function navFocus(ev){
 rail.addEventListener('click', navFocus);
 minimap.addEventListener('click', navFocus);
 
-/* ---------- 카드 등장 ---------- */
-const io = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); }), {threshold:0.22});
-document.querySelectorAll('.card').forEach(c => io.observe(c));
+/* (카드 등장 IO는 three.min.js 앞의 조기 스크립트가 단독 소유 — 3D 실패에도 본문 표시 보장) */
 
 /* ---------- 렌더 루프 ---------- */
 function resize(){
@@ -1538,6 +1601,7 @@ stages.forEach(st => st.group.traverse(o => {
 }));
 
 frame();
+canvas.classList.add('up');   // 첫 렌더 완료 후 3D 씬 페이드인 (팝인 방지)
 /* 모션 최소화: 상시 루프 대신 스크롤·리사이즈·위젯 조작 시에만 렌더 */
 if(REDUCE){
   let queued = false;
@@ -1931,6 +1995,249 @@ if(REDUCE){
   }
   pinR.oninput = render; stkR.oninput = render;
   sync(); render();
+})();
+
+/* ============================================================
+   위젯 8 — 멀티패터닝 (분할 차수 N = ⌈최소hp / 목표hp⌉)
+   해상도 실험실의 후속: 단일 노광 하한보다 가는 피치는 나눠 찍는다
+   ============================================================ */
+(function(){
+  const lamps = document.getElementById('mpLamps');
+  if(!lamps) return;
+  const cv = document.getElementById('mpCv'), ctx = cv.getContext('2d');
+  const W = cv.width, H = cv.height;
+  const tgtR = document.getElementById('mpTgt'), tgtO = document.getElementById('mpTgtO');
+  const nO   = document.getElementById('mpN'),  techO = document.getElementById('mpTech');
+  const costO= document.getElementById('mpCost'), useO = document.getElementById('mpUse');
+
+  /* 광원별 단일 노광 최소 하프피치(nm) — 실무 하한 */
+  const SRC = [
+    {name:'ArF 액침',              min:38},  /* 193nm·1.35NA, k₁≈0.28 실무 하한 */
+    {name:'EUV (0.33 NA)',         min:13},  /* 13.5nm 단일 노광 실무 하한 */
+    {name:'High-NA EUV (0.55 NA)', min:8}    /* imec 16nm 피치 단일 노광 실증 */
+  ];
+  const COLORS = ['#38e1ff','#ffbe4d','#b18cff','#41e396']; // 마스크 A/B/C/D
+  const TECH = {
+    1:{tag:'단일 노광',   full:'Single Exposure'},
+    2:{tag:'SADP / LELE', full:'더블 패터닝'},
+    3:{tag:'LELELE',      full:'트리플 패터닝'},
+    4:{tag:'SAQP',        full:'자기정렬 쿼드러플 패터닝'}
+  };
+  const USE = {
+    1:'광원의 단일 노광 한계 안쪽 — 나눌 필요 없이 한 번에 찍는다',
+    2:'14nm 세대 양산에 도입 — 마스크 2장(LELE) 또는 스페이서 1회(SADP)',
+    3:'리소–식각을 세 번 반복(LELELE)',
+    4:'인텔 10nm 핀을 EUV 없이 ArF로 — SAQP(연속 SADP 2회로 피치 1/4)'
+  };
+
+  let cur = 0;
+  SRC.forEach((s,i)=>{
+    const b = document.createElement('button');
+    b.textContent = s.name;
+    b.onclick = ()=>{ cur = i; sync(); render(); };
+    lamps.appendChild(b);
+  });
+  function sync(){ Array.from(lamps.children).forEach((b,i)=>b.classList.toggle('on', i===cur)); }
+  function splits(minHp, tgt){ return Math.max(1, Math.ceil(minHp/tgt)); }
+
+  function render(){
+    const s = SRC[cur], tgt = +tgtR.value;
+    tgtO.textContent = tgt + ' nm';
+    const N = splits(s.min, tgt);
+    nO.textContent = '×' + N;
+
+    if(N <= 4){
+      const t = TECH[N];
+      techO.textContent = t.tag + ' — ' + t.full;
+      costO.textContent = '노광 ' + N + '회 · 상대 공정비용 ≈ ' + N + '배 (근사)';
+    } else {
+      techO.textContent = '≥5회 — 단일 파장 한계 초과';
+      costO.textContent = '노광 ' + N + '회 상당 · 5중 이상 분할은 비현실적 (근사)';
+    }
+
+    const arfN = splits(SRC[0].min, tgt);
+    let use = USE[N] || '이 피치는 더 짧은 파장으로 갈아탈 신호 — ArF로는 5회 이상 나눠야 한다';
+    if(cur > 0 && arfN > N){
+      use = '같은 ' + tgt + 'nm를 ArF는 ' + (arfN > 4 ? '5회+' : '×'+arfN) +
+            ', 이 광원은 ×' + N + ' — EUV 도입이 멀티패터닝을 줄였다';
+    }
+    useO.textContent = use;
+    draw(N);
+  }
+
+  function draw(N){
+    ctx.clearRect(0,0,W,H);
+    const pad = 14, labelW = 76, cols = 24;
+    const x0 = pad + labelW, uW = W - x0 - pad;
+    const dpx = uW / cols;                 // 최종(합쳐진) 패턴의 피치(px)
+    const bw  = Math.max(2, dpx * 0.5);    // 선폭 = 하프피치
+    ctx.font = '11px sans-serif';
+    ctx.textBaseline = 'middle';
+    const label = (txt,y)=>{ ctx.fillStyle='#93a4bd'; ctx.textAlign='left'; ctx.fillText(txt, pad, y); };
+
+    if(N >= 5){   /* 단일 파장 비현실 영역 */
+      const y = H/2 - 22;
+      for(let i=0;i<cols;i++){
+        ctx.fillStyle = (i % 2) ? 'rgba(255,93,115,.85)' : 'rgba(255,93,115,.30)';
+        ctx.fillRect(x0 + i*dpx, y, bw, 30);
+      }
+      ctx.fillStyle = '#ff5d73'; ctx.textAlign = 'left';
+      ctx.fillText('5회+ 분할 — 단일 파장으로는 비현실적', pad, y + 52);
+      return;
+    }
+    if(N === 1){
+      const y = H/2 - 10;
+      label('단일 노광', y + 10);
+      for(let i=0;i<cols;i++){ ctx.fillStyle = '#38e1ff'; ctx.fillRect(x0 + i*dpx, y, bw, 20); }
+      return;
+    }
+    /* N개 마스크 행 — 각 행은 N배 성긴 피치(단일 노광으로 찍히는 간격) */
+    const rowH = 20, gap = 8;
+    let y = 10;
+    for(let k=0;k<N;k++){
+      label('마스크 ' + String.fromCharCode(65 + k), y + rowH/2);
+      for(let i=0;i<cols;i++){
+        if((i % N) !== k) continue;
+        ctx.fillStyle = COLORS[k];
+        ctx.fillRect(x0 + i*dpx, y, bw, rowH);
+      }
+      y += rowH + gap;
+    }
+    y += 4;
+    label('합쳐진 패턴', y + rowH/2);
+    for(let i=0;i<cols;i++){
+      ctx.fillStyle = COLORS[i % N];
+      ctx.fillRect(x0 + i*dpx, y, bw, rowH);
+    }
+  }
+
+  tgtR.oninput = render;
+  sync(); render();
+})();
+
+/* ============================================================
+   위젯 9 — 재진입 루프 카운터 (마스크 층수 × 층당 단계 → 총 단계·기간)
+   ============================================================ */
+(function(){
+  const cv = document.getElementById('rlCv');
+  if(!cv) return;
+  const ctx = cv.getContext('2d');
+  const W = cv.width, H = cv.height;                 // 320 × 200
+  const MONO = 'Consolas,ui-monospace,monospace';
+  let ACC = getComputedStyle(cv).getPropertyValue('--acc').trim();
+  if(ACC[0] !== '#') ACC = '#d97a3c';                // S8 구리색 폴백
+  function hex2rgba(h,a){ h=h.replace('#',''); if(h.length===3) h=h.split('').map(c=>c+c).join('');
+    const n=parseInt(h,16); return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')'; }
+
+  const CHIPS = [
+    {name:'구형 로직 28nm급', masks:40, tip:'레거시 CMOS · 40~50 마스크'},
+    {name:'최신 로직 3nm급',  masks:90, tip:'7nm ~87 → 5nm ~81(EUV가 다중노광 마스크를 대체해 감소) → 3nm에서 다시 증가 · 대표값'},
+    {name:'DRAM 1x급',        masks:35, tip:'멀티패터닝은 소수 · 30~40 마스크'},
+    {name:'3D NAND',          masks:30, tip:'마스크는 적지만, 수백 층 증착·식각 반복이 이 계산 밖에서 별도로 길다'},
+  ];
+  const AVG_H = 2.0;                                  // 단계당 평균 소요(h) — 큐·재작업·계측 포함 근사
+  let cur = 1;                                        // 기본 = 최신 로직(3nm)
+
+  const chipsEl = document.getElementById('rlChips');
+  const stepR = document.getElementById('rlStepR'),   stepO   = document.getElementById('rlStepO');
+  const loopsB = document.getElementById('rlLoops'),  layersB = document.getElementById('rlLayers'),
+        stepsB = document.getElementById('rlSteps');
+  const periodN = document.getElementById('rlPeriod'), noteE  = document.getElementById('rlNote'),
+        subE = document.getElementById('rlSub');
+
+  CHIPS.forEach((c,i)=>{
+    const b = document.createElement('button');
+    b.textContent = c.name;
+    b.onclick = ()=>{ cur=i; syncChips(); prog=0; done=false; headA=A0; compute(); };
+    chipsEl.appendChild(b);
+  });
+  function syncChips(){ Array.from(chipsEl.children).forEach((b,i)=>b.classList.toggle('on', i===cur)); }
+
+  /* ---- 애니 상태 ---- */
+  const NODES = ['산화·증착','포토','식각','CMP','세정'];
+  const CX=100, CY=100, RR=62, A0=-Math.PI/2, STEP=Math.PI*2/5;
+  let prog=0, done=false, headA=A0, visible=false, running=false, lastTs=0;
+  let targetMasks = CHIPS[cur].masks;
+
+  function compute(){
+    const c = CHIPS[cur];
+    targetMasks = c.masks;
+    const spl = +stepR.value;
+    stepO.textContent = spl + ' 단계/층';
+    const totalSteps = c.masks * spl;
+    const periodDays = totalSteps * AVG_H / 24;
+    const months = periodDays / 30;
+    loopsB.textContent  = c.masks + '회';
+    layersB.textContent = c.masks + '층';
+    stepsB.textContent  = totalSteps.toLocaleString() + '단계';
+    periodN.textContent = '약 ' + months.toFixed(1) + '개월';
+    noteE.textContent = '≈ ' + Math.round(periodDays) + '일 · ' + totalSteps.toLocaleString()
+      + '단계 × ' + AVG_H.toFixed(1) + 'h/단계 · 대기·재작업 포함 근사 추정';
+    let sub = c.tip;
+    if(cur===1 && months >= 2 && months <= 3) sub += ' · 본문의 "2~3개월"과 정합';
+    subE.textContent = sub;
+    if(REDUCE) draw();
+    else if(visible && !running){ running=true; requestAnimationFrame(loop); }
+  }
+
+  function draw(){
+    const laps = (done||REDUCE) ? targetMasks : Math.round(prog*targetMasks);
+    const frac = targetMasks ? laps/targetMasks : 0;
+    const hA   = REDUCE ? A0 : headA;
+    ctx.clearRect(0,0,W,H);
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+
+    /* 재진입 고리 */
+    ctx.lineWidth=2; ctx.strokeStyle='rgba(147,164,189,.22)';
+    ctx.beginPath(); ctx.arc(CX,CY,RR,0,7); ctx.stroke();
+    ctx.lineWidth=3; ctx.strokeStyle=ACC;
+    ctx.beginPath(); ctx.arc(CX,CY,RR, hA-0.9, hA); ctx.stroke();
+    const hx=CX+Math.cos(hA)*RR, hy=CY+Math.sin(hA)*RR;
+    ctx.fillStyle='#eaf6ff'; ctx.beginPath(); ctx.arc(hx,hy,4.5,0,7); ctx.fill();
+    /* 5개 공정 노드 — 헤드 최근접 강조 */
+    const near = ((Math.round((hA-A0)/STEP)%5)+5)%5;
+    ctx.font='10px sans-serif';
+    for(let k=0;k<5;k++){
+      const a=A0+k*STEP, nx=CX+Math.cos(a)*RR, ny=CY+Math.sin(a)*RR, on=(k===near);
+      ctx.beginPath(); ctx.arc(nx,ny,on?5:3.5,0,7);
+      ctx.fillStyle = on?ACC:'rgba(147,164,189,.55)'; ctx.fill();
+      ctx.fillStyle = on?'#eaf6ff':'#93a4bd';
+      ctx.fillText(NODES[k], CX+Math.cos(a)*(RR+15), CY+Math.sin(a)*(RR+15));
+    }
+    /* 중앙 라이브 카운터 */
+    ctx.fillStyle=ACC; ctx.font='700 28px '+MONO; ctx.fillText(String(laps), CX, CY-4);
+    ctx.fillStyle='#93a4bd'; ctx.font='10px sans-serif'; ctx.fillText('재진입 루프', CX, CY+16);
+
+    /* 누적 층 막대 */
+    const bx=250, bw=46, baseY=176, maxH=150, h=maxH*frac;
+    ctx.strokeStyle='rgba(147,164,189,.25)'; ctx.lineWidth=1; ctx.strokeRect(bx, baseY-maxH, bw, maxH);
+    const grd=ctx.createLinearGradient(0,baseY,0,baseY-maxH);
+    grd.addColorStop(0,hex2rgba(ACC,.35)); grd.addColorStop(1,hex2rgba(ACC,.95));
+    ctx.fillStyle=grd; ctx.fillRect(bx, baseY-h, bw, h);
+    ctx.strokeStyle='rgba(7,11,20,.5)';
+    const per=maxH/targetMasks, ls=targetMasks>60?2:1;
+    for(let k=ls;k<laps;k+=ls){ const yy=baseY-k*per; ctx.beginPath(); ctx.moveTo(bx,yy); ctx.lineTo(bx+bw,yy); ctx.stroke(); }
+    ctx.fillStyle='#93a4bd'; ctx.font='10px sans-serif'; ctx.fillText('누적 층', bx+bw/2, baseY+12);
+  }
+
+  function loop(ts){
+    if(!visible || REDUCE){ running=false; lastTs=0; return; }
+    const mul = lastTs ? Math.min((ts-lastTs)/16.7, 3) : 1; lastTs=ts;   // 60fps 정규화
+    headA += mul*0.16;
+    if(!done){ prog += mul/(60*9); if(prog>=1){ prog=1; done=true; } }   // ~9초에 마스크수까지 누적
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  new IntersectionObserver(es => es.forEach(e => {
+    visible = e.isIntersecting;
+    if(!visible) return;
+    if(REDUCE) draw();
+    else if(!running){ running=true; requestAnimationFrame(loop); }
+  }), {threshold:0}).observe(cv);
+
+  stepR.oninput = compute;   // 슬라이더는 마스크수 불변 → 애니 리셋 안 함
+  syncChips(); compute();
 })();
 
 /* ============================================================
