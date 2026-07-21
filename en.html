@@ -1,24 +1,24 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>모래에서 칩까지 — 반도체 8대 공정 인터랙티브</title>
+<title>From Sand to Chip — The 8 Core Semiconductor Processes, Interactive</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23070b14'/%3E%3Crect x='9' y='9' width='14' height='14' rx='2' fill='none' stroke='%2338e1ff' stroke-width='2'/%3E%3Crect x='13' y='13' width='6' height='6' fill='%2338e1ff'/%3E%3C/svg%3E">
-<meta name="description" content="모래 한 줌이 수백억 트랜지스터의 칩이 되기까지 — 스크롤로 떠나는 반도체 8대 공정 3D 여행. 잉곳 성장부터 EUV 노광, 수율 실험실까지.">
-<meta property="og:title" content="모래에서 칩까지">
-<meta property="og:description" content="스크롤로 떠나는 반도체 8대 공정 인터랙티브 여행">
+<meta name="description" content="How a handful of sand becomes a chip of tens of billions of transistors — a scroll-driven 3D journey through the 8 core semiconductor processes, from ingot growth to EUV lithography to the yield lab.">
+<meta property="og:title" content="From Sand to Chip">
+<meta property="og:description" content="A scroll-driven interactive journey through the 8 core semiconductor processes">
 <meta property="og:image" content="https://stkeo.github.io/sand-to-chip/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="모래에서 칩까지 — 반도체 8대 공정 3D 여행">
-<meta property="og:site_name" content="모래에서 칩까지">
+<meta property="og:image:alt" content="From Sand to Chip — a 3D journey through the 8 core semiconductor processes">
+<meta property="og:site_name" content="From Sand to Chip">
 <meta property="og:type" content="website">
-<meta property="og:locale" content="ko_KR">
-<meta property="og:locale:alternate" content="en_US">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="ko_KR">
 <meta name="twitter:card" content="summary_large_image">
-<meta property="og:url" content="https://stkeo.github.io/sand-to-chip/">
-<link rel="canonical" href="https://stkeo.github.io/sand-to-chip/">
+<meta property="og:url" content="https://stkeo.github.io/sand-to-chip/en.html">
+<link rel="canonical" href="https://stkeo.github.io/sand-to-chip/en.html">
 <link rel="alternate" hreflang="ko" href="https://stkeo.github.io/sand-to-chip/">
 <link rel="alternate" hreflang="en" href="https://stkeo.github.io/sand-to-chip/en.html">
 <link rel="alternate" hreflang="x-default" href="https://stkeo.github.io/sand-to-chip/">
@@ -27,11 +27,11 @@
 <script>document.documentElement.classList.add('js')</script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"LearningResource",
- "name":"모래에서 칩까지 — 반도체 8대 공정 인터랙티브",
- "description":"모래 한 줌이 수백억 트랜지스터의 칩이 되기까지 — 스크롤로 떠나는 반도체 8대 공정 3D 여행.",
- "inLanguage":"ko","url":"https://stkeo.github.io/sand-to-chip/",
- "learningResourceType":"인터랙티브 설명",
- "teaches":"반도체 8대 공정","datePublished":"2026-07-04","dateModified":"2026-07-21",
+ "name":"From Sand to Chip — The 8 Core Semiconductor Processes, Interactive",
+ "description":"How a handful of sand becomes a chip of tens of billions of transistors — a scroll-driven 3D journey through the 8 core semiconductor processes.",
+ "inLanguage":"en","url":"https://stkeo.github.io/sand-to-chip/en.html",
+ "learningResourceType":"Interactive explainer",
+ "teaches":"The 8 core semiconductor processes","datePublished":"2026-07-04","dateModified":"2026-07-21",
  "image":"https://stkeo.github.io/sand-to-chip/og.png"}
 </script>
 <style>
@@ -409,296 +409,296 @@ html.js .card.in>*{opacity:1; transform:none}
 </style>
 </head>
 <body>
-<a class="skip" href="#s0">본문 바로가기</a>
+<a class="skip" href="#s0">Skip to content</a>
 <div class="langtoggle" role="group" aria-label="Language / 언어">
-  <a href="./" hreflang="ko" lang="ko" class="on" aria-current="true">KO</a>
-  <a href="./en.html" hreflang="en" lang="en">EN</a>
+  <a href="./" hreflang="ko" lang="ko">KO</a>
+  <a href="./en.html" hreflang="en" lang="en" class="on" aria-current="true">EN</a>
 </div>
-<noscript><div style="position:relative;z-index:20;padding:10px 16px;background:#131b2e;color:#c7d3e6;font-size:13px;text-align:center">JavaScript가 꺼져 있어 3D 애니메이션은 나오지 않지만, 본문은 그대로 읽을 수 있습니다.</div></noscript>
+<noscript><div style="position:relative;z-index:20;padding:10px 16px;background:#131b2e;color:#c7d3e6;font-size:13px;text-align:center">JavaScript is turned off, so the 3D animation won't play — but you can still read the full article.</div></noscript>
 <canvas id="bg" aria-hidden="true"></canvas>
 <div id="veil" aria-hidden="true"></div>
-<div id="topbar" role="progressbar" aria-label="읽기 진행도" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
-<nav id="rail" aria-label="공정 단계"></nav>
-<nav id="minimap" aria-label="공정 단계 (모바일)"></nav>
+<div id="topbar" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+<nav id="rail" aria-label="Process stages"></nav>
+<nav id="minimap" aria-label="Process stages (mobile)"></nav>
 
 <main>
 
 <section class="stage hero" data-stage="0" id="s0">
   <div class="card">
     <div class="step pre">INTERACTIVE JOURNEY</div>
-    <h1>모래에서<br>칩까지</h1>
-    <p class="sub">지금 이 화면을 그리고 있는 칩은 <b>몇 달 전까지 모래</b>였다.<br>
-    스크롤을 내리며, 인류가 만든 가장 정밀한 제조 공정을 따라가 보자.</p>
+    <h1>From Sand<br>to Chip</h1>
+    <p class="sub">The chip drawing this very screen was <b>just sand a few months ago</b>.<br>
+    Scroll down and follow the most precise manufacturing process humankind has ever built.</p>
     <div class="chips" style="justify-content:center">
-      <span class="chip">8대 공정</span><span class="chip">소요 <b>2~3개월</b></span><span class="chip">공정 단계 <b>수백 개</b></span>
+      <span class="chip">8 core processes</span><span class="chip">Takes <b>2–3 months</b></span><span class="chip"><b>Hundreds</b> of process steps</span>
     </div>
     <div class="scrollcue">SCROLL</div>
-    <div class="keyhint">← · → 또는 J · K 키로 공정 사이를 건너뛸 수 있다</div>
+    <div class="keyhint">Use ← · → or J · K to jump between process steps</div>
   </div>
 </section>
 
 <section class="stage" data-stage="1" data-ghost="Ⅰ" id="s1">
   <div class="card">
-    <div class="step pre">프롤로그 Ⅰ · 정제</div>
-    <h2>모든 칩은 모래에서 시작된다<small>REFINING — 99.9999999%</small></h2>
-    <p>칩의 재료는 <b>규소(Si)</b>. 지각의 약 28%를 차지하는, 산소 다음으로 흔한 원소다.
-    바닷가 모래(석영, SiO₂)에서 출발하지만, 반도체가 되려면
-    <b>'나인 나인(9N)' — 99.9999999%</b> 순도까지 정제해야 한다.</p>
-    <p>탄소와 함께 녹여 산소를 떼어내면 순도 ~98%의 야금급 실리콘.
-    이를 염화수소와 반응시켜 증류하고 다시 석출시키는 <b>지멘스 공정</b>을 거치면,
-    불순물이 10억 분의 1 수준인 <b>폴리실리콘</b> 덩어리가 남는다.</p>
-    <div class="chips"><span class="chip">아크로 <b>~1,900°C</b> 탄소 환원</span><span class="chip">정제 매개 <b>삼염화실란(SiHCl₃)</b></span></div>
-    <div class="fact"><b>💡 10억 분의 1이란?</b> 지구 인구 80억 명 중 딱 8명만 '이방인'인 수준의 순도다.</div>
+    <div class="step pre">Prologue Ⅰ · Refining</div>
+    <h2>Every chip begins as sand<small>REFINING — 99.9999999%</small></h2>
+    <p>The chip's raw material is <b>silicon (Si)</b> — after oxygen, the most abundant element in Earth's crust, making up about 28% of it.
+    It starts out as beach sand (quartz, SiO₂), but to become a semiconductor it must be refined to
+    <b>'nine-nines (9N)' — 99.9999999%</b> purity.</p>
+    <p>Melting it with carbon strips away the oxygen, yielding metallurgical-grade silicon of about 98% purity.
+    Running that through the <b>Siemens process</b> — reacting it with hydrogen chloride, distilling, then redepositing it —
+    leaves a chunk of <b>polysilicon</b> with impurities down to one part per billion.</p>
+    <div class="chips"><span class="chip">Arc furnace <b>~1,900°C</b> carbon reduction</span><span class="chip">Refining agent <b>trichlorosilane (SiHCl₃)</b></span></div>
+    <div class="fact"><b>💡 One part per billion?</b> A purity where, out of Earth's 8 billion people, exactly 8 would be 'strangers.'</div>
   </div>
 </section>
 
 <section class="stage" data-stage="2" data-ghost="Ⅱ" id="s2">
   <div class="card">
-    <div class="step pre">프롤로그 Ⅱ · 잉곳 성장</div>
-    <h2>회전하며 자라나는 단결정 기둥<small>CZOCHRALSKI GROWTH</small></h2>
-    <p>폴리실리콘을 석영 도가니에 넣고 실리콘의 융점 <b>1,414°C</b>로 녹인다.
-    손가락만 한 <b>종자 결정(시드)</b>을 표면에 살짝 담근 뒤, 천천히 회전시키며 끌어올리면 —
-    녹은 실리콘이 시드의 원자 배열을 그대로 따라 굳으면서
-    원자가 완벽히 정렬된 <b>단결정 잉곳</b>이 자라난다.</p>
-    <p>1916년 폴란드 화학자 <b>얀 초크랄스키</b>가 펜을 잉크병 대신
-    녹은 주석에 잘못 담갔다가 발견한 이 방법은, 110년이 지난 지금도
-    거의 모든 웨이퍼의 출발점이다.</p>
-    <div class="chips"><span class="chip">지름 <b>300mm</b></span><span class="chip">길이 <b>1~2m</b></span><span class="chip">무게 <b>수백 kg</b></span></div>
-    <div class="fact"><b>💡 왜 하필 '단'결정일까?</b> 결정 알갱이 경계(결정립계)가 있으면
-    그 자리에서 전자가 흩어져 소자 특성이 흐트러진다. 웨이퍼 한 장 전체가
-    <b>하나의 결정</b>이어야 수백억 개 트랜지스터가 균일하게 동작한다.</div>
+    <div class="step pre">Prologue Ⅱ · Ingot Growth</div>
+    <h2>A single-crystal pillar grown while spinning<small>CZOCHRALSKI GROWTH</small></h2>
+    <p>The polysilicon goes into a quartz crucible and is melted at silicon's melting point of <b>1,414°C</b>.
+    A finger-sized <b>seed crystal</b> is dipped lightly onto the surface, then slowly pulled upward while rotating —
+    and the molten silicon solidifies following the seed's atomic arrangement exactly,
+    growing into a <b>single-crystal ingot</b> with its atoms in perfect order.</p>
+    <p>Discovered in 1916 when Polish chemist <b>Jan Czochralski</b> accidentally dipped his pen into
+    molten tin instead of an inkwell, this method is — 110 years later — still
+    the starting point for nearly every wafer.</p>
+    <div class="chips"><span class="chip">Diameter <b>300mm</b></span><span class="chip">Length <b>1–2m</b></span><span class="chip">Weight <b>hundreds of kg</b></span></div>
+    <div class="fact"><b>💡 Why single-crystal?</b> Where crystal grain boundaries exist,
+    electrons scatter at those spots and the device characteristics fall apart. Only when a whole wafer is
+    <b>one single crystal</b> do its tens of billions of transistors operate uniformly.</div>
   </div>
 </section>
 
 <section class="stage" data-stage="3" data-ghost="01" id="s3">
   <div class="card">
-    <div class="step">공정 ① 웨이퍼 제조</div>
-    <h2>다이아몬드 톱으로 썰어낸 캔버스<small>WAFER SLICING & POLISHING</small></h2>
-    <p>잉곳을 <b>다이아몬드 와이어</b>로 얇게 썬다. 지름 300mm, 두께 <b>0.775mm</b>의 원판 — 웨이퍼다.</p>
-    <p>절단면을 갈아내고(래핑) 화학적으로 다듬은 뒤 거울처럼 연마하면(폴리싱),
-    표면 굴곡이 <b>나노미터 수준</b>인 완벽한 캔버스가 완성된다.
-    이 위에 앞으로 수백 개의 공정이 쌓인다.</p>
-    <div class="fact"><b>💡 왜 원형일까?</b> 잉곳이 회전하며 자라 원기둥이기 때문. 사각 칩을 새기다 보니 가장자리는 버려지지만, 원형이 열·응력 분포에도 유리하다.</div>
+    <div class="step">Process ① Wafer Manufacturing</div>
+    <h2>A canvas sliced out with a diamond saw<small>WAFER SLICING & POLISHING</small></h2>
+    <p>The ingot is sliced thin with a <b>diamond wire</b>. A disc 300mm across and <b>0.775mm</b> thick — the wafer.</p>
+    <p>Grinding down the cut face (lapping), refining it chemically, then polishing it to a mirror finish
+    produces a flawless canvas whose surface undulations are at the <b>nanometer scale</b>.
+    Onto this, hundreds of processes will be stacked.</p>
+    <div class="fact"><b>💡 Why round?</b> Because the ingot grows while rotating, forming a cylinder. Square chips are carved from it so the edges go to waste, but a round shape is also better for heat and stress distribution.</div>
     <div class="widget" id="scaleWidget">
-      <h3>🔬 나노 스케일 감각 — 머리카락에서 원자까지</h3>
+      <h3>🔬 A feel for nano scale — from a human hair to an atom</h3>
       <div class="lamps" id="scLamps"></div>
       <canvas id="scCv" width="460" height="64" aria-hidden="true"></canvas>
-      <div class="bigout" aria-live="polite" aria-atomic="true">크기 <div class="num" id="scSize">—</div><div class="note" id="scNote" style="color:var(--dim)"></div></div>
+      <div class="bigout" aria-live="polite" aria-atomic="true">Size <div class="num" id="scSize">—</div><div class="note" id="scNote" style="color:var(--dim)"></div></div>
     </div>
   </div>
 </section>
 
 <section class="stage" data-stage="4" data-ghost="02" id="s4">
   <div class="card">
-    <div class="step">공정 ② 산화</div>
-    <h2>실리콘 위에 유리 갑옷을 입히다<small>OXIDATION</small></h2>
-    <p>거울처럼 닦아낸 웨이퍼에 가장 먼저 하는 일은, 역설적이게도 표면을 다시 덮는 것이다.
-    웨이퍼를 <b>800~1,200°C</b> 고온 노(퍼니스)에 넣고 산소나 수증기를 흘리면,
-    표면에 <b>이산화규소(SiO₂)</b> — 유리 — 막이 자란다.</p>
-    <p>이 산화막은 전기가 통하지 않는 <b>절연체</b>다. 회로 사이 누전을 막는 보호벽이자,
-    트랜지스터(이 여정 끝에 완성될 전기 스위치)의 심장인 <b>게이트 절연막</b>의 재료가 된다.
-    두께는 나노미터 단위로 정밀하게 제어한다.</p>
-    <div class="chips"><span class="chip">건식: 산소, 얇고 치밀</span><span class="chip">습식: 수증기, 빠르고 두껍게</span></div>
-    <div class="fact"><b>💡 SiO₂를 넘어서:</b> 45nm 세대(2007년)부터 트랜지스터 게이트 절연막은
-    얇은 SiO₂ 대신 <b>하프늄 산화물(HfO₂) 같은 high-k 물질</b>로 바뀌었다.
-    막을 더 두껍게 하고도 같은 전기적 효과를 내 <b>누설 전류</b>를 억제하기 위해서다.</div>
+    <div class="step">Process ② Oxidation</div>
+    <h2>Cladding silicon in armor of glass<small>OXIDATION</small></h2>
+    <p>The very first thing done to the mirror-polished wafer is, paradoxically, to cover its surface again.
+    Place the wafer in a high-temperature furnace at <b>800–1,200°C</b> and flow oxygen or water vapor over it,
+    and a film of <b>silicon dioxide (SiO₂)</b> — glass — grows on the surface.</p>
+    <p>This oxide film is an <b>insulator</b> that electricity cannot pass through. It is both a protective wall against leakage between circuits
+    and the material for the <b>gate insulator</b>, the heart of the transistor (the electrical switch to be completed at the end of this journey).
+    Its thickness is controlled precisely at the nanometer scale.</p>
+    <div class="chips"><span class="chip">Dry: oxygen, thin and dense</span><span class="chip">Wet: water vapor, fast and thick</span></div>
+    <div class="fact"><b>💡 Beyond SiO₂:</b> From the 45nm generation (2007), the transistor's gate insulator switched
+    from thin SiO₂ to <b>high-k materials such as hafnium oxide (HfO₂)</b>.
+    The point is to make the film physically thicker yet deliver the same electrical effect, holding down <b>leakage current</b>.</div>
   </div>
 </section>
 
 <section class="stage" data-stage="5" data-ghost="03" id="s5">
   <div class="card">
-    <div class="step">공정 ③ 포토 (노광)</div>
-    <h2>빛으로 회로를 그리다<small>PHOTOLITHOGRAPHY — 칩 제조의 심장</small></h2>
-    <p>앞서 기른 산화막은 웨이퍼 전체를 통짜로 덮고 있다. 이제 <b>어디를 남기고 어디를 깎을지</b>,
-    그 경계선을 빛으로 그릴 차례다. 웨이퍼에 빛에 반응하는 <b>감광액(포토레지스트)</b>을 바르고, 회로 설계도가 새겨진
-    <b>마스크(레티클)</b>를 통해 빛을 쏘아 패턴을 <b>4분의 1로 축소 투영</b>한다.</p>
-    <p>더 짧은 파장일수록 더 가는 선을 그릴 수 있다. 그래서 업계는 g-line(436nm) → KrF(248nm) →
-    ArF(193nm)를 거쳐 극자외선 <b>EUV(13.5nm)</b>까지 왔다. EUV 빛은 날아가는 <b>주석 방울을
-    레이저로 초당 5만 번</b> 맞혀 플라즈마로 만들어 얻고, 렌즈(유리)에 흡수되므로
-    초정밀 <b>다층 거울</b>로만 다룬다. 이 장비를 만드는 회사는 지구상에 <b>ASML 하나</b> —
-    기본형이 대당 약 <b>2억 달러</b>, 2024년 등장한 차세대 <b>하이-NA EUV</b>는 약 <b>3.8억 달러</b>에 이른다.</p>
+    <div class="step">Process ③ Photo (Exposure)</div>
+    <h2>Drawing circuits with light<small>PHOTOLITHOGRAPHY — the heart of chip making</small></h2>
+    <p>The oxide film grown earlier blankets the whole wafer in one solid layer. Now it is time to draw, with light, the boundary of <b>what to keep and what to carve away</b>.
+    The wafer is coated with light-reactive <b>photoresist</b>, and light is fired through a
+    <b>mask (reticle)</b> engraved with the circuit design, projecting the pattern at <b>one-quarter reduction</b>.</p>
+    <p>The shorter the wavelength, the finer the line you can draw. So the industry moved from g-line (436nm) → KrF (248nm) →
+    ArF (193nm) all the way to extreme-ultraviolet <b>EUV (13.5nm)</b>. EUV light is obtained by hitting flying <b>tin droplets
+    with a laser 50,000 times per second</b> to turn them into plasma; and since it is absorbed by lenses (glass),
+    it is handled only with ultra-precise <b>multilayer mirrors</b>. The company that makes this equipment is, on Earth, <b>ASML alone</b> —
+    a base model running about <b>$200 million</b> each, while the next-generation <b>High-NA EUV</b> that appeared in 2024 reaches about <b>$380 million</b>.</p>
     <div class="chips">
-      <span class="chip">① 감광액 도포(스핀 코팅)</span><span class="chip">② 소프트베이크</span>
-      <span class="chip">③ 노광</span><span class="chip">④ 노광후 베이크(PEB)</span><span class="chip">⑤ 현상</span>
-      <span class="chip">도포·현상 트랙 장비 <b>도쿄일렉트론(TEL)</b></span>
+      <span class="chip">① Photoresist coating (spin coating)</span><span class="chip">② Soft bake</span>
+      <span class="chip">③ Exposure</span><span class="chip">④ Post-exposure bake (PEB)</span><span class="chip">⑤ Develop</span>
+      <span class="chip">Coat/develop track tool <b>Tokyo Electron (TEL)</b></span>
     </div>
     <div class="widget" id="lithoWidget">
-      <h3>⚗️ 해상도 실험실 — 레일리 공식 CD = k₁·λ/NA</h3>
+      <h3>⚗️ Resolution lab — Rayleigh's equation CD = k₁·λ/NA</h3>
       <div class="lamps" id="lamps"></div>
-      <div class="wrow"><label for="naR">개구수 NA</label><input type="range" id="naR" min="0" max="100" value="60"><output id="naO"></output></div>
-      <div class="wrow"><label for="k1R">공정상수 k₁</label><input type="range" id="k1R" min="25" max="80" value="35"><output id="k1O"></output></div>
-      <div class="bigout" aria-live="polite" aria-atomic="true">최소 선폭(하프피치) <div class="num" id="cdO">—</div><div class="note" id="cdNote"></div><div class="note" id="dofO" style="color:var(--dim)"></div></div>
+      <div class="wrow"><label for="naR">Numerical aperture NA</label><input type="range" id="naR" min="0" max="100" value="60"><output id="naO"></output></div>
+      <div class="wrow"><label for="k1R">Process constant k₁</label><input type="range" id="k1R" min="25" max="80" value="35"><output id="k1O"></output></div>
+      <div class="bigout" aria-live="polite" aria-atomic="true">Minimum linewidth (half-pitch) <div class="num" id="cdO">—</div><div class="note" id="cdNote"></div><div class="note" id="dofO" style="color:var(--dim)"></div></div>
     </div>
-    <div class="fact"><b>💡 팹은 왜 노란빛일까?</b> 감광액이 파란빛·자외선에 반응하기 때문에, 포토 구역은 반응하지 않는 노란 조명만 켠다. 참고로 '3nm 공정'의 3nm는 실제 선폭이 아니라 세대를 뜻하는 마케팅 명칭 — 2025년부터는 <b>2nm 세대</b>가 양산에 들어갔다.</div>
-    <div class="fact"><b>💡 설계도는 어디서 올까?</b> 이 여정은 모래를 칩으로 <b>'만드는'</b> 이야기다.
-    무엇을 만들지 그리는 <b>회로 설계</b>(팹리스·EDA)와 그 밑그림을 유리판에 새기는 <b>포토마스크 제작</b>은,
-    이 앞단에 존재하는 또 다른 거대 산업이다.</div>
+    <div class="fact"><b>💡 Why is a fab bathed in yellow light?</b> Because photoresist reacts to blue light and ultraviolet, the photo bay is lit only with yellow light it does not respond to. And note: the '3nm' in '3nm process' is not an actual linewidth but a marketing name for a generation — from 2025, the <b>2nm generation</b> entered mass production.</div>
+    <div class="fact"><b>💡 Where does the design come from?</b> This journey is the story of <b>'making'</b> a chip out of sand.
+    Drawing what to make — <b>circuit design</b> (fabless · EDA) — and engraving that blueprint onto a glass plate — <b>photomask fabrication</b> —
+    are yet another giant industry that sits upstream of it.</div>
   </div>
 </section>
 
 <section class="stage" data-stage="6" data-ghost="04" id="s6">
   <div class="card">
-    <div class="step">공정 ④ 식각</div>
-    <h2>플라즈마로 새기는 나노 조각<small>ETCHING</small></h2>
-    <p>현상된 감광액 패턴을 방패 삼아, <b>플라즈마 이온</b>으로 노출된 부분만 깎아낸다(건식 식각).
-    이온이 수직으로 내리꽂히는 <b>이방성 식각</b> 덕분에, 옆으로 번지지 않는
-    깊고 좁은 도랑을 팔 수 있다.</p>
-    <p>최신 3D 낸드에서는 <b>종횡비 100:1</b>이 넘는 — 폭보다 깊이가 100배인 —
-    구멍을 수백 층의 막을 관통해 한 번에 뚫는다. 우물 지름이 1m라면 깊이 100m를 수직으로 파는 셈.</p>
-    <p>여기까지가 회로 <b>한 층</b>을 새기는 한 바퀴다. 층을 만들고(산화·증착) → 빛으로 그리고(포토) →
-    깎아내는(식각) 이 사이클이 층을 바꿔 가며 <b>수십 번</b> 되풀이된다 — 지금 보는 ①~⑧은 그 반복을 한 줄로 편 것이다.</p>
+    <div class="step">Process ④ Etching</div>
+    <h2>Nanoscale sculptures carved by plasma<small>ETCHING</small></h2>
+    <p>Using the developed photoresist pattern as a shield, <b>plasma ions</b> carve away only the exposed regions (dry etching).
+    Because the ions strike straight down in <b>anisotropic etching</b>, you can dig deep, narrow trenches
+    that never spread sideways.</p>
+    <p>In the latest 3D NAND, holes with an <b>aspect ratio over 100:1</b> — 100 times deeper than they are wide —
+    are punched in a single pass through hundreds of stacked films. It's like drilling straight down 100m into a well just 1m across.</p>
+    <p>This completes one lap of engraving a <b>single layer</b> of the circuit. Build a layer (oxidation·deposition) → draw with light (photo) →
+    etch it away (etching): this cycle repeats <b>dozens of times</b>, layer after layer — the ①–⑧ you see here is that repetition unrolled into a single line.</p>
     <div class="widget" id="mpWidget">
-      <h3>🪞 멀티패터닝 — 단일 노광보다 가는 피치는 나눠 찍는다</h3>
+      <h3>🪞 Multipatterning — pitches finer than a single exposure are split across several prints</h3>
       <div class="lamps" id="mpLamps"></div>
-      <div class="wrow"><label for="mpTgt">목표 하프피치</label><input type="range" id="mpTgt" min="6" max="40" value="19"><output id="mpTgtO"></output></div>
+      <div class="wrow"><label for="mpTgt">Target half-pitch</label><input type="range" id="mpTgt" min="6" max="40" value="19"><output id="mpTgtO"></output></div>
       <canvas id="mpCv" width="460" height="160" aria-hidden="true"></canvas>
-      <div class="bigout" aria-live="polite" aria-atomic="true">분할 차수 (필요 마스크·노광)
+      <div class="bigout" aria-live="polite" aria-atomic="true">Split factor (masks·exposures needed)
         <div class="num" id="mpN">—</div>
         <div class="note" id="mpTech"></div>
         <div class="note" id="mpCost" style="color:var(--dim)"></div>
         <div class="note" id="mpUse" style="color:var(--dim)"></div>
       </div>
-      <div class="note">N = ⌈최소 하프피치 ÷ 목표 하프피치⌉ — 해상도 실험실(공정 ③)의 광원별 단일 노광 하한을 이어받았다.
-      SADP·SAQP는 실제로는 마스크가 아니라 스페이서로 나누지만, '여러 번 나눠 찍는다'는 직관은 같다.</div>
+      <div class="note">N = ⌈minimum half-pitch ÷ target half-pitch⌉ — carried over from the single-exposure floor of each light source in the Resolution Lab (Process ③).
+      SADP·SAQP actually split with spacers rather than masks, but the intuition — "print it in several passes" — is the same.</div>
     </div>
-    <div class="chips"><span class="chip">건식: 플라즈마, 정밀·수직</span><span class="chip">습식: 용액, 빠르지만 등방성</span><span class="chip">식각 장비 선두 <b>램리서치·TEL</b></span></div>
+    <div class="chips"><span class="chip">Dry: plasma, precise·vertical</span><span class="chip">Wet: solution, fast but isotropic</span><span class="chip">Etch equipment leaders <b>Lam Research·TEL</b></span></div>
   </div>
 </section>
 
 <section class="stage" data-stage="7" data-ghost="05" id="s7">
   <div class="card">
-    <div class="step">공정 ⑤ 증착 & 이온주입</div>
-    <h2>원자 한 층씩 쌓고, 심는다<small>DEPOSITION & ION IMPLANTATION</small></h2>
-    <p>이번엔 반대로 <b>쌓을 차례</b>. 가스를 반응시켜 박막을 입히는 <b>CVD</b>,
-    원자를 말 그대로 <b>한 층씩</b> 쌓는 <b>ALD</b>로 나노미터 두께의 막을 올린다.</p>
-    <p>그리고 <b>이온주입기</b>로 붕소(B)·인(P)·비소(As) 이온을 가속해 실리콘 속
-    정확한 깊이에 박아 넣는다. 순수 실리콘은 전기가 잘 안 통하지만, 이 미량의 불순물이
-    들어가는 순간 전기를 <b>제어할 수 있는</b> 진짜 '반도체'가 된다 — n형과 p형이 이렇게 만들어진다.</p>
-    <p>주입 직후의 실리콘은 이온 충격으로 원자 배열이 헝클어진 상태다.
-    곧바로 <b>급속 열처리(RTA)</b>로 1,000°C 안팎까지 순간 가열해 격자를 복구하고,
-    박힌 불순물을 제자리에 앉혀 <b>활성화</b>시켜야 비로소 전기가 흐른다.</p>
+    <div class="step">Process ⑤ Deposition & Ion Implantation</div>
+    <h2>Stacking atoms layer by layer, then implanting<small>DEPOSITION & ION IMPLANTATION</small></h2>
+    <p>Now the reverse — <b>time to build up</b>. With <b>CVD</b>, which reacts gases to lay down a thin film, and
+    <b>ALD</b>, which stacks atoms literally <b>one layer at a time</b>, films just nanometers thick are deposited.</p>
+    <p>Then an <b>ion implanter</b> accelerates boron (B)·phosphorus (P)·arsenic (As) ions and drives them
+    to a precise depth inside the silicon. Pure silicon barely conducts, but the moment these trace impurities
+    enter, it becomes a true 'semiconductor' whose electricity can be <b>controlled</b> — this is how n-type and p-type are made.</p>
+    <p>Right after implantation, the ion bombardment has left the silicon's atomic lattice in disarray.
+    A <b>rapid thermal anneal (RTA)</b> immediately flash-heats it to around 1,000°C to repair the lattice and
+    settle the embedded impurities into place — <b>activating</b> them — and only then does current flow.</p>
     <div class="widget" id="mosWidget">
-      <h3>🔀 MOSFET 스위치 — 도핑이 만든 트랜지스터</h3>
+      <h3>🔀 MOSFET switch — the transistor doping built</h3>
       <canvas id="mosCanvas" width="300" height="180" aria-hidden="true"></canvas>
-      <div class="wrow"><label for="vgR">게이트 전압</label><input type="range" id="vgR" min="0" max="100" value="0"><output id="vgO"></output></div>
-      <div class="bigout" aria-live="polite" aria-atomic="true">상태 <div class="num" id="mosState">—</div><div class="note" id="mosNote"></div></div>
-      <div class="note">※ 평면형 MOSFET 개념 단면 — 최신 2nm 세대는 게이트가 채널을 사방에서 감싸는 <b>GAA</b> 구조다</div>
+      <div class="wrow"><label for="vgR">Gate voltage</label><input type="range" id="vgR" min="0" max="100" value="0"><output id="vgO"></output></div>
+      <div class="bigout" aria-live="polite" aria-atomic="true">Status <div class="num" id="mosState">—</div><div class="note" id="mosNote"></div></div>
+      <div class="note">※ Conceptual cross-section of a planar MOSFET — the latest 2nm generation uses a <b>GAA</b> structure where the gate wraps the channel on all sides</div>
     </div>
-    <div class="fact"><b>💡 도핑의 마법:</b> 실리콘 원자 백만 개당 불순물 몇 개 수준의 차이가 도체와 부도체 사이를 오가는 스위치를 만든다.</div>
-    <div class="chips"><span class="chip">증착·이온주입 장비 <b>어플라이드 머티어리얼즈(AMAT)</b></span></div>
+    <div class="fact"><b>💡 The magic of doping:</b> a difference of just a few impurity atoms per million silicon atoms creates a switch that toggles between conductor and insulator.</div>
+    <div class="chips"><span class="chip">Deposition·implant equipment <b>Applied Materials (AMAT)</b></span></div>
   </div>
 </section>
 
 <section class="stage" data-stage="8" data-ghost="06" id="s8">
   <div class="card">
-    <div class="step">공정 ⑥ 금속 배선</div>
-    <h2>수백억 개를 잇는 입체 고속도로<small>METALLIZATION & CMP</small></h2>
-    <p>트랜지스터를 만들었으니 이제 <b>서로 연결할 차례</b>. 구리 배선을
-    <b>10층 이상</b> 쌓아 올리고, 층과 층은 <b>비아(via)</b>라는 수직 통로로 잇는다.</p>
-    <p>한 층을 쌓을 때마다 <b>CMP(화학기계연마)</b>로 표면을 평탄하게 갈아내고,
-    그 위에 다시 노광→식각→증착을 반복한다. 이 <b>재진입 루프</b>를 수십 번 돌기 때문에
-    칩 하나에 수백 개의 공정 단계와 2~3개월이 걸리는 것이다.</p>
-    <div class="fact"><b>💡 보이지 않는 절반, 세정:</b> 거의 모든 공정 단계 사이에는
-    <b>세정</b>이 끼어든다. 입자 하나, 금속 원자 하나만 남아도 회로가 죽기 때문에,
-    <b>초순수(UPW)</b>와 화학액으로 씻어내는 이 과정이 팹에서 가장 여러 번 반복되는 축에 든다.</div>
+    <div class="step">Process ⑥ Metal Interconnect</div>
+    <h2>A 3D highway connecting tens of billions<small>METALLIZATION & CMP</small></h2>
+    <p>Now that the transistors are built, it's <b>time to wire them together</b>. Copper interconnects are
+    stacked <b>10 or more layers</b> high, and each layer is joined to the next by vertical channels called <b>vias</b>.</p>
+    <p>Each time a layer is added, <b>CMP (chemical mechanical polishing)</b> grinds the surface flat, and
+    then exposure→etching→deposition repeats on top of it. Because this <b>re-entrant loop</b> runs dozens of times,
+    a single chip takes hundreds of process steps and 2–3 months.</p>
+    <div class="fact"><b>💡 The invisible half — cleaning:</b> a
+    <b>cleaning</b> step sits between nearly every process step. A single particle or stray metal atom can kill a circuit, so
+    rinsing with <b>ultrapure water (UPW)</b> and chemicals is among the most frequently repeated operations in the fab.</div>
     <div class="widget" id="reentryWidget">
-      <h3>🔁 재진입 루프 카운터 — 한 장의 칩, 수십 번의 되돌이</h3>
+      <h3>🔁 Re-entrant loop counter — one chip, dozens of passes</h3>
       <div class="lamps" id="rlChips"></div>
-      <div class="wrow"><label for="rlStepR">층당 단위공정</label><input type="range" id="rlStepR" min="8" max="15" value="10"><output id="rlStepO"></output></div>
+      <div class="wrow"><label for="rlStepR">Unit steps per layer</label><input type="range" id="rlStepR" min="8" max="15" value="10"><output id="rlStepO"></output></div>
       <canvas id="rlCv" width="320" height="200" aria-hidden="true" style="display:block; max-width:100%; height:auto; margin:12px auto 4px"></canvas>
-      <div class="ystats" aria-live="polite" aria-atomic="true"><span>재진입 루프 <b id="rlLoops">—</b></span><span>누적 마스크 층 <b id="rlLayers">—</b></span><span>총 공정 단계 <b id="rlSteps" style="color:var(--acc)">—</b></span></div>
-      <div class="bigout" aria-live="polite" aria-atomic="true">예상 기간 <div class="num" id="rlPeriod">—</div><div class="note" id="rlNote"></div><div class="note" id="rlSub" style="color:var(--dim)"></div></div>
-      <div class="note">모델: <b>총 단계 = 마스크(포토) 층수 × 층당 단위공정</b>, <b>기간 = 총 단계 × 2.0h ÷ 24</b> —
-      시간당 소요는 대기(큐)·재작업·계측을 포함한 <b>근사 추정</b>이며, 실제 팹 체류의 대부분은 대기시간이다.
-      마스크 층수는 공개 산업 자료 기준 대표값.</div>
+      <div class="ystats" aria-live="polite" aria-atomic="true"><span>Re-entrant loops <b id="rlLoops">—</b></span><span>Cumulative mask layers <b id="rlLayers">—</b></span><span>Total process steps <b id="rlSteps" style="color:var(--acc)">—</b></span></div>
+      <div class="bigout" aria-live="polite" aria-atomic="true">Estimated duration <div class="num" id="rlPeriod">—</div><div class="note" id="rlNote"></div><div class="note" id="rlSub" style="color:var(--dim)"></div></div>
+      <div class="note">Model: <b>total steps = mask (photo) layers × unit steps per layer</b>, <b>duration = total steps × 2.0h ÷ 24</b> —
+      the per-step hours are an <b>approximate estimate</b> including queue waiting·rework·metrology, and most of the actual fab dwell time is waiting.
+      Mask-layer counts are representative values from public industry data.</div>
     </div>
-    <div class="chips"><span class="chip">알루미늄 → <b>구리</b> (1997, IBM 다마신)</span><span class="chip">배선 총길이: 다이당 <b>수 km</b></span><span class="chip">배선 사이엔 <b>저유전율(low-k)</b> 절연막</span><span class="chip">구리 확산 막는 <b>배리어막</b></span></div>
+    <div class="chips"><span class="chip">Aluminum → <b>copper</b> (1997, IBM damascene)</span><span class="chip">Total interconnect length: <b>several km</b> per die</span><span class="chip"><b>Low-k</b> dielectric between the wires</span><span class="chip"><b>Barrier film</b> that blocks copper diffusion</span></div>
   </div>
 </section>
 
 <section class="stage" data-stage="9" data-ghost="07" id="s9">
   <div class="card">
-    <div class="step">공정 ⑦ EDS 테스트</div>
-    <h2>수율 — 생사를 가르는 숫자<small>WAFER TEST & YIELD</small></h2>
-    <p>완성된 웨이퍼의 모든 다이(칩)에 미세 바늘이 달린 <b>프로브 카드</b>를 접촉시켜
-    전기 신호로 양품/불량을 판정한다 — <b>EDS</b>(Electrical Die Sorting)다. 양품 비율이 곧 <b>수율(yield)</b> —
-    파운드리 사업의 생사를 가르는 숫자다.</p>
-    <p>불량 대부분은 공정 중 내려앉은 눈에 보이지 않는 <b>미세 결함</b> 때문이다.
-    결함은 면적당 무작위로 떨어지므로, <b>다이가 클수록 수율은 기하급수적으로 떨어진다</b>.
-    아래에서 직접 실험해 보자.</p>
-    <div class="fact"><b>💡 불량도 되살린다:</b> 메모리 칩은 여분의 셀 배열을 미리 심어 두고,
-    테스트에서 걸린 불량 셀을 <b>여분으로 대체(리페어)</b>해 양품으로 살린다.
-    양·불량을 가르는 전기 검사는 <b>어드밴테스트·테라다인</b> 같은 테스트 장비(ATE)가 수행한다.</div>
+    <div class="step">Process ⑦ EDS Test</div>
+    <h2>Yield — the number that decides life or death<small>WAFER TEST & YIELD</small></h2>
+    <p>A <b>probe card</b> tipped with fine needles touches every die (chip) on the finished wafer and
+    sorts good from bad by electrical signal — this is <b>EDS</b> (Electrical Die Sorting). The share of good dies is the <b>yield</b> —
+    the number that decides whether a foundry business lives or dies.</p>
+    <p>Most failures come from invisible <b>micro-defects</b> that settle on the wafer during processing.
+    Since defects land randomly per unit area, <b>the larger the die, the more steeply yield falls</b>.
+    Try it for yourself below.</p>
+    <div class="fact"><b>💡 Even failures get revived:</b> memory chips embed spare cell arrays in advance and
+    <b>swap in a spare (repair)</b> for any bad cell caught in testing, salvaging the part as good.
+    The electrical inspection that sorts good from bad is done by test equipment (ATE) from the likes of <b>Advantest·Teradyne</b>.</div>
     <div class="widget" id="yieldWidget">
-      <h3>🎯 수율 실험실 — 300mm 웨이퍼</h3>
+      <h3>🎯 Yield lab — 300mm wafer</h3>
       <div class="lamps" id="yModel"></div>
-      <div class="wrow"><label for="dieR">다이 한 변</label><input type="range" id="dieR" min="40" max="220" value="90"><output id="dieO"></output></div>
-      <div class="wrow"><label for="d0R">결함 밀도 D₀</label><input type="range" id="d0R" min="2" max="40" value="10"><output id="d0O"></output></div>
+      <div class="wrow"><label for="dieR">Die edge length</label><input type="range" id="dieR" min="40" max="220" value="90"><output id="dieO"></output></div>
+      <div class="wrow"><label for="d0R">Defect density D₀</label><input type="range" id="d0R" min="2" max="40" value="10"><output id="d0O"></output></div>
       <canvas id="waferMap" width="280" height="280" aria-hidden="true"></canvas>
-      <div class="ystats" aria-live="polite" aria-atomic="true"><span>다이 <b id="nDie">—</b>개</span><span class="yg">양품 <b id="nGood">—</b></span><span class="yb">불량 <b id="nBad">—</b></span><span>수율 <b id="yPct" style="color:var(--cyan)">—</b></span></div>
-      <div class="wrow"><label for="wcR">웨이퍼 가공비</label><input type="range" id="wcR" min="10" max="150" value="50"><output id="wcO"></output></div>
-      <div class="ystats" aria-live="polite" aria-atomic="true"><span>양품당 원가 <b id="cpd" style="color:var(--amber)">—</b></span></div>
-      <div class="bigout" style="margin-top:12px"><span style="font-size:12px" id="yFormula">푸아송 수율 모델 Y = e<sup>−A·D₀</sup> — 같은 결함 밀도라도 다이 면적(A)이 크면 수율이 급락하고, <b>양품당 원가 = 웨이퍼 가공비 ÷ 양품 수</b>는 폭증한다</span></div>
+      <div class="ystats" aria-live="polite" aria-atomic="true"><span>Dies <b id="nDie">—</b></span><span class="yg">Good <b id="nGood">—</b></span><span class="yb">Bad <b id="nBad">—</b></span><span>Yield <b id="yPct" style="color:var(--cyan)">—</b></span></div>
+      <div class="wrow"><label for="wcR">Wafer processing cost</label><input type="range" id="wcR" min="10" max="150" value="50"><output id="wcO"></output></div>
+      <div class="ystats" aria-live="polite" aria-atomic="true"><span>Cost per good die <b id="cpd" style="color:var(--amber)">—</b></span></div>
+      <div class="bigout" style="margin-top:12px"><span style="font-size:12px" id="yFormula">Poisson yield model Y = e<sup>−A·D₀</sup> — at the same defect density, a larger die area (A) makes yield plunge, and <b>cost per good die = wafer processing cost ÷ number of good dies</b> soars</span></div>
     </div>
   </div>
 </section>
 
 <section class="stage" data-stage="10" data-ghost="08" id="s10">
   <div class="card">
-    <div class="step">공정 ⑧ 패키징</div>
-    <h2>칩에 옷을 입히다, 그리고 쌓다<small>PACKAGING — 제2의 미세공정</small></h2>
-    <p>앞선 테스트에서 <b>양품으로 걸러진 다이만</b>이 이 마지막 관문에 들어온다.
-    웨이퍼를 블레이드나 레이저로 잘라 다이를 분리하고(<b>다이싱</b>), 기판에 붙여
-    외부 세계와 연결한 뒤 보호 껍질을 씌운다. 연결 방식은 금선을 잇는 <b>와이어 본딩</b>에서
-    다이를 뒤집어 범프로 직결하는 <b>플립칩</b>으로 진화했다.</p>
-    <p>최신 AI 칩은 여기서 한 번 더 도약한다 — D램을 <b>8~12층으로 쌓고</b> 실리콘을 관통하는
-    전극 <b>TSV</b>로 수직 연결한 <b>HBM</b>, GPU와 HBM을 한 기판에 나란히 얹는
-    <b>2.5D 패키징(CoWoS)</b>까지. 패키징이 '제2의 미세공정'이라 불리는 이유다.</p>
-    <div class="chips"><span class="chip">HBM: 대역폭 <b>TB/s급</b></span><span class="chip">TSV 지름 <b>수 µm</b></span><span class="chip"><b>HBM4</b>(2026 양산 개시): 2,048비트·최대 16단</span><span class="chip"><b>칩렛</b>: 큰 칩을 조각으로 나눠 이어붙임</span></div>
+    <div class="step">Process ⑧ Packaging</div>
+    <h2>Dressing the chip, and stacking it<small>PACKAGING — THE SECOND MINIATURIZATION</small></h2>
+    <p>Only the <b>dies screened as good</b> in the earlier test pass into this final gate.
+    The wafer is cut with a blade or laser to separate the dies (<b>dicing</b>), bonded to a substrate,
+    connected to the outside world, and sealed in a protective shell. The connection method has evolved from <b>wire bonding</b>, which joins gold wires,
+    to <b>flip-chip</b>, which flips the die over and connects it directly through bumps.</p>
+    <p>The latest AI chips take one more leap here — <b>HBM</b>, which <b>stacks DRAM 8–12 layers high</b> and connects them vertically with
+    silicon-piercing electrodes called <b>TSV</b>, all the way to <b>2.5D packaging (CoWoS)</b>, which sets a GPU and HBM
+    side by side on one substrate. This is why packaging is called 'the second miniaturization'.</p>
+    <div class="chips"><span class="chip">HBM: bandwidth <b>TB/s-class</b></span><span class="chip">TSV diameter <b>a few µm</b></span><span class="chip"><b>HBM4</b> (mass production from 2026): 2,048-bit·up to 16 stacks</span><span class="chip"><b>Chiplet</b>: a large chip split into pieces and stitched together</span></div>
     <div class="widget" id="hbmWidget">
-      <h3>🚄 HBM 대역폭 계산기 — 쌓을수록 넓어지는 길</h3>
+      <h3>🚄 HBM bandwidth calculator — the more you stack, the wider the road</h3>
       <div class="lamps" id="hbmGen"></div>
-      <div class="wrow"><label for="pinR">핀 속도</label><input type="range" id="pinR" min="20" max="120" value="80"><output id="pinO"></output></div>
-      <div class="wrow"><label for="stkR">스택 수</label><input type="range" id="stkR" min="1" max="12" value="8"><output id="stkO"></output></div>
-      <div class="bigout" aria-live="polite" aria-atomic="true">시스템 메모리 대역폭 <div class="num" id="bwO">—</div><div class="note" id="bwNote"></div></div>
-      <div class="note">대역폭 = 버스폭 × 핀 속도 ÷ 8 × 스택 수 · JEDEC 공개 규격 기준(실제 제품은 이보다 낮게 운용되기도 한다)</div>
+      <div class="wrow"><label for="pinR">Pin speed</label><input type="range" id="pinR" min="20" max="120" value="80"><output id="pinO"></output></div>
+      <div class="wrow"><label for="stkR">Stack count</label><input type="range" id="stkR" min="1" max="12" value="8"><output id="stkO"></output></div>
+      <div class="bigout" aria-live="polite" aria-atomic="true">System memory bandwidth <div class="num" id="bwO">—</div><div class="note" id="bwNote"></div></div>
+      <div class="note">Bandwidth = bus width × pin speed ÷ 8 × stack count · based on public JEDEC specs (real products are sometimes run below this)</div>
     </div>
-    <div class="fact"><b>💡 병목이 된 패키징:</b> 2025~26년 AI 가속기 수요가 폭증하며
-    <b>CoWoS</b> 2.5D 패키징과 <b>HBM</b>은 반도체 공급망 전체의 최대 병목이 됐다.
-    이제 패키징 용량이 곧 AI 칩 생산량을 결정한다.</div>
+    <div class="fact"><b>💡 Packaging, now the bottleneck:</b> as demand for AI accelerators surged in 2025–26,
+    <b>CoWoS</b> 2.5D packaging and <b>HBM</b> became the single biggest bottleneck across the entire semiconductor supply chain.
+    Packaging capacity now directly determines how many AI chips can be built.</div>
   </div>
 </section>
 
 <section class="stage finale" data-stage="11" id="s11">
   <div class="card">
-    <div class="step pre">FIN · 그리고 당신의 손안으로</div>
-    <h2>모래 한 줌이 걸어온 길</h2>
-    <div class="flow" aria-label="공정 요약">
-      <span>정제</span><span class="fa" aria-hidden="true">→</span><span>잉곳</span><span class="fa" aria-hidden="true">→</span><span>웨이퍼</span><span class="fa" aria-hidden="true">→</span><span>산화</span><span class="fa" aria-hidden="true">→</span><span>노광</span><span class="fa" aria-hidden="true">→</span><span>식각</span><span class="fa" aria-hidden="true">→</span><span>증착·주입</span><span class="fa" aria-hidden="true">→</span><span>배선</span><span class="fa" aria-hidden="true">→</span><span>테스트</span><span class="fa" aria-hidden="true">→</span><span>패키징</span>
+    <div class="step pre">FIN · And Into Your Hands</div>
+    <h2>The road a handful of sand has traveled</h2>
+    <div class="flow" aria-label="Process summary">
+      <span>Refining</span><span class="fa" aria-hidden="true">→</span><span>Ingot</span><span class="fa" aria-hidden="true">→</span><span>Wafer</span><span class="fa" aria-hidden="true">→</span><span>Oxidation</span><span class="fa" aria-hidden="true">→</span><span>Exposure</span><span class="fa" aria-hidden="true">→</span><span>Etching</span><span class="fa" aria-hidden="true">→</span><span>Deposition·Implant</span><span class="fa" aria-hidden="true">→</span><span>Interconnect</span><span class="fa" aria-hidden="true">→</span><span>Test</span><span class="fa" aria-hidden="true">→</span><span>Packaging</span>
     </div>
-    <div class="flownote">웨이퍼 위에서 이뤄지는 테스트까지가 <b>전공정</b>(Front-end), 잘라서 조립하는 패키징부터가 <b>후공정</b>(Back-end)이다</div>
-    <p style="font-size:15.5px"><b>2~3개월, 수백 개의 공정</b>을 거친 손톱만 한 칩 안에는<br>
-    바이러스와 견줄 만큼 작은 트랜지스터가 <b>수백억 개</b> 들어 있다.<br>
-    그리고 지금 — 이 글을 띄운 화면 속에서도, 모래에서 온 그 도시가 쉼 없이 돌아가고 있다.</p>
+    <div class="flownote">Everything through the test performed on the wafer is the <b>front-end</b>; from the dicing-and-assembly of packaging onward is the <b>back-end</b></div>
+    <p style="font-size:15.5px">Inside a fingernail-sized chip that has passed through <b>2–3 months and hundreds of processes</b><br>
+    sit <b>tens of billions</b> of transistors, each as small as a virus.<br>
+    And right now — even in the very screen showing you these words — that city born of sand runs without pause.</p>
     <div class="chips" style="justify-content:center; margin-top:22px">
-      <span class="chip">최신 스마트폰 AP 트랜지스터 <b>200억+</b></span>
-      <span class="chip">최소 배선 폭 <b>~20nm</b></span>
-      <span class="chip">클린룸 청정도: 수술실의 <b>수천 배</b></span>
+      <span class="chip">Latest smartphone AP transistors <b>20 billion+</b></span>
+      <span class="chip">Minimum interconnect width <b>~20nm</b></span>
+      <span class="chip">Cleanroom cleanliness: <b>thousands of times</b> that of an operating room</span>
     </div>
     <div class="widget" id="mooreWidget" style="max-width:520px; margin:var(--sp-module) auto 0; text-align:left">
-      <h3>📈 무어의 법칙 — 트랜지스터 수 (로그 축)</h3>
-      <canvas id="mooreCv" width="480" height="240" role="img" aria-label="무어의 법칙: 1971년 인텔 4004의 2,300개부터 2024년 엔비디아 B200의 2,080억 개까지, 트랜지스터 수가 로그 축에서 거의 직선으로 증가"></canvas>
-      <div class="note" id="mooreNote">점을 탭하거나 커서를 올려보세요</div>
+      <h3>📈 Moore's Law — transistor count (log axis)</h3>
+      <canvas id="mooreCv" width="480" height="240" role="img" aria-label="Moore's Law: from the 2,300 transistors of Intel's 4004 in 1971 to the 208 billion of NVIDIA's B200 in 2024, the transistor count rises almost linearly on a log axis"></canvas>
+      <div class="note" id="mooreNote">Tap a dot or hover over it</div>
     </div>
     <div class="widget" id="quizWidget" style="max-width:480px; margin:var(--sp-module) auto 0; text-align:left">
-      <h3>🧩 8대 공정 복습 퀴즈</h3>
+      <h3>🧩 8-process review quiz</h3>
       <div id="qStem" style="font-size:14px; color:#c7d3e6; min-height:40px">—</div>
       <div class="lamps" id="qOpts" style="margin-top:12px"></div>
       <div class="note" id="qFb" aria-live="polite" style="min-height:18px; text-align:left"></div>
       <div class="bigout" id="qScore" style="display:none"></div>
     </div>
-    <a class="cta" href="https://stkeo.itch.io/cleanroom-tycoon" target="_blank" rel="noopener">🏭 직접 팹을 운영해보고 싶다면 — <b>클린룸 타이쿤</b> 플레이 <span class="ar">→</span></a>
-    <div class="credit">이 사이트는 <b>Claude Fable 5</b>가 three.js로 설계·제작했습니다 · 데이터는 공개 산업 자료 기준</div>
+    <a class="cta" href="https://stkeo.itch.io/cleanroom-tycoon" target="_blank" rel="noopener">🏭 Want to run a fab yourself? — Play <b>Cleanroom Tycoon</b> <span class="ar">→</span></a>
+    <div class="credit">This site was designed and built with three.js by <b>Claude Fable 5</b> · Data based on public industry sources</div>
   </div>
 </section>
 
@@ -714,7 +714,7 @@ html.js .card.in>*{opacity:1; transform:none}
   }, {threshold:0.22});
   cards.forEach(function(c){ io.observe(c); });
   console.log(
-    '%c🔬 모래에서 칩까지%c — 반도체 8대 공정\n한 줌의 규소가 수백억 개의 스위치가 되기까지.\n소스가 궁금해 여기까지 오셨다면, 환영합니다.\n%c▶ 클린룸 타이쿤  https://stkeo.itch.io/cleanroom-tycoon',
+    '%c🔬 From Sand to Chip%c — the eight core semiconductor processes\nHow a handful of silicon becomes tens of billions of switches.\nIf curiosity about the source brought you this far, welcome.\n%c▶ Cleanroom Tycoon  https://stkeo.itch.io/cleanroom-tycoon',
     'font:800 15px sans-serif;color:#38e1ff',
     'color:#93a4bd',
     'color:#b18cff');
@@ -1487,7 +1487,7 @@ function stagePosNow(){
 }
 
 /* ---------- 진행바 + 레일 ---------- */
-const railNames = ['시작','정제','잉곳','① 웨이퍼','② 산화','③ 포토','④ 식각','⑤ 증착·주입','⑥ 배선','⑦ 테스트','⑧ 패키징','완성'];
+const railNames = ['Start','Refine','Ingot','① Wafer','② Oxidation','③ Photo','④ Etch','⑤ Deposition·implant','⑥ Interconnect','⑦ Test','⑧ Packaging','Done'];
 const rail = document.getElementById('rail');
 railNames.forEach((n,i)=>{
   const a = document.createElement('a');
@@ -1631,13 +1631,13 @@ if(REDUCE){
    ============================================================ */
 (function(){
   const SRC = [
-    {name:'g-line', l:436, naMin:0.30, naMax:0.60, era:'1980년대 · µm 시대'},
-    {name:'i-line', l:365, naMin:0.35, naMax:0.65, era:'1990년대 초 · 0.5~0.35µm'},
-    {name:'KrF',    l:248, naMin:0.50, naMax:0.80, era:'1990년대 말 · 250~130nm'},
-    {name:'ArF',    l:193, naMin:0.60, naMax:0.93, era:'2000년대 · 90~65nm'},
-    {name:'ArF 액침',l:193, naMin:0.85, naMax:1.35, era:'2007~ · 45nm부터, 물 렌즈'},
-    {name:'EUV',    l:13.5, naMin:0.25, naMax:0.33, era:'2019~ · 7nm 세대부터 양산'},
-    {name:'High-NA EUV', l:13.5, naMin:0.40, naMax:0.55, era:'2026~ · 인텔 18A로 양산 진입'},
+    {name:'g-line', l:436, naMin:0.30, naMax:0.60, era:'1980s · the µm era'},
+    {name:'i-line', l:365, naMin:0.35, naMax:0.65, era:'early 1990s · 0.5–0.35µm'},
+    {name:'KrF',    l:248, naMin:0.50, naMax:0.80, era:'late 1990s · 250–130nm'},
+    {name:'ArF',    l:193, naMin:0.60, naMax:0.93, era:'2000s · 90–65nm'},
+    {name:'ArF immersion',l:193, naMin:0.85, naMax:1.35, era:'2007~ · from 45nm, water lens'},
+    {name:'EUV',    l:13.5, naMin:0.25, naMax:0.33, era:'2019~ · volume production from the 7nm generation'},
+    {name:'High-NA EUV', l:13.5, naMin:0.40, naMax:0.55, era:'2026~ · entering volume production on Intel 18A'},
   ];
   let cur = 5;
   const lamps = document.getElementById('lamps');
@@ -1664,11 +1664,11 @@ if(REDUCE){
     k1O.textContent = 'k₁ ' + k1().toFixed(2);
     cdO.textContent = cd >= 1000 ? (cd/1000).toFixed(2)+' µm' : cd.toFixed(1)+' nm';
     const dof = 0.5*s.l/(na()*na());   // DOF = k₂·λ/NA², k₂=0.5 개념값
-    dofO.textContent = '초점심도 DOF ≈ ' + (dof >= 1000 ? (dof/1000).toFixed(2)+' µm' : Math.round(dof)+' nm')
-      + ' — NA를 올리면 선폭은 줄지만 초점 여유는 NA²로 급감한다 (k₂=0.5)';
+    dofO.textContent = 'Depth of focus DOF ≈ ' + (dof >= 1000 ? (dof/1000).toFixed(2)+' µm' : Math.round(dof)+' nm')
+      + ' — raising NA shrinks the linewidth, but the focus margin plunges as NA² (k₂=0.5)';
     let note = s.era;
-    if(s.l===13.5 && cd < 10) note += ' — 최첨단 로직의 최소 패턴 영역';
-    else if(s.l===193 && cd < 40) note += ' — 이보다 가늘게는 멀티패터닝(여러 번 나눠 노광) 필요';
+    if(s.l===13.5 && cd < 10) note += ' — the minimum-pattern regime of leading-edge logic';
+    else if(s.l===193 && cd < 40) note += ' — finer than this needs multipatterning (splitting into several exposures)';
     cdNote.textContent = note;
   }
   naR.oninput = render; k1R.oninput = render;
@@ -1691,9 +1691,9 @@ if(REDUCE){
   const yFormula = document.getElementById('yFormula');
   /* 수율 모델 3종 — 푸아송이 가장 비관적, 음이항(결함 군집)이 가장 관대 */
   const YM = [
-    {name:'푸아송', f:ad=>Math.exp(-ad), desc:'푸아송 Y = e<sup>−A·D₀</sup> — 결함이 완전 무작위라는 가정, 가장 비관적'},
-    {name:'머피', f:ad=> ad<1e-9 ? 1 : Math.pow((1-Math.exp(-ad))/ad, 2), desc:'머피 Y = ((1−e<sup>−AD₀</sup>)/AD₀)² — 실무에서 오래 쓰인 고전 모델'},
-    {name:'음이항', f:ad=>Math.pow(1+ad/3, -3), desc:'음이항 Y = (1+AD₀/α)<sup>−α</sup> (α=3) — 결함이 뭉쳐 떨어지는 현실 반영, 가장 관대'},
+    {name:'Poisson', f:ad=>Math.exp(-ad), desc:'Poisson Y = e<sup>−A·D₀</sup> — assumes defects are perfectly random; the most pessimistic'},
+    {name:'Murphy', f:ad=> ad<1e-9 ? 1 : Math.pow((1-Math.exp(-ad))/ad, 2), desc:'Murphy Y = ((1−e<sup>−AD₀</sup>)/AD₀)² — a classic model long used in practice'},
+    {name:'Negative binomial', f:ad=>Math.pow(1+ad/3, -3), desc:'Negative binomial Y = (1+AD₀/α)<sup>−α</sup> (α=3) — reflects how defects fall in clusters; the most generous'},
   ];
   let curYM = 0, lastD0 = -1;
   const yModel = document.getElementById('yModel');
@@ -1744,7 +1744,7 @@ if(REDUCE){
     wcO.textContent = '$'+waferUSD.toLocaleString();
     cpd.textContent = good>0 ? '$'+Math.round(waferUSD/good).toLocaleString() : '—';
     const pc = y => Math.round(y*100)+'%';
-    yFormula.innerHTML = YM[curYM].desc + '<br>같은 조건의 이론 수율 — 푸아송 <b>'+pc(YM[0].f(AD))+'</b> · 머피 <b>'+pc(YM[1].f(AD))+'</b> · 음이항 <b>'+pc(YM[2].f(AD))+'</b> · <b>양품당 원가 = 가공비 ÷ 양품 수</b>';
+    yFormula.innerHTML = YM[curYM].desc + '<br>Theoretical yield at the same settings — Poisson <b>'+pc(YM[0].f(AD))+'</b> · Murphy <b>'+pc(YM[1].f(AD))+'</b> · Negative binomial <b>'+pc(YM[2].f(AD))+'</b> · <b>Cost per good die = processing cost ÷ good dies</b>';
     if(edsApi && D0 !== lastD0){ edsApi.paint(D0*0.9); lastD0 = D0; }  // 결함 밀도가 변할 때만 3D 재도색 (가공비 슬라이더에 안 흔들림)
   }
   dieR.oninput = render; d0R.oninput = render; wcR.oninput = render;
@@ -1771,11 +1771,11 @@ if(REDUCE){
     ctx.fillStyle = '#39415a'; ctx.fillRect(10,70,280,100);              // p-기판
     ctx.fillStyle = '#2b6f8f'; ctx.fillRect(20,80,70,60); ctx.fillRect(210,80,70,60); // n+ 소스/드레인
     ctx.font = '11px sans-serif'; ctx.fillStyle = '#7fd6ff';
-    ctx.fillText('n+ 소스',30,152); ctx.fillText('n+ 드레인',216,152);
-    ctx.fillStyle = '#93a4bd'; ctx.fillText('p형 기판',130,164);
+    ctx.fillText('n+ source',30,152); ctx.fillText('n+ drain',216,152);
+    ctx.fillStyle = '#93a4bd'; ctx.fillText('p-substrate',130,164);
     ctx.fillStyle = 'rgba(255,190,77,.9)'; ctx.fillRect(90,72,120,6);    // 게이트 산화막
     ctx.fillStyle = on ? '#ffbe4d' : '#5a6373'; ctx.fillRect(96,54,108,16); // 게이트 전극
-    ctx.fillStyle = '#93a4bd'; ctx.fillText('게이트',128,50);
+    ctx.fillStyle = '#93a4bd'; ctx.fillText('Gate',128,50);
     const kLin = on ? Math.min(1,(vg-VTH)/(100-VTH)) : 0;
     const k = kLin*kLin;                       // I_D ∝ (V_GS−V_th)² — 포화영역 제곱법칙
     if(on){
@@ -1787,11 +1787,11 @@ if(REDUCE){
         ctx.beginPath(); ctx.arc(28+els[i]*244, 83+Math.sin(els[i]*22)*1.2, 1.6, 0, 7); ctx.fill();
       }
     }
-    stO.textContent = on ? 'ON — 논리 1' : 'OFF — 논리 0';
+    stO.textContent = on ? 'ON — logic 1' : 'OFF — logic 0';
     stO.style.color = on ? 'var(--good)' : 'var(--bad)';
     noteO.textContent = on
-      ? '반전층이 열렸다 — I_D ∝ (V_GS−V_th)²: 문턱을 조금만 넘겨도 전류가 급증한다 (상대 전류 '+Math.round(k*100)+'%)'
-      : '문턱전압 미만: 채널이 없어 전류 차단 (스위치 열림)';
+      ? 'Inversion layer opens — I_D ∝ (V_GS−V_th)²: nudge just past threshold and current surges (relative current '+Math.round(k*100)+'%)'
+      : 'Below threshold: no channel, current blocked (switch open)';
   }
   function loop(ts){
     if(!visible || REDUCE){ running = false; lastTs = 0; return; }
@@ -1854,8 +1854,8 @@ if(REDUCE){
     const mx = (e.clientX-r.left)*sx, my = (e.clientY-r.top)*sy;
     let hit = null;
     D.forEach(d=>{ if(Math.hypot(px(d[1])-mx, py(d[2])-my) < 16) hit = d; });
-    note.textContent = hit ? hit[0]+' ('+hit[1]+') — 트랜지스터 '+hit[2].toLocaleString()+'개'
-                           : '점을 탭하거나 커서를 올려보세요 — 점선은 "2년마다 2배", 주황 점은 AI 가속기';
+    note.textContent = hit ? hit[0]+' ('+hit[1]+') — '+hit[2].toLocaleString()+' transistors'
+                           : 'Tap a dot or hover the cursor — the dashed line is "2× every 2 years", the orange dot is an AI accelerator';
   }
   cv.addEventListener('pointermove', probe);
   cv.addEventListener('pointerdown', probe);   // 터치 기기 대응
@@ -1868,14 +1868,14 @@ if(REDUCE){
   const stem = document.getElementById('qStem'), opts = document.getElementById('qOpts'),
         scoreEl = document.getElementById('qScore');
   if(!stem) return;
-  const NAMES = ['정제','잉곳 성장','웨이퍼 제조','산화','포토(노광)','식각','증착·이온주입','금속 배선','EDS 테스트','패키징'];
+  const NAMES = ['Refining','Ingot growth','Wafer fabrication','Oxidation','Photo (exposure)','Etching','Deposition & ion implant','Metal interconnect','EDS test','Packaging'];
   const Q = [
-    {q:'빛에 반응하는 감광액에 마스크로 회로 패턴을 축소 투영하는 공정은?', a:'포토(노광)'},
-    {q:'웨이퍼 표면에 SiO₂(유리) 절연막을 고온에서 자라게 하는 공정은?', a:'산화'},
-    {q:'붕소·인·비소 이온을 실리콘에 심어 n형·p형을 만드는 공정은?', a:'증착·이온주입'},
-    {q:'플라즈마 이온으로 노출된 부분만 수직으로 깎아내는 공정은?', a:'식각'},
-    {q:'프로브 카드로 다이의 양품/불량을 가려 수율을 판정하는 공정은?', a:'EDS 테스트'},
-    {q:'다이를 잘라 기판에 붙이고 HBM처럼 쌓아 옷을 입히는 공정은?', a:'패키징'}
+    {q:'Which step shrinks and projects the circuit pattern through a mask onto light-sensitive photoresist?', a:'Photo (exposure)'},
+    {q:'Which step grows a SiO₂ (glass) insulating film on the wafer surface at high temperature?', a:'Oxidation'},
+    {q:'Which step implants boron, phosphorus, and arsenic ions into silicon to form n-type and p-type?', a:'Deposition & ion implant'},
+    {q:'Which step uses plasma ions to carve only the exposed regions straight down?', a:'Etching'},
+    {q:'Which step uses a probe card to separate good dies from bad and judge the yield?', a:'EDS test'},
+    {q:'Which step dices the die, bonds it to a substrate, stacks it like HBM, and gives it its packaging?', a:'Packaging'}
   ];
   const qFb = document.getElementById('qFb');
   let i = 0, score = 0;
@@ -1896,7 +1896,7 @@ if(REDUCE){
           b.textContent = '✗ '+c; b.style.borderColor='var(--bad)'; b.style.color='var(--bad)';
           btns.forEach(x=>{ if(x.textContent===cur.a){ x.textContent = '✓ '+cur.a; x.classList.add('on'); } });
         }
-        qFb.textContent = hit ? '정답!' : '오답 — 정답은 "'+cur.a+'"';
+        qFb.textContent = hit ? 'Correct!' : 'Wrong — the answer is "'+cur.a+'"';
         qFb.style.color = hit ? 'var(--good)' : 'var(--bad)';
         btns.forEach(x=>x.disabled=true);
         setTimeout(next, hit ? 700 : 1500);
@@ -1906,15 +1906,15 @@ if(REDUCE){
   }
   function next(){
     if(++i < Q.length){ show(); return; }
-    stem.textContent = '복습 완료!';
+    stem.textContent = 'Review complete!';
     qFb.textContent = '';
     opts.innerHTML = '';
     const again = document.createElement('button');
-    again.textContent = '다시 풀기';
+    again.textContent = 'Try again';
     again.onclick = ()=>{ i=0; score=0; scoreEl.style.display='none'; show(); };
     opts.appendChild(again);
     scoreEl.style.display = 'block';
-    scoreEl.innerHTML = '<div class="num">'+score+' / '+Q.length+'</div><div class="note">틀린 공정은 위로 스크롤해 복습해보자</div>';
+    scoreEl.innerHTML = '<div class="num">'+score+' / '+Q.length+'</div><div class="note">Scroll back up to review the ones you missed</div>';
   }
   show();
 })();
@@ -1928,13 +1928,13 @@ if(REDUCE){
   const cv = document.getElementById('scCv'), ctx = cv.getContext('2d');
   const sizeO = document.getElementById('scSize'), noteO = document.getElementById('scNote');
   const ITEMS = [  // [버튼명, 크기 nm, 설명]
-    ['머리카락', 80000, '굵기 ≈ 0.08mm — 맨눈으로 보이는 마지막 세계'],
-    ['적혈구', 7500, '피 한 방울 속 산소 배달부'],
-    ['대장균', 2000, '박테리아 — 광학현미경의 영역'],
-    ['바이러스', 100, '코로나바이러스 — 전자현미경이 필요한 크기'],
-    ['트랜지스터 게이트', 16, '최신 칩 스위치의 게이트 길이 — 빛의 파장보다 훨씬 작다'],
-    ['DNA', 2.5, 'DNA 이중나선의 폭'],
-    ['실리콘 원자 간격', 0.54, '실리콘 결정의 격자상수 — 사실상 바닥'],
+    ['Human hair', 80000, 'Width ≈ 0.08mm — the last world visible to the naked eye'],
+    ['Red blood cell', 7500, 'the oxygen courier inside a drop of blood'],
+    ['E. coli', 2000, 'a bacterium — the realm of the optical microscope'],
+    ['Virus', 100, 'coronavirus — a size that needs an electron microscope'],
+    ['Transistor gate', 16, 'the gate length of a modern chip switch — far smaller than the wavelength of light'],
+    ['DNA', 2.5, 'the width of the DNA double helix'],
+    ['Silicon atom spacing', 0.54, 'the lattice constant of a silicon crystal — effectively the floor'],
   ];
   const L0 = Math.log10(0.4), L1 = Math.log10(150000);
   const X = lg => 14 + (lg - L0)/(L1 - L0)*(cv.width - 28);
@@ -1951,7 +1951,7 @@ if(REDUCE){
     const it = ITEMS[cur];
     sizeO.textContent = fmt(it[1]);
     const ratio = 80000/it[1];
-    noteO.textContent = it[2] + (cur>0 ? ' · 머리카락 굵기에 나란히 약 '+Math.round(ratio).toLocaleString()+'개' : '');
+    noteO.textContent = it[2] + (cur>0 ? ' · about '+Math.round(ratio).toLocaleString()+' side by side across the width of a hair' : '');
     ctx.clearRect(0,0,cv.width,cv.height);
     ctx.strokeStyle = 'rgba(147,164,189,.3)';
     ctx.beginPath(); ctx.moveTo(14,34); ctx.lineTo(cv.width-14,34); ctx.stroke();
@@ -1981,9 +1981,9 @@ if(REDUCE){
   const GENS = [  // [이름, 버스폭 bit, 대표 핀속도 Gbps, 설명]
     ['HBM2', 1024, 2.0, '2016~'],
     ['HBM2E', 1024, 3.6, '2020~'],
-    ['HBM3', 1024, 6.4, '2022~ · H100 세대'],
-    ['HBM3E', 1024, 9.2, '2024~ · B200 세대'],
-    ['HBM4', 2048, 8.0, '2026 양산 — 버스폭 2배'],
+    ['HBM3', 1024, 6.4, '2022~ · H100 generation'],
+    ['HBM3E', 1024, 9.2, '2024~ · B200 generation'],
+    ['HBM4', 2048, 8.0, '2026 volume production — 2× bus width'],
   ];
   let cur = 4;
   const pinR = document.getElementById('pinR'), pinO = document.getElementById('pinO');
@@ -2004,9 +2004,9 @@ if(REDUCE){
     const per = s[1]*pin/8;                    // 스택당 GB/s
     const sys = per*stacks;
     pinO.textContent = pin.toFixed(1)+' Gbps';
-    stkO.textContent = stacks+'개';
+    stkO.textContent = stacks+' stacks';
     bwO.textContent = fmtBW(sys);
-    bwNote.textContent = s[0]+' ('+s[3]+') · 스택당 '+fmtBW(per)+' — 1초에 4K 영화(50GB) 약 '+(sys/50).toFixed(sys/50<10?1:0)+'편 분량';
+    bwNote.textContent = s[0]+' ('+s[3]+') · per stack '+fmtBW(per)+' — about '+(sys/50).toFixed(sys/50<10?1:0)+' 4K movies (50GB each) per second';
   }
   pinR.oninput = render; stkR.oninput = render;
   sync(); render();
@@ -2027,22 +2027,22 @@ if(REDUCE){
 
   /* 광원별 단일 노광 최소 하프피치(nm) — 실무 하한 */
   const SRC = [
-    {name:'ArF 액침',              min:38},  /* 193nm·1.35NA, k₁≈0.28 실무 하한 */
+    {name:'ArF immersion',              min:38},  /* 193nm·1.35NA, k₁≈0.28 실무 하한 */
     {name:'EUV (0.33 NA)',         min:13},  /* 13.5nm 단일 노광 실무 하한 */
     {name:'High-NA EUV (0.55 NA)', min:8}    /* imec 16nm 피치 단일 노광 실증 */
   ];
   const COLORS = ['#38e1ff','#ffbe4d','#b18cff','#41e396']; // 마스크 A/B/C/D
   const TECH = {
-    1:{tag:'단일 노광',   full:'Single Exposure'},
-    2:{tag:'SADP / LELE', full:'더블 패터닝'},
-    3:{tag:'LELELE',      full:'트리플 패터닝'},
-    4:{tag:'SAQP',        full:'자기정렬 쿼드러플 패터닝'}
+    1:{tag:'Single exposure',   full:'Single Exposure'},
+    2:{tag:'SADP / LELE', full:'Double patterning'},
+    3:{tag:'LELELE',      full:'Triple patterning'},
+    4:{tag:'SAQP',        full:'Self-aligned quadruple patterning'}
   };
   const USE = {
-    1:'광원의 단일 노광 한계 안쪽 — 나눌 필요 없이 한 번에 찍는다',
-    2:'14nm 세대 양산에 도입 — 마스크 2장(LELE) 또는 스페이서 1회(SADP)',
-    3:'리소–식각을 세 번 반복(LELELE)',
-    4:'인텔 10nm 핀을 EUV 없이 ArF로 — SAQP(연속 SADP 2회로 피치 1/4)'
+    1:'Inside the single-exposure limit of the source — no need to split; print it in one shot',
+    2:'Adopted for 14nm-generation production — two masks (LELE) or one spacer pass (SADP)',
+    3:'Litho–etch repeated three times (LELELE)',
+    4:'Intel 10nm fins with ArF instead of EUV — SAQP (two consecutive SADP passes cut the pitch to 1/4)'
   };
 
   let cur = 0;
@@ -2064,17 +2064,17 @@ if(REDUCE){
     if(N <= 4){
       const t = TECH[N];
       techO.textContent = t.tag + ' — ' + t.full;
-      costO.textContent = '노광 ' + N + '회 · 상대 공정비용 ≈ ' + N + '배 (근사)';
+      costO.textContent = N + ' exposures · relative process cost ≈ ' + N + '× (approx.)';
     } else {
-      techO.textContent = '≥5회 — 단일 파장 한계 초과';
-      costO.textContent = '노광 ' + N + '회 상당 · 5중 이상 분할은 비현실적 (근사)';
+      techO.textContent = '≥5 passes — beyond the single-wavelength limit';
+      costO.textContent = '~' + N + ' exposures · 5+ way splitting is impractical (approx.)';
     }
 
     const arfN = splits(SRC[0].min, tgt);
-    let use = USE[N] || '이 피치는 더 짧은 파장으로 갈아탈 신호 — ArF로는 5회 이상 나눠야 한다';
+    let use = USE[N] || 'This pitch is the cue to move to a shorter wavelength — ArF would need 5+ splits';
     if(cur > 0 && arfN > N){
-      use = '같은 ' + tgt + 'nm를 ArF는 ' + (arfN > 4 ? '5회+' : '×'+arfN) +
-            ', 이 광원은 ×' + N + ' — EUV 도입이 멀티패터닝을 줄였다';
+      use = 'The same ' + tgt + 'nm takes ArF ' + (arfN > 4 ? '5+ passes' : '×'+arfN) +
+            ', this source ×' + N + ' — EUV adoption cut multipatterning';
     }
     useO.textContent = use;
     draw(N);
@@ -2097,12 +2097,12 @@ if(REDUCE){
         ctx.fillRect(x0 + i*dpx, y, bw, 30);
       }
       ctx.fillStyle = '#ff5d73'; ctx.textAlign = 'left';
-      ctx.fillText('5회+ 분할 — 단일 파장으로는 비현실적', pad, y + 52);
+      ctx.fillText('5+ splits — impractical for a single wavelength', pad, y + 52);
       return;
     }
     if(N === 1){
       const y = H/2 - 10;
-      label('단일 노광', y + 10);
+      label('Single exposure', y + 10);
       for(let i=0;i<cols;i++){ ctx.fillStyle = '#38e1ff'; ctx.fillRect(x0 + i*dpx, y, bw, 20); }
       return;
     }
@@ -2110,7 +2110,7 @@ if(REDUCE){
     const rowH = 20, gap = 8;
     let y = 10;
     for(let k=0;k<N;k++){
-      label('마스크 ' + String.fromCharCode(65 + k), y + rowH/2);
+      label('Mask ' + String.fromCharCode(65 + k), y + rowH/2);
       for(let i=0;i<cols;i++){
         if((i % N) !== k) continue;
         ctx.fillStyle = COLORS[k];
@@ -2119,7 +2119,7 @@ if(REDUCE){
       y += rowH + gap;
     }
     y += 4;
-    label('합쳐진 패턴', y + rowH/2);
+    label('Merged pattern', y + rowH/2);
     for(let i=0;i<cols;i++){
       ctx.fillStyle = COLORS[i % N];
       ctx.fillRect(x0 + i*dpx, y, bw, rowH);
@@ -2145,10 +2145,10 @@ if(REDUCE){
     const n=parseInt(h,16); return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')'; }
 
   const CHIPS = [
-    {name:'구형 로직 28nm급', masks:40, tip:'레거시 CMOS · 40~50 마스크'},
-    {name:'최신 로직 3nm급',  masks:90, tip:'7nm ~87 → 5nm ~81(EUV가 다중노광 마스크를 대체해 감소) → 3nm에서 다시 증가 · 대표값'},
-    {name:'DRAM 1x급',        masks:35, tip:'멀티패터닝은 소수 · 30~40 마스크'},
-    {name:'3D NAND',          masks:30, tip:'마스크는 적지만, 수백 층 증착·식각 반복이 이 계산 밖에서 별도로 길다'},
+    {name:'Legacy logic ~28nm', masks:40, tip:'Legacy CMOS · 40–50 masks'},
+    {name:'Leading-edge logic ~3nm',  masks:90, tip:'7nm ~87 → 5nm ~81 (EUV replaces multi-exposure masks, so the count drops) → rises again at 3nm · representative value'},
+    {name:'DRAM 1x-class',        masks:35, tip:'Little multipatterning · 30–40 masks'},
+    {name:'3D NAND',          masks:30, tip:'Few masks, but the hundreds of deposition·etch layer cycles run long on their own, outside this count'},
   ];
   const AVG_H = 2.0;                                  // 단계당 평균 소요(h) — 큐·재작업·계측 포함 근사
   let cur = 1;                                        // 기본 = 최신 로직(3nm)
@@ -2169,7 +2169,7 @@ if(REDUCE){
   function syncChips(){ Array.from(chipsEl.children).forEach((b,i)=>b.classList.toggle('on', i===cur)); }
 
   /* ---- 애니 상태 ---- */
-  const NODES = ['산화·증착','포토','식각','CMP','세정'];
+  const NODES = ['Oxidation·deposition','Photo','Etch','CMP','Clean'];
   const CX=100, CY=100, RR=62, A0=-Math.PI/2, STEP=Math.PI*2/5;
   let prog=0, done=false, headA=A0, visible=false, running=false, lastTs=0;
   let targetMasks = CHIPS[cur].masks;
@@ -2178,18 +2178,18 @@ if(REDUCE){
     const c = CHIPS[cur];
     targetMasks = c.masks;
     const spl = +stepR.value;
-    stepO.textContent = spl + ' 단계/층';
+    stepO.textContent = spl + ' steps/layer';
     const totalSteps = c.masks * spl;
     const periodDays = totalSteps * AVG_H / 24;
     const months = periodDays / 30;
-    loopsB.textContent  = c.masks + '회';
-    layersB.textContent = c.masks + '층';
-    stepsB.textContent  = totalSteps.toLocaleString() + '단계';
-    periodN.textContent = '약 ' + months.toFixed(1) + '개월';
-    noteE.textContent = '≈ ' + Math.round(periodDays) + '일 · ' + totalSteps.toLocaleString()
-      + '단계 × ' + AVG_H.toFixed(1) + 'h/단계 · 대기·재작업 포함 근사 추정';
+    loopsB.textContent  = c.masks + '×';
+    layersB.textContent = c.masks + ' layers';
+    stepsB.textContent  = totalSteps.toLocaleString() + ' steps';
+    periodN.textContent = '~' + months.toFixed(1) + ' months';
+    noteE.textContent = '≈ ' + Math.round(periodDays) + ' days · ' + totalSteps.toLocaleString()
+      + ' steps × ' + AVG_H.toFixed(1) + 'h/step · incl. wait & rework, rough estimate';
     let sub = c.tip;
-    if(cur===1 && months >= 2 && months <= 3) sub += ' · 본문의 "2~3개월"과 정합';
+    if(cur===1 && months >= 2 && months <= 3) sub += ' · matches the "2–3 months" in the text';
     subE.textContent = sub;
     if(REDUCE) draw();
     else if(visible && !running){ running=true; requestAnimationFrame(loop); }
@@ -2221,7 +2221,7 @@ if(REDUCE){
     }
     /* 중앙 라이브 카운터 */
     ctx.fillStyle=ACC; ctx.font='700 28px '+MONO; ctx.fillText(String(laps), CX, CY-4);
-    ctx.fillStyle='#93a4bd'; ctx.font='10px sans-serif'; ctx.fillText('재진입 루프', CX, CY+16);
+    ctx.fillStyle='#93a4bd'; ctx.font='10px sans-serif'; ctx.fillText('Reentrant loops', CX, CY+16);
 
     /* 누적 층 막대 */
     const bx=250, bw=46, baseY=176, maxH=150, h=maxH*frac;
@@ -2232,7 +2232,7 @@ if(REDUCE){
     ctx.strokeStyle='rgba(7,11,20,.5)';
     const per=maxH/targetMasks, ls=targetMasks>60?2:1;
     for(let k=ls;k<laps;k+=ls){ const yy=baseY-k*per; ctx.beginPath(); ctx.moveTo(bx,yy); ctx.lineTo(bx+bw,yy); ctx.stroke(); }
-    ctx.fillStyle='#93a4bd'; ctx.font='10px sans-serif'; ctx.fillText('누적 층', bx+bw/2, baseY+12);
+    ctx.fillStyle='#93a4bd'; ctx.font='10px sans-serif'; ctx.fillText('Cumulative layers', bx+bw/2, baseY+12);
   }
 
   function loop(ts){
