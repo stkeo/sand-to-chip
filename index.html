@@ -496,6 +496,44 @@ body::after{
   color:color-mix(in srgb,var(--acc,var(--dim)) 40%,var(--dim))}
 .colophon dd{color:var(--ink); font-variant-numeric:tabular-nums}
 .finale .credit{margin-top:16px; font-size:11px; opacity:.68}
+/* ── FIG 장비 도면 뷰어 — 카드 트리거 버튼 + 싱글턴 모달(온디맨드 로드) ── */
+.figbtn{display:inline-flex; align-items:center; gap:7px; align-self:flex-start; margin-top:var(--sp-block);
+  font-family:var(--mono); font-size:11.5px; letter-spacing:.03em; text-decoration:none; cursor:pointer;
+  color:var(--acc,var(--cyan)); border-radius:9px; padding:7px 13px; line-height:1.2;
+  border:1px solid color-mix(in srgb,var(--acc,var(--cyan)) 40%,var(--line));
+  background:color-mix(in srgb,var(--acc,var(--cyan)) 8%,rgba(255,255,255,.02));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05); transition:.22s ease}
+.figbtn:focus-visible{outline:2px solid var(--acc,var(--cyan)); outline-offset:3px}
+@media (hover:hover){
+  .figbtn:hover{color:var(--ink); transform:translateY(-1px);
+    border-color:color-mix(in srgb,var(--acc,var(--cyan)) 62%,transparent);
+    background:color-mix(in srgb,var(--acc,var(--cyan)) 13%,rgba(255,255,255,.02));
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.07), 0 12px 28px -16px var(--acc,var(--cyan))}
+}
+.figmodal{position:fixed; inset:0; z-index:70; display:flex; align-items:center; justify-content:center;
+  padding:clamp(12px,3vw,40px); background:rgba(4,6,12,.92);
+  backdrop-filter:blur(9px); -webkit-backdrop-filter:blur(9px); animation:figIn .28s ease}
+.figmodal[hidden]{display:none}
+#figimg{max-width:min(1500px,96vw); max-height:92vh; width:auto; height:auto; background:#070b14;
+  border:1px solid color-mix(in srgb,var(--cyan) 26%,var(--line)); border-radius:10px;
+  box-shadow:0 40px 120px rgba(0,0,0,.72), inset 0 0 0 1px rgba(255,255,255,.03)}
+.figclose{position:fixed; z-index:71; top:calc(14px + env(safe-area-inset-top)); right:calc(16px + env(safe-area-inset-right));
+  width:42px; height:42px; display:flex; align-items:center; justify-content:center;
+  font-size:19px; line-height:1; cursor:pointer; color:var(--ink);
+  background:var(--card); border:1px solid var(--line); border-radius:50%;
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); transition:.2s ease}
+.figclose:focus-visible{outline:2px solid var(--cyan); outline-offset:3px}
+@media (hover:hover){
+  .figclose:hover{color:#fff; transform:rotate(90deg);
+    border-color:color-mix(in srgb,var(--cyan) 50%,var(--line))}
+}
+body.figlock{overflow:hidden}
+@keyframes figIn{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion: reduce){
+  .figmodal{animation:none}
+  .figbtn,.figclose{transition:none}
+  .figclose:hover{transform:none}
+}
 /* v9 반응형·접근성·인쇄 */
 @media (max-width:760px){
   .dwg-wm{display:none}
@@ -637,6 +675,7 @@ body::after{
     불순물이 10억 분의 1 수준인 <b>폴리실리콘</b> 덩어리가 남는다.</p>
     <div class="chips"><span class="chip">아크로 <b>~1,900°C</b> 탄소 환원</span><span class="chip">정제 매개 <b>삼염화실란(SiHCl₃)</b></span></div>
     <div class="fact"><b>💡 10억 분의 1이란?</b> 지구 인구 80억 명 중 딱 8명만 '이방인'인 수준의 순도다.</div>
+    <a class="figbtn" data-fig="s1" href="fig/fig-s1-ko.svg" target="_blank" rel="noopener">📐 FIG.1 — 장비 도면 보기</a>
   </div>
 </section>
 
@@ -655,6 +694,7 @@ body::after{
     <div class="fact"><b>💡 왜 하필 '단'결정일까?</b> 결정 알갱이 경계(결정립계)가 있으면
     그 자리에서 전자가 흩어져 소자 특성이 흐트러진다. 웨이퍼 한 장 전체가
     <b>하나의 결정</b>이어야 수백억 개 트랜지스터가 균일하게 동작한다.</div>
+    <a class="figbtn" data-fig="s2" href="fig/fig-s2-ko.svg" target="_blank" rel="noopener">📐 FIG.2 — 장비 도면 보기</a>
   </div>
 </section>
 
@@ -673,6 +713,7 @@ body::after{
       <canvas id="scCv" width="460" height="64" aria-hidden="true"></canvas>
       <div class="bigout" aria-live="polite" aria-atomic="true">크기 <div class="num" id="scSize">—</div><div class="note" id="scNote" style="color:var(--dim)"></div></div>
     </div>
+    <a class="figbtn" data-fig="s3" href="fig/fig-s3-ko.svg" target="_blank" rel="noopener">📐 FIG.3 — 장비 도면 보기</a>
   </div>
 </section>
 
@@ -690,6 +731,7 @@ body::after{
     <div class="fact"><b>💡 SiO₂를 넘어서:</b> 45nm 세대(2007년)부터 트랜지스터 게이트 절연막은
     얇은 SiO₂ 대신 <b>하프늄 산화물(HfO₂) 같은 high-k 물질</b>로 바뀌었다.
     막을 더 두껍게 하고도 같은 전기적 효과를 내 <b>누설 전류</b>를 억제하기 위해서다.</div>
+    <a class="figbtn" data-fig="s4" href="fig/fig-s4-ko.svg" target="_blank" rel="noopener">📐 FIG.4 — 장비 도면 보기</a>
   </div>
 </section>
 
@@ -721,6 +763,7 @@ body::after{
     <div class="fact"><b>💡 설계도는 어디서 올까?</b> 이 여정은 모래를 칩으로 <b>'만드는'</b> 이야기다.
     무엇을 만들지 그리는 <b>회로 설계</b>(팹리스·EDA)와 그 밑그림을 유리판에 새기는 <b>포토마스크 제작</b>은,
     이 앞단에 존재하는 또 다른 거대 산업이다.</div>
+    <a class="figbtn" data-fig="s5" href="fig/fig-s5-ko.svg" target="_blank" rel="noopener">📐 FIG.5 — 장비 도면 보기</a>
   </div>
 </section>
 
@@ -750,6 +793,7 @@ body::after{
       SADP·SAQP는 실제로는 마스크가 아니라 스페이서로 나누지만, '여러 번 나눠 찍는다'는 직관은 같다.</div>
     </div>
     <div class="chips"><span class="chip">건식: 플라즈마, 정밀·수직</span><span class="chip">습식: 용액, 빠르지만 등방성</span><span class="chip">식각 장비 선두 <b>램리서치·TEL</b></span></div>
+    <a class="figbtn" data-fig="s6" href="fig/fig-s6-ko.svg" target="_blank" rel="noopener">📐 FIG.6 — 장비 도면 보기</a>
   </div>
 </section>
 
@@ -774,6 +818,7 @@ body::after{
     </div>
     <div class="fact"><b>💡 도핑의 마법:</b> 실리콘 원자 백만 개당 불순물 몇 개 수준의 차이가 도체와 부도체 사이를 오가는 스위치를 만든다.</div>
     <div class="chips"><span class="chip">증착·이온주입 장비 <b>어플라이드 머티어리얼즈(AMAT)</b></span></div>
+    <a class="figbtn" data-fig="s7" href="fig/fig-s7-ko.svg" target="_blank" rel="noopener">📐 FIG.7 — 장비 도면 보기</a>
   </div>
 </section>
 
@@ -801,6 +846,7 @@ body::after{
       마스크 층수는 공개 산업 자료 기준 대표값.</div>
     </div>
     <div class="chips"><span class="chip">알루미늄 → <b>구리</b> (1997, IBM 다마신)</span><span class="chip">배선 총길이: 다이당 <b>수 km</b></span><span class="chip">배선 사이엔 <b>저유전율(low-k)</b> 절연막</span><span class="chip">구리 확산 막는 <b>배리어막</b></span></div>
+    <a class="figbtn" data-fig="s8" href="fig/fig-s8-ko.svg" target="_blank" rel="noopener">📐 FIG.8 — 장비 도면 보기</a>
   </div>
 </section>
 
@@ -828,6 +874,7 @@ body::after{
       <div class="ystats" aria-live="polite" aria-atomic="true"><span>양품당 원가 <b id="cpd" style="color:var(--amber)">—</b></span></div>
       <div class="bigout" style="margin-top:12px"><span style="font-size:12px" id="yFormula">푸아송 수율 모델 Y = e<sup>−A·D₀</sup> — 같은 결함 밀도라도 다이 면적(A)이 크면 수율이 급락하고, <b>양품당 원가 = 웨이퍼 가공비 ÷ 양품 수</b>는 폭증한다</span></div>
     </div>
+    <a class="figbtn" data-fig="s9" href="fig/fig-s9-ko.svg" target="_blank" rel="noopener">📐 FIG.9 — 장비 도면 보기</a>
   </div>
 </section>
 
@@ -854,6 +901,7 @@ body::after{
     <div class="fact"><b>💡 병목이 된 패키징:</b> 2025~26년 AI 가속기 수요가 폭증하며
     <b>CoWoS</b> 2.5D 패키징과 <b>HBM</b>은 반도체 공급망 전체의 최대 병목이 됐다.
     이제 패키징 용량이 곧 AI 칩 생산량을 결정한다.</div>
+    <a class="figbtn" data-fig="s10" href="fig/fig-s10-ko.svg" target="_blank" rel="noopener">📐 FIG.10 — 장비 도면 보기</a>
   </div>
 </section>
 
@@ -2581,6 +2629,45 @@ if(!REDUCE && 'MutationObserver' in window){
   });
 }
 
+})();
+</script>
+
+<div id="figmodal" class="figmodal" hidden role="dialog" aria-modal="true" aria-label="장비 도면">
+  <button type="button" class="figclose" aria-label="닫기">✕</button>
+  <img id="figimg" alt="">
+</div>
+<script>
+/* FIG 장비 도면 뷰어 — .figbtn 클릭을 가로채 모달로 SVG 도면을 연다(열 때만 src 설정) */
+(function(){
+  var modal = document.getElementById('figmodal');
+  if(!modal) return;
+  var img = document.getElementById('figimg');
+  var closeBtn = modal.querySelector('.figclose');
+  var lang = document.documentElement.lang === 'en' ? 'en' : 'ko';
+  var opener = null;
+  function openFig(trigger){
+    opener = trigger;
+    img.setAttribute('src', 'fig/fig-' + trigger.getAttribute('data-fig') + '-' + lang + '.svg');
+    img.setAttribute('alt', trigger.textContent);
+    modal.hidden = false;
+    document.body.classList.add('figlock');
+    closeBtn.focus();
+  }
+  function closeFig(){
+    if(modal.hidden) return;
+    modal.hidden = true;
+    document.body.classList.remove('figlock');
+    img.removeAttribute('src');
+    img.setAttribute('alt', '');
+    if(opener){ opener.focus(); opener = null; }
+  }
+  var btns = document.querySelectorAll('.figbtn');
+  for(var i=0;i<btns.length;i++){
+    btns[i].addEventListener('click', function(ev){ ev.preventDefault(); openFig(this); });
+  }
+  closeBtn.addEventListener('click', closeFig);
+  modal.addEventListener('click', function(ev){ if(ev.target === modal) closeFig(); });
+  document.addEventListener('keydown', function(ev){ if(ev.key === 'Escape') closeFig(); });
 })();
 </script>
 </body>
