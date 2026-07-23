@@ -527,11 +527,21 @@ body::after{
   .figclose:hover{color:#fff; transform:rotate(90deg);
     border-color:color-mix(in srgb,var(--cyan) 50%,var(--line))}
 }
+.figview{position:fixed; z-index:71; top:calc(14px + env(safe-area-inset-top)); left:calc(16px + env(safe-area-inset-left));
+  display:flex; gap:4px; padding:4px; border-radius:99px;
+  background:var(--card); border:1px solid var(--line);
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px)}
+.figview button{font-family:var(--mono); font-size:12px; letter-spacing:.05em; line-height:1;
+  min-height:40px; display:inline-flex; align-items:center;
+  color:var(--dim); background:none; border:1px solid transparent; border-radius:99px;
+  padding:0 18px; cursor:pointer; transition:.2s ease}
+.figview button.on{color:#0a0f1a; background:var(--cyan); font-weight:700}
+.figview button:focus-visible{outline:2px solid var(--cyan); outline-offset:2px}
 body.figlock{overflow:hidden}
 @keyframes figIn{from{opacity:0}to{opacity:1}}
 @media (prefers-reduced-motion: reduce){
   .figmodal{animation:none}
-  .figbtn,.figclose{transition:none}
+  .figbtn,.figclose,.figview button{transition:none}
   .figclose:hover{transform:none}
 }
 /* v9 반응형·접근성·인쇄 */
@@ -2634,6 +2644,10 @@ if(!REDUCE && 'MutationObserver' in window){
 
 <div id="figmodal" class="figmodal" hidden role="dialog" aria-modal="true" aria-label="장비 도면">
   <button type="button" class="figclose" aria-label="닫기">✕</button>
+  <div class="figview" role="group" aria-label="도면 보기 방식">
+    <button type="button" data-view="fig" class="on" aria-pressed="true">단면</button>
+    <button type="button" data-view="iso" aria-pressed="false">입체</button>
+  </div>
   <img id="figimg" alt="">
 </div>
 <script>
@@ -2643,12 +2657,26 @@ if(!REDUCE && 'MutationObserver' in window){
   if(!modal) return;
   var img = document.getElementById('figimg');
   var closeBtn = modal.querySelector('.figclose');
+  var viewBtns = modal.querySelectorAll('.figview button');
   var lang = document.documentElement.lang === 'en' ? 'en' : 'ko';
   var opener = null;
+  var view = 'fig';
+  function syncView(){
+    for(var v=0;v<viewBtns.length;v++){
+      var on = viewBtns[v].getAttribute('data-view') === view;
+      viewBtns[v].classList.toggle('on', on);
+      viewBtns[v].setAttribute('aria-pressed', on ? 'true' : 'false');
+    }
+  }
+  function setSrc(){
+    if(!opener) return;
+    img.setAttribute('src', 'fig/' + (view === 'iso' ? 'iso-' : 'fig-') + opener.getAttribute('data-fig') + '-' + lang + '.svg');
+    img.setAttribute('alt', opener.textContent);
+  }
   function openFig(trigger){
     opener = trigger;
-    img.setAttribute('src', 'fig/fig-' + trigger.getAttribute('data-fig') + '-' + lang + '.svg');
-    img.setAttribute('alt', trigger.textContent);
+    syncView();
+    setSrc();
     modal.hidden = false;
     document.body.classList.add('figlock');
     closeBtn.focus();
@@ -2664,6 +2692,13 @@ if(!REDUCE && 'MutationObserver' in window){
   var btns = document.querySelectorAll('.figbtn');
   for(var i=0;i<btns.length;i++){
     btns[i].addEventListener('click', function(ev){ ev.preventDefault(); openFig(this); });
+  }
+  for(var j=0;j<viewBtns.length;j++){
+    viewBtns[j].addEventListener('click', function(){
+      view = this.getAttribute('data-view');
+      syncView();
+      setSrc();
+    });
   }
   closeBtn.addEventListener('click', closeFig);
   modal.addEventListener('click', function(ev){ if(ev.target === modal) closeFig(); });

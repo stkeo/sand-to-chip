@@ -2,7 +2,7 @@
    전략: HTML=네트워크 우선(배포 즉시 반영, 오프라인 시 캐시 폴백) ·
         three.min.js/이미지=캐시 우선(불변 대용량, 재방문 즉시 로드)
    배포 시 캐시 갱신이 필요하면 CACHE 버전만 올리면 된다(구 캐시는 activate에서 청소) */
-const CACHE = 's2c-v2';
+const CACHE = 's2c-v3';
 const PRECACHE = [
   './', './en.html', './404.html',
   './three.min.js',
