@@ -1213,6 +1213,31 @@ reg(g => {
   poly.position.x = 1.15; g.add(poly);
   const flow = pointCloud(160, 0, 0xffbe4d, 0.03, (i,n) => new THREE.Vector3(-1.15+(i/n)*2.3, Math.sin(i/n*Math.PI)*0.75-0.1, (Math.random()-0.5)*0.2));
   g.add(flow);
+  /* 진짜 3D 장비 컨텍스트 — 지멘스 CVD 반응기: 벨 자·통전 U-로드 2조·전극 보스·베이스 플레이트 */
+  const reactor = new THREE.Group();
+  const jarM = mat({color:0xcfe3f4, metalness:.05, roughness:.1, transparent:true, opacity:.13, side:THREE.DoubleSide});
+  const jarWall = new THREE.Mesh(new THREE.CylinderGeometry(0.95,0.95,1.5,48,1,true), jarM);
+  jarWall.position.y = -0.1; reactor.add(jarWall);
+  const jarDome = new THREE.Mesh(new THREE.SphereGeometry(0.95,48,24,0,Math.PI*2,0,Math.PI/2), jarM);
+  jarDome.position.y = 0.65; reactor.add(jarDome);
+  const rodM1 = mat({color:0x772f18, emissive:0xff6a2a, emissiveIntensity:.25, roughness:.5});
+  const legG1 = new THREE.CylinderGeometry(0.055,0.055,1.0,12);
+  const brgG1 = new THREE.TorusGeometry(0.3,0.055,10,24,Math.PI);
+  const bossM1 = mat({color:0x39415a, metalness:.7, roughness:.4});
+  const bossG1 = new THREE.CylinderGeometry(0.09,0.11,0.12,12);
+  for(const zc of [-0.22,0.22]){
+    for(const xc of [-0.3,0.3]){
+      const leg = new THREE.Mesh(legG1, rodM1);
+      leg.position.set(xc,-0.35,zc); reactor.add(leg);
+      const boss = new THREE.Mesh(bossG1, bossM1);
+      boss.position.set(xc,-0.9,zc); reactor.add(boss);
+    }
+    const brg = new THREE.Mesh(brgG1, rodM1);
+    brg.position.set(0,0.15,zc); reactor.add(brg);
+  }
+  const plate1 = new THREE.Mesh(new THREE.CylinderGeometry(1.0,1.08,0.14,48), bossM1);
+  plate1.position.y = -0.95; reactor.add(plate1);
+  reactor.position.x = 1.15; g.add(reactor);
   return (p,t,dt,ww) => {
     const e = ease(p), W = ww===undefined?1:ww;
     quartz.rotation.y = Math.sin(t*0.25)*0.25;
@@ -1221,6 +1246,7 @@ reg(g => {
     poly.rotation.y = -t*0.15;
     poly.scale.setScalar(0.5 + e*0.55);          // 폴리실리콘 석출 성장
     pm.emissiveIntensity = 0.04 + e*0.4;         // 순도↑ → 발광↑
+    rodM1.emissiveIntensity = 0.25 + e*1.0 + Math.sin(t*3.1)*0.12*e;   // U-로드 백열 — 석출 진행 동기
     flow.rotation.z = Math.sin(t*0.6)*0.03;
     flow.material.opacity = (0.35 + e*0.55) * W;
   };
@@ -1665,6 +1691,37 @@ reg(g => {
   const ions = new THREE.Points(ig, new THREE.PointsMaterial({color:0xffe27a, size:0.035, map:DOT, transparent:true, opacity:.95, blending:THREE.AdditiveBlending, depthWrite:false}));
   g.add(ions);
   const target = new THREE.Vector3(-0.2,-0.1,-0.1);
+  /* 진짜 3D 장비 컨텍스트 — 임플란터 엔드스테이션: 진공 챔버 프레임 12변·빔라인 분석 링+여자 코일·터보 펌프 */
+  const frM7 = mat({color:0x39415a, metalness:.7, roughness:.4});
+  const edgeG7 = new THREE.BoxGeometry(0.09,2.0,0.09);
+  for(const xc of [-1.35,1.35]) for(const zc of [-1.35,1.35]){
+    const c = new THREE.Mesh(edgeG7, frM7);
+    c.position.set(xc,0.1,zc); g.add(c);
+  }
+  const railG7 = new THREE.BoxGeometry(2.79,0.09,0.09);
+  for(const zc of [-1.35,1.35]) for(const yy of [-0.9,1.1]){
+    const r = new THREE.Mesh(railG7, frM7);
+    r.position.set(0,yy,zc); g.add(r);
+  }
+  const railG7b = new THREE.BoxGeometry(0.09,0.09,2.61);
+  for(const xc of [-1.35,1.35]) for(const yy of [-0.9,1.1]){
+    const r = new THREE.Mesh(railG7b, frM7);
+    r.position.set(xc,yy,0); g.add(r);
+  }
+  const dir7 = new THREE.Vector3(-1.8,-1.6,-0.5).normalize();
+  const ringM7 = mat({color:0x6f7ea3, metalness:.85, roughness:.3, emissive:0x2a4a8f, emissiveIntensity:.25});
+  const anal7 = new THREE.Mesh(new THREE.TorusGeometry(0.24,0.055,10,40), ringM7);
+  anal7.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1), dir7);
+  anal7.position.set(0.79,0.78,0.175); g.add(anal7);
+  const coilM7 = mat({color:0xd97a3c, metalness:.9, roughness:.3, emissive:0x7a3210, emissiveIntensity:.3});
+  for(const s of [-1,1]){
+    const coil = new THREE.Mesh(new THREE.TorusGeometry(0.24,0.03,8,40), coilM7);
+    coil.quaternion.copy(anal7.quaternion);
+    coil.position.copy(anal7.position).addScaledVector(dir7, s*0.09);
+    g.add(coil);
+  }
+  const pump7 = new THREE.Mesh(new THREE.CylinderGeometry(0.2,0.2,0.42,24), mat({color:0x2a3140, metalness:.7, roughness:.45}));
+  pump7.position.set(0.85,-1.1,0.85); g.add(pump7);
   return (p,t,dt,ww) => {
     const e = ease(p), W = ww===undefined?1:ww;
     layers.forEach((L,i)=>{
@@ -1683,6 +1740,7 @@ reg(g => {
       ip[i*3+2]= M.lerp(gunPos.z, target.z, k)+(Math.random()-0.5)*0.05;
     }
     ig.attributes.position.needsUpdate = true;
+    ringM7.emissiveIntensity = 0.25 + Math.abs(Math.sin(t*2.4))*0.35;   // 분석 링 여자 전류
     g.rotation.y = -0.2+Math.sin(t*0.25)*0.1;
   };
 });
@@ -1736,6 +1794,23 @@ reg(g => {
     return new THREE.Vector3(Math.cos(a)*r, (Math.random()-0.5)*0.04, Math.sin(a)*r);
   });
   slurry.position.y = 0.515; g.add(slurry);
+  /* 진짜 3D 장비 컨텍스트 — CMP 스테이션: 배스 림·오버헤드 캐리어 레일·서포트·헤드 스핀들 */
+  const rimM8 = mat({color:0x2a3140, metalness:.7, roughness:.45});
+  const rimG8a = new THREE.BoxGeometry(2.56,0.3,0.08);
+  const rimG8b = new THREE.BoxGeometry(0.08,0.3,2.56);
+  for(const s of [-1,1]){
+    const wa = new THREE.Mesh(rimG8a, rimM8); wa.position.set(0,-0.72,s*1.24); g.add(wa);
+    const wb = new THREE.Mesh(rimG8b, rimM8); wb.position.set(s*1.24,-0.72,0); g.add(wb);
+  }
+  const rail8 = new THREE.Mesh(new THREE.TorusGeometry(0.8,0.045,10,64), mat({color:0x6f7ea3, metalness:.85, roughness:.3}));
+  rail8.rotation.x = Math.PI/2; rail8.position.y = 1.18; g.add(rail8);
+  const colG8 = new THREE.CylinderGeometry(0.05,0.05,2.05,10);
+  for(const a of [Math.PI*0.8, Math.PI*1.2]){
+    const c = new THREE.Mesh(colG8, rimM8);
+    c.position.set(Math.cos(a)*1.15, 0.15, Math.sin(a)*1.15); g.add(c);
+  }
+  const spin8 = new THREE.Mesh(new THREE.CylinderGeometry(0.07,0.07,0.6,12), mat({color:0x3a4254, metalness:.7}));
+  spin8.position.y = 0.33; cmp.add(spin8);
   return (p,t,dt,ww) => {
     const e = ease(p), W = ww===undefined?1:ww;
     wires.children.forEach((w,i)=>{
