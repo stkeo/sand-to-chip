@@ -497,19 +497,16 @@ body::after{
 .colophon dd{color:var(--ink); font-variant-numeric:tabular-nums}
 .finale .credit{margin-top:16px; font-size:11px; opacity:.68}
 /* ── FIG 장비 도면 뷰어 — 카드 트리거 버튼 + 싱글턴 모달(온디맨드 로드) ── */
-.figbtn{display:inline-flex; align-items:center; gap:7px; align-self:flex-start; margin-top:var(--sp-block);
-  font-family:var(--mono); font-size:11.5px; letter-spacing:.03em; text-decoration:none; cursor:pointer;
-  color:var(--acc,var(--cyan)); border-radius:9px; padding:7px 13px; line-height:1.2;
-  border:1px solid color-mix(in srgb,var(--acc,var(--cyan)) 40%,var(--line));
-  background:color-mix(in srgb,var(--acc,var(--cyan)) 8%,rgba(255,255,255,.02));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.05); transition:.22s ease}
-.figbtn:focus-visible{outline:2px solid var(--acc,var(--cyan)); outline-offset:3px}
-@media (hover:hover){
-  .figbtn:hover{color:var(--ink); transform:translateY(-1px);
-    border-color:color-mix(in srgb,var(--acc,var(--cyan)) 62%,transparent);
-    background:color-mix(in srgb,var(--acc,var(--cyan)) 13%,rgba(255,255,255,.02));
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.07), 0 12px 28px -16px var(--acc,var(--cyan))}
-}
+/* 모형 호버 = 클릭 가능 신호 · 다이브 화이트아웃 플래시 · 도면 sr 바로가기(포커스 시 노출) */
+.srfig-nav a{position:fixed; left:16px; top:16px; z-index:66; width:1px; height:1px; overflow:hidden;
+  clip:rect(0 0 0 0); white-space:nowrap; font-family:var(--mono); font-size:12.5px; text-decoration:none}
+.srfig-nav a:focus-visible{width:auto; height:auto; clip:auto; overflow:visible;
+  color:var(--cyan); background:var(--card); border:1px solid var(--cyan); border-radius:8px; padding:9px 14px; outline:none}
+body.modelhot{cursor:pointer}
+.diveflash{position:fixed; inset:0; z-index:69; pointer-events:none; opacity:0;
+  background:radial-gradient(ellipse 70% 60% at 50% 48%, color-mix(in srgb,var(--acc,var(--cyan)) 30%,#fff) 0%, transparent 70%)}
+.diveflash.go{animation:diveFlash .5s ease}
+@keyframes diveFlash{0%{opacity:0}45%{opacity:.55}100%{opacity:0}}
 .figmodal{position:fixed; inset:0; z-index:70; display:flex; align-items:center; justify-content:center;
   padding:clamp(12px,3vw,40px); background:rgba(4,6,12,.92);
   backdrop-filter:blur(9px); -webkit-backdrop-filter:blur(9px); animation:figIn .28s ease}
@@ -541,7 +538,8 @@ body.figlock{overflow:hidden}
 @keyframes figIn{from{opacity:0}to{opacity:1}}
 @media (prefers-reduced-motion: reduce){
   .figmodal{animation:none}
-  .figbtn,.figclose,.figview button{transition:none}
+  .figclose,.figview button{transition:none}
+  .diveflash.go{animation:none}
   .figclose:hover{transform:none}
 }
 /* v9 반응형·접근성·인쇄 */
@@ -654,6 +652,18 @@ body.figlock{overflow:hidden}
 <div id="topbar" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
 <nav id="rail" aria-label="Process stages"></nav>
 <nav id="minimap" aria-label="Process stages (mobile)"></nav>
+<nav class="srfig-nav" aria-label="Machine drawings">
+  <a data-fig="s1" href="fig/fig-s1-en.svg" target="_blank" rel="noopener">Drawing: Refining — Siemens reactor</a>
+  <a data-fig="s2" href="fig/fig-s2-en.svg" target="_blank" rel="noopener">Drawing: Ingot — CZ puller</a>
+  <a data-fig="s3" href="fig/fig-s3-en.svg" target="_blank" rel="noopener">Drawing: Wafer — wire saw</a>
+  <a data-fig="s4" href="fig/fig-s4-en.svg" target="_blank" rel="noopener">Drawing: Oxidation — furnace</a>
+  <a data-fig="s5" href="fig/fig-s5-en.svg" target="_blank" rel="noopener">Drawing: Photo — EUV scanner</a>
+  <a data-fig="s6" href="fig/fig-s6-en.svg" target="_blank" rel="noopener">Drawing: Etch — plasma etcher</a>
+  <a data-fig="s7" href="fig/fig-s7-en.svg" target="_blank" rel="noopener">Drawing: Deposition·implant — ion implanter</a>
+  <a data-fig="s8" href="fig/fig-s8-en.svg" target="_blank" rel="noopener">Drawing: Interconnect — damascene</a>
+  <a data-fig="s9" href="fig/fig-s9-en.svg" target="_blank" rel="noopener">Drawing: Test — wafer prober</a>
+  <a data-fig="s10" href="fig/fig-s10-en.svg" target="_blank" rel="noopener">Drawing: Packaging — CoWoS</a>
+</nav>
 
 <main>
 
@@ -669,7 +679,7 @@ body.figlock{overflow:hidden}
     </div>
     <div class="elem" aria-hidden="true">14 · Si · 28.0855 u</div>
     <div class="scrollcue">SCROLL</div>
-    <div class="keyhint">Use ← · → or J · K to jump between process steps</div>
+    <div class="keyhint">Use ← · → or J · K to jump between process steps · click the 3D model (or F) for the drawing</div>
   </div>
 </section>
 
@@ -685,7 +695,6 @@ body.figlock{overflow:hidden}
     leaves a chunk of <b>polysilicon</b> with impurities down to one part per billion.</p>
     <div class="chips"><span class="chip">Arc furnace <b>~1,900°C</b> carbon reduction</span><span class="chip">Refining agent <b>trichlorosilane (SiHCl₃)</b></span></div>
     <div class="fact"><b>💡 One part per billion?</b> A purity where, out of Earth's 8 billion people, exactly 8 would be 'strangers.'</div>
-    <a class="figbtn" data-fig="s1" href="fig/fig-s1-en.svg" target="_blank" rel="noopener">📐 FIG.1 — View machine drawing</a>
   </div>
 </section>
 
@@ -704,7 +713,6 @@ body.figlock{overflow:hidden}
     <div class="fact"><b>💡 Why single-crystal?</b> Where crystal grain boundaries exist,
     electrons scatter at those spots and the device characteristics fall apart. Only when a whole wafer is
     <b>one single crystal</b> do its tens of billions of transistors operate uniformly.</div>
-    <a class="figbtn" data-fig="s2" href="fig/fig-s2-en.svg" target="_blank" rel="noopener">📐 FIG.2 — View machine drawing</a>
   </div>
 </section>
 
@@ -723,7 +731,6 @@ body.figlock{overflow:hidden}
       <canvas id="scCv" width="460" height="64" aria-hidden="true"></canvas>
       <div class="bigout" aria-live="polite" aria-atomic="true">Size <div class="num" id="scSize">—</div><div class="note" id="scNote" style="color:var(--dim)"></div></div>
     </div>
-    <a class="figbtn" data-fig="s3" href="fig/fig-s3-en.svg" target="_blank" rel="noopener">📐 FIG.3 — View machine drawing</a>
   </div>
 </section>
 
@@ -741,7 +748,6 @@ body.figlock{overflow:hidden}
     <div class="fact"><b>💡 Beyond SiO₂:</b> From the 45nm generation (2007), the transistor's gate insulator switched
     from thin SiO₂ to <b>high-k materials such as hafnium oxide (HfO₂)</b>.
     The point is to make the film physically thicker yet deliver the same electrical effect, holding down <b>leakage current</b>.</div>
-    <a class="figbtn" data-fig="s4" href="fig/fig-s4-en.svg" target="_blank" rel="noopener">📐 FIG.4 — View machine drawing</a>
   </div>
 </section>
 
@@ -773,7 +779,6 @@ body.figlock{overflow:hidden}
     <div class="fact"><b>💡 Where does the design come from?</b> This journey is the story of <b>'making'</b> a chip out of sand.
     Drawing what to make — <b>circuit design</b> (fabless · EDA) — and engraving that blueprint onto a glass plate — <b>photomask fabrication</b> —
     are yet another giant industry that sits upstream of it.</div>
-    <a class="figbtn" data-fig="s5" href="fig/fig-s5-en.svg" target="_blank" rel="noopener">📐 FIG.5 — View machine drawing</a>
   </div>
 </section>
 
@@ -803,7 +808,6 @@ body.figlock{overflow:hidden}
       SADP·SAQP actually split with spacers rather than masks, but the intuition — "print it in several passes" — is the same.</div>
     </div>
     <div class="chips"><span class="chip">Dry: plasma, precise·vertical</span><span class="chip">Wet: solution, fast but isotropic</span><span class="chip">Etch equipment leaders <b>Lam Research·TEL</b></span></div>
-    <a class="figbtn" data-fig="s6" href="fig/fig-s6-en.svg" target="_blank" rel="noopener">📐 FIG.6 — View machine drawing</a>
   </div>
 </section>
 
@@ -828,7 +832,6 @@ body.figlock{overflow:hidden}
     </div>
     <div class="fact"><b>💡 The magic of doping:</b> a difference of just a few impurity atoms per million silicon atoms creates a switch that toggles between conductor and insulator.</div>
     <div class="chips"><span class="chip">Deposition·implant equipment <b>Applied Materials (AMAT)</b></span></div>
-    <a class="figbtn" data-fig="s7" href="fig/fig-s7-en.svg" target="_blank" rel="noopener">📐 FIG.7 — View machine drawing</a>
   </div>
 </section>
 
@@ -856,7 +859,6 @@ body.figlock{overflow:hidden}
       Mask-layer counts are representative values from public industry data.</div>
     </div>
     <div class="chips"><span class="chip">Aluminum → <b>copper</b> (1997, IBM damascene)</span><span class="chip">Total interconnect length: <b>several km</b> per die</span><span class="chip"><b>Low-k</b> dielectric between the wires</span><span class="chip"><b>Barrier film</b> that blocks copper diffusion</span></div>
-    <a class="figbtn" data-fig="s8" href="fig/fig-s8-en.svg" target="_blank" rel="noopener">📐 FIG.8 — View machine drawing</a>
   </div>
 </section>
 
@@ -884,7 +886,6 @@ body.figlock{overflow:hidden}
       <div class="ystats" aria-live="polite" aria-atomic="true"><span>Cost per good die <b id="cpd" style="color:var(--amber)">—</b></span></div>
       <div class="bigout" style="margin-top:12px"><span style="font-size:12px" id="yFormula">Poisson yield model Y = e<sup>−A·D₀</sup> — at the same defect density, a larger die area (A) makes yield plunge, and <b>cost per good die = wafer processing cost ÷ number of good dies</b> soars</span></div>
     </div>
-    <a class="figbtn" data-fig="s9" href="fig/fig-s9-en.svg" target="_blank" rel="noopener">📐 FIG.9 — View machine drawing</a>
   </div>
 </section>
 
@@ -911,7 +912,6 @@ body.figlock{overflow:hidden}
     <div class="fact"><b>💡 Packaging, now the bottleneck:</b> as demand for AI accelerators surged in 2025–26,
     <b>CoWoS</b> 2.5D packaging and <b>HBM</b> became the single biggest bottleneck across the entire semiconductor supply chain.
     Packaging capacity now directly determines how many AI chips can be built.</div>
-    <a class="figbtn" data-fig="s10" href="fig/fig-s10-en.svg" target="_blank" rel="noopener">📐 FIG.10 — View machine drawing</a>
   </div>
 </section>
 
@@ -1012,7 +1012,7 @@ body.figlock{overflow:hidden}
       var killToast = function(){ toast.classList.remove('up'); setTimeout(function(){ toast.remove(); }, 500); };
       setTimeout(function(){
         try{ localStorage.setItem('s2c_seen', '1'); }catch(e){}   // mark at actual show time — early bounce gets a retry next visit
-        toast.innerHTML = '💡 The <b>lab widgets</b> on this journey are hands-on — try the sliders and buttons <button aria-label="Close">✕</button>';
+        toast.innerHTML = '💡 The <b>lab widgets</b> are hands-on, and <b>clicking a 3D model</b> opens its machine drawing <button aria-label="Close">✕</button>';
         toast.querySelector('button').onclick = killToast;
         toast.classList.add('up');
       }, 1800);
@@ -1041,6 +1041,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, LOW ? 1.5 : 2));
 /* 필르믹 컬러 그레이드 — 발광부(융액·퍼니스·코어)가 흰색으로 클립되지 않고 부드럽게 롤오프 */
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.12;
+renderer.localClippingEnabled = true;   // S2 quarter cutaway (per-material clipping; no effect on other scenes)
 const scene = new THREE.Scene();
 scene.fog = new THREE.FogExp2(0x070b14, 0.055);
 const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
@@ -1225,19 +1226,89 @@ reg(g => {
   };
 });
 
-/* ============ S2 잉곳 — CZ 인상 ============ */
+/* ============ S2 잉곳 — CZ 인상 (진짜 3D 쿼터 컷어웨이: 컷이 천천히 돌며 내부가 열린다) ============ */
 reg(g => {
-  const cru = new THREE.Mesh(new THREE.CylinderGeometry(1.05,0.85,0.75,40,1,true), mat({color:0x2a2f3c, metalness:.7, roughness:.5, side:THREE.DoubleSide}));
-  cru.position.y = -1.05; g.add(cru);
-  const melt = new THREE.Mesh(new THREE.CircleGeometry(1.02,40), basic({color:0xff7a26, transparent:true, opacity:.95}));
+  const czP1 = new THREE.Plane(new THREE.Vector3(-1,0,0), 0);
+  const czP2 = new THREE.Plane(new THREE.Vector3(0,0,-1), 0);
+  const CZCLIP = {clippingPlanes:[czP1,czP2], clipIntersection:true, side:THREE.DoubleSide};
+  const cmat = o => mat(Object.assign({}, CZCLIP, o));
+  /* 챔버 셸 — 이중벽 + 돔 (클리핑 대상) */
+  const wallM = cmat({color:0x465164, metalness:.85, roughness:.34});
+  const wallInM = cmat({color:0x1c2330, metalness:.6, roughness:.55});
+  const wOut = new THREE.Mesh(new THREE.CylinderGeometry(1.62,1.62,2.57,72,1,true), wallM);
+  wOut.position.y = -0.135; g.add(wOut);
+  const wIn = new THREE.Mesh(new THREE.CylinderGeometry(1.5,1.5,2.57,72,1,true), wallInM);
+  wIn.position.y = -0.135; g.add(wIn);
+  const domeO = new THREE.Mesh(new THREE.SphereGeometry(1.62,72,36,0,Math.PI*2,0,Math.PI/2), wallM);
+  domeO.position.y = 1.15; g.add(domeO);
+  const domeI = new THREE.Mesh(new THREE.SphereGeometry(1.5,72,36,0,Math.PI*2,0,Math.PI/2), wallInM);
+  domeI.position.y = 1.15; g.add(domeI);
+  const collar = new THREE.Mesh(new THREE.CylinderGeometry(.3,.3,.42,32), mat({color:0x8b96a8, metalness:.85, roughness:.3}));
+  collar.position.y = 2.86; g.add(collar);
+  /* 플랜지 + 볼트 링 + 베이스 */
+  const flange = new THREE.Mesh(new THREE.CylinderGeometry(1.85,1.85,.12,72), mat({color:0x707b8e, metalness:.85, roughness:.35}));
+  flange.position.y = -1.48; g.add(flange);
+  const boltGeo = new THREE.SphereGeometry(.045, 10, 8);
+  const boltMat = mat({color:0xaab4c4, metalness:.9, roughness:.3});
+  const bolts = new THREE.InstancedMesh(boltGeo, boltMat, 16);
+  const boltD = new THREE.Object3D();
+  for(let i=0;i<16;i++){
+    const a = i/16*Math.PI*2;
+    boltD.position.set(Math.cos(a)*1.74, -1.41, Math.sin(a)*1.74);
+    boltD.updateMatrix(); bolts.setMatrixAt(i, boltD.matrix);
+  }
+  g.add(bolts);
+  const base = new THREE.Mesh(new THREE.BoxGeometry(3.0,.12,3.0), mat({color:0x39415a, metalness:.6, roughness:.5}));
+  base.position.y = -1.6; g.add(base);
+  /* 뷰포트 + 배기 포트 (셸 부속) */
+  const vp = new THREE.Mesh(new THREE.CylinderGeometry(.19,.19,.16,24), mat({color:0x9fd6e8, metalness:.1, roughness:.08, transparent:true, opacity:.6}));
+  vp.rotation.z = Math.PI/2; vp.position.set(-1.63, 0.5, 0.35); g.add(vp);
+  const exh = new THREE.Mesh(new THREE.CylinderGeometry(.11,.11,.5,20), mat({color:0x707b8e, metalness:.8, roughness:.35}));
+  exh.rotation.z = Math.PI/2; exh.position.set(1.72, 0.15, -0.3); g.add(exh);
+  /* 내부 — 흑연 서셉터 + 석영 도가니 + 융액 + 히터 + 열 차폐 */
+  const susc = new THREE.Mesh(new THREE.CylinderGeometry(1.16,0.95,.6,64,1,true), cmat({color:0x191d24, metalness:.35, roughness:.75}));
+  susc.position.y = -1.0; g.add(susc);
+  const cru = new THREE.Mesh(new THREE.CylinderGeometry(1.08,0.9,.55,64,1,true), cmat({color:0xbfe0ee, metalness:.05, roughness:.12, transparent:true, opacity:.38, emissive:0x6fb6d8, emissiveIntensity:.08}));
+  cru.position.y = -0.97; g.add(cru);
+  const heaterM = mat({color:0x2a0f08, emissive:0xff4d12, emissiveIntensity:1.25, metalness:.05, roughness:.7});
+  const heaters = new THREE.Group(); g.add(heaters);
+  for(let i=0;i<8;i++){
+    const a = i/8*Math.PI*2 + .18;
+    const pts = [];
+    for(let k=0;k<=8;k++){
+      const y = -1.12 + k/8*.8;
+      const rr = 1.26 + ((k%2)?.045:-.045);
+      pts.push(new THREE.Vector3(Math.cos(a)*rr, y, Math.sin(a)*rr));
+    }
+    heaters.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 24, .028, 6, false), heaterM));
+  }
+  const shield = new THREE.Mesh(new THREE.CylinderGeometry(1.42,1.34,.92,64,1,true), cmat({color:0x3a4254, metalness:.7, roughness:.4}));
+  shield.position.y = -0.66; g.add(shield);
+  /* 융액 — 라디얼 텍스처 디스크 */
+  const meltTexC = document.createElement('canvas'); meltTexC.width = meltTexC.height = 128;
+  const mx = meltTexC.getContext('2d');
+  const mg = mx.createRadialGradient(64,64,6,64,64,64);
+  mg.addColorStop(0,'#fff3cf'); mg.addColorStop(.35,'#ffcf7e');
+  mg.addColorStop(.7,'#ff8a2e'); mg.addColorStop(1,'#c2470f');
+  mx.fillStyle = mg; mx.fillRect(0,0,128,128);
+  const melt = new THREE.Mesh(new THREE.CircleGeometry(1.02,48),
+    new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(meltTexC), transparent:true, opacity:.95}));
   melt.rotation.x = -Math.PI/2; melt.position.y = -0.72; g.add(melt);
   const meltRing = new THREE.Mesh(new THREE.CircleGeometry(1.35,40), basic({color:0xff5a1a, transparent:true, opacity:.18, blending:THREE.AdditiveBlending}));
   meltRing.rotation.x = -Math.PI/2; meltRing.position.y = -0.70; g.add(meltRing);
   const meltGlow = glow(0xff7a26, 2.4); meltGlow.position.y = -0.55; g.add(meltGlow);
+  /* 잉곳 (성장 줄무늬 링 포함) */
   const ingot = new THREE.Group();
   const body = new THREE.Mesh(new THREE.CylinderGeometry(0.42,0.42,1.9,48), mat({color:0xc8ccd4, metalness:.95, roughness:.18}));
   body.position.y = 0.95;
   blueprintEdges(body);
+  const ringGeo = new THREE.TorusGeometry(.422, .005, 6, 48);
+  const ringMat = mat({color:0x8f9aac, metalness:.9, roughness:.3});
+  for(let i=0;i<6;i++){
+    const ring = new THREE.Mesh(ringGeo, ringMat);
+    ring.rotation.x = Math.PI/2; ring.position.y = 0.3 + i*0.28;
+    ingot.add(ring);
+  }
   const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.42,0.5,48), mat({color:0xc8ccd4, metalness:.95, roughness:.18}));
   neck.position.y = -0.25;
   const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.045,0.045,2.2,12), mat({color:0x3a4254, metalness:.6}));
@@ -1251,9 +1322,13 @@ reg(g => {
   return (p,t,dt,ww) => {
     const W = ww===undefined?1:ww;
     warm.intensity = 2.2*W;   // 페이드와 동기화
+    const ca = t*0.09;        // 살아있는 컷 — 절단면이 천천히 장비를 돈다
+    czP1.normal.set(-Math.cos(ca), 0, Math.sin(ca));
+    czP2.normal.set(Math.sin(ca), 0, Math.cos(ca)).negate();
     ingot.rotation.y = t*0.9;
     ingot.position.y = -0.45 + ease(p)*1.15;   // 스크롤에 따라 위로 인상
     ingot.scale.y = 0.55 + ease(p)*0.45;
+    heaterM.emissiveIntensity = 1.1 + Math.sin(t*3.4)*0.25;
     sparks.rotation.y = -t*0.25;
     melt.material.opacity = (0.85 + Math.sin(t*3)*0.1) * W;
     meltGlow.material.opacity = (0.55 + Math.sin(t*3)*0.15) * W;
@@ -1855,6 +1930,13 @@ window.addEventListener('keydown', e => {
   const k = e.key.toLowerCase();
   if(k==='arrowright' || k==='j'){ e.preventDefault(); jumpTo(Math.round(stagePosNow())+1); }
   else if(k==='arrowleft' || k==='k'){ e.preventDefault(); jumpTo(Math.round(stagePosNow())-1); }
+  else if(k==='f'){
+    const act = Math.round(stagePosNow());
+    if(act >= 1 && act <= 10 && typeof window.s2cOpenFig === 'function'){
+      e.preventDefault();
+      window.s2cOpenFig('s'+act, railNames[act], sections[act]);
+    }
+  }
 });
 function navFocus(ev){
   const a = ev.target.closest('a'); if(!a) return;
@@ -1863,6 +1945,57 @@ function navFocus(ev){
 }
 rail.addEventListener('click', navFocus);
 minimap.addEventListener('click', navFocus);
+
+/* ---------- click the model → drawing dive (raycast) ---------- */
+let diveT = 0, diveOn = false;
+const diveTarget = new THREE.Vector3();
+const rayc = new THREE.Raycaster();
+const ndc = new THREE.Vector2();
+const diveFx = document.createElement('div');
+diveFx.className = 'diveflash'; diveFx.setAttribute('aria-hidden','true');
+document.body.appendChild(diveFx);
+const UIGUARD = '.card,a,button,input,select,textarea,label,nav,#figmodal,.toast,.langtoggle';
+function modelHit(cx, cy){
+  const act = Math.round(stagePosNow());
+  if(act < 1 || act > 10) return null;
+  const st = stages[act];
+  if(!st || !st.group.visible) return null;
+  ndc.set(cx/window.innerWidth*2 - 1, -(cy/window.innerHeight)*2 + 1);
+  rayc.setFromCamera(ndc, camera);
+  const hits = rayc.intersectObject(st.group, true);
+  return hits.length ? {act: act, point: hits[0].point} : null;
+}
+let diveTimer = 0;
+function diveOpen(act, point){
+  if(typeof window.s2cOpenFig !== 'function') return;
+  if(REDUCE || !point){ window.s2cOpenFig('s'+act, railNames[act], sections[act]); return; }
+  diveTarget.copy(point);
+  diveOn = true;
+  diveFx.classList.remove('go'); void diveFx.offsetWidth; diveFx.classList.add('go');
+  diveTimer = setTimeout(function(){
+    diveTimer = 0;
+    window.s2cOpenFig('s'+act, railNames[act], sections[act]);
+  }, 300);
+}
+window.s2cDiveEnd = function(){
+  diveOn = false;
+  if(diveTimer){ clearTimeout(diveTimer); diveTimer = 0; }
+};
+window.addEventListener('click', e => {
+  if(e.target.closest && e.target.closest(UIGUARD)) return;
+  if(diveOn) return;
+  const h = modelHit(e.clientX, e.clientY);
+  if(h) diveOpen(h.act, h.point);
+});
+let hoverAt = 0;
+window.addEventListener('pointermove', e => {
+  if(REDUCE || window.innerWidth <= 760 || diveOn) return;
+  const now = performance.now();
+  if(now - hoverAt < 130) return;
+  hoverAt = now;
+  const overUI = !!(e.target.closest && e.target.closest(UIGUARD));
+  document.body.classList.toggle('modelhot', !overUI && !!modelHit(e.clientX, e.clientY));
+}, {passive:true});
 
 /* (카드 등장 IO는 three.min.js 앞의 조기 스크립트가 단독 소유 — 3D 실패에도 본문 표시 보장) */
 
@@ -1919,6 +2052,14 @@ function frame(){
   const lx = window.innerWidth > 760 ? M.lerp(lookX[Math.min(i0,11)], lookX[Math.min(i0+1,11)], ef) : 0;
   const ly = window.innerWidth > 760 ? M.lerp(lookY[Math.min(i0,11)], lookY[Math.min(i0+1,11)], ef) : 0;
   camera.lookAt(lx,ly,0);
+  /* model dive — camera gets pulled into the machine (rewinds on close) */
+  if(diveOn){ diveT = Math.min(1, diveT + dt*3.0); }
+  else if(diveT > 0){ diveT = Math.max(0, diveT - dt*2.4); }
+  if(diveT > 0){
+    const dvw = ease(diveT);
+    camera.position.lerp(diveTarget, dvw*0.86);
+    camera.lookAt(diveTarget);
+  }
   dust.rotation.y = t*0.01;
   dust2.rotation.y = -t*0.004;
   /* 스테이지 액센트를 씬 전체에 — 림라이트·안개·별먼지 틴트·화각 (드로우콜 0) */
@@ -2659,7 +2800,7 @@ if(!REDUCE && 'MutationObserver' in window){
   var closeBtn = modal.querySelector('.figclose');
   var viewBtns = modal.querySelectorAll('.figview button');
   var lang = document.documentElement.lang === 'en' ? 'en' : 'ko';
-  var opener = null;
+  var curId = null, curAlt = '', opener = null;
   var view = 'fig';
   function syncView(){
     for(var v=0;v<viewBtns.length;v++){
@@ -2669,12 +2810,14 @@ if(!REDUCE && 'MutationObserver' in window){
     }
   }
   function setSrc(){
-    if(!opener) return;
-    img.setAttribute('src', 'fig/' + (view === 'iso' ? 'iso-' : 'fig-') + opener.getAttribute('data-fig') + '-' + lang + '.svg');
-    img.setAttribute('alt', opener.textContent);
+    if(!curId) return;
+    img.setAttribute('src', 'fig/' + (view === 'iso' ? 'iso-' : 'fig-') + curId + '-' + lang + '.svg');
+    img.setAttribute('alt', curAlt);
   }
-  function openFig(trigger){
-    opener = trigger;
+  function openFig(id, altText, trigger){
+    curId = id;
+    curAlt = altText || '';
+    opener = trigger || null;
     syncView();
     setSrc();
     modal.hidden = false;
@@ -2682,16 +2825,25 @@ if(!REDUCE && 'MutationObserver' in window){
     closeBtn.focus();
   }
   function closeFig(){
-    if(modal.hidden) return;
+    if(modal.hidden){
+      if(typeof window.s2cDiveEnd === 'function') window.s2cDiveEnd();
+      return;
+    }
     modal.hidden = true;
     document.body.classList.remove('figlock');
     img.removeAttribute('src');
     img.setAttribute('alt', '');
+    curId = null;
+    if(typeof window.s2cDiveEnd === 'function') window.s2cDiveEnd();
     if(opener){ opener.focus(); opener = null; }
   }
-  var btns = document.querySelectorAll('.figbtn');
-  for(var i=0;i<btns.length;i++){
-    btns[i].addEventListener('click', function(ev){ ev.preventDefault(); openFig(this); });
+  window.s2cOpenFig = openFig;
+  var srs = document.querySelectorAll('.srfig-nav a');
+  for(var i=0;i<srs.length;i++){
+    srs[i].addEventListener('click', function(ev){
+      ev.preventDefault();
+      openFig(this.getAttribute('data-fig'), this.textContent, this);
+    });
   }
   for(var j=0;j<viewBtns.length;j++){
     viewBtns[j].addEventListener('click', function(){
